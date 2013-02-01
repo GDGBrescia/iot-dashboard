@@ -13,17 +13,116 @@
                 padding-top: 60px;
                 padding-bottom: 40px;
             }
-            .sidebar-nav {
+            .sidebar {
                 padding: 9px 0;
             }
-
+            #iot-canvas{
+                width: 800px;
+                height: 300px;
+                border: 1px inset #333;
+            }
 
         </style>
 
         <script type="text/javascript" src="js/jquery-1.9.0.min.js"></script>
-        <script type="text/javascript" src="js/bootstrap.js"></script>
+        <script type="text/javascript" src="js/bootstrap.js"></script>        
+        <script type="text/javascript">
+            //Oggetto Logger
+            function Logger(msg,obj){
+                var logger=$("#iot-logger"),
+                    currDate=new Date();
+                    logger.prepend(currDate.toLocaleString()+" - "+msg+" "+obj.toString()+"\n<br>");
+                console.log(obj);                                        
+            };
+            
+            //Oggetto CanvasElement
+            // per ora solo rettangoli...            
+            function CanvasElement(id,color,left,top,width,height){
+                this._id=id;
+                this._color=color;
+                this._x=left;
+                this._y=top;
+                this._width=width;
+                this._height=height;
+                
+                this.draw=function(context){
+                    context.fillStyle= this._color;
+                    context.fillRect(this._x, this._y, this._width, this._height);
+                };
+                
+                this.checkClicked=function(x,y){
+                    Logger("Y: "+this._y+" X:"+this._x+" -- Y: "+y+" X:"+x,this);
+                    if (y > this._y && y < this._y + this._height 
+                        && x > this._x && x < this._x + this._width) {
+                        alert("Clicked "+this.id);
+                        return true;
+                    }else{
+                        return false;
+                    }
+                }
+                
+                this.onclick=function(){
+                    Logger("Clicked on CanvasElement [id:"+this._id+"]", this);
+                }
+                
+            };
+            
+            //On document load load the canvas..
+            $(document).ready(function(){
+                
+                var canvas=$("#iot-canvas")[0],
+                canvasLeft = canvas.offsetLeft,
+                canvasTop = canvas.offsetTop,
+                canvasElements=new Array();
+            
+                
+                if (canvas.getContext) {
+                    var ctx = canvas.getContext("2d");
+                    ctx.strokeStyle = "#0000AA";
+
+                    // Choose a color
+                                        
+                    var rect1=new CanvasElement(1, "red", 0, 0, 50, 20);
+                    var rect2=new CanvasElement(2, "blue", 0, 26, 50, 20);
+                    var rect3=new CanvasElement(3, "green", 0, 52, 50, 20);
+                    var rect4=new CanvasElement(4, "yellow", 0, 78, 50, 20);
+                    
+                    canvasElements[0]=rect1;
+                    canvasElements[1]=rect2;
+                    canvasElements[2]=rect3;
+                    canvasElements[3]=rect4;
+                    
+                    //drow elements...
+                    canvasElements.forEach(function(element) {                            
+                        element.draw(ctx);
+                    });
+                        
+                    //addEventListener
+                    canvas.addEventListener('click', function(event) {                        
+                        var x = event.pageX - canvasLeft,
+                        y = event.pageY - canvasTop;
+                        
+                        Logger("Canvas Y: "+canvasTop+" X:"+canvasLeft+" -- Y: "+y+" X:"+x,this);
+                        
+                        
+                        // Collision detection between clicked offset and element.
+                        canvasElements.forEach(function(element) {
+                            var clicked=element.checkClicked(y,x);
+                            if (clicked){
+                                alert("EXSTERNAL Clicked "+element.id);
+                            }
+                        });
+
+                    }, false);
+                    
+                } else {
+                    // Browser doesn't support CANVAS
+                    $("#no_cav").show();
+                }
+            });
+        </script>
     </head>
-    <body>
+    <body>        
         <div class="navbar navbar-inverse navbar-fixed-top">
             <div class="navbar-inner">
                 <div class="container-fluid">
@@ -49,25 +148,12 @@
         <div class="container-fluid">
             <div class="row-fluid">
                 <div class="span3">
-                    <div class="well sidebar-nav">
-                        <ul class="nav nav-list">
-                            <li class="nav-header">Sidebar</li>
-                            <li class="active"><a href="#">Link</a></li>
-                            <li><a href="#">Link</a></li>
-                            <li><a href="#">Link</a></li>
-                            <li><a href="#">Link</a></li>
-                            <li class="nav-header">Sidebar</li>
-                            <li><a href="#">Link</a></li>
-                            <li><a href="#">Link</a></li>
-                            <li><a href="#">Link</a></li>
-                            <li><a href="#">Link</a></li>
-                            <li><a href="#">Link</a></li>
-                            <li><a href="#">Link</a></li>
-                            <li class="nav-header">Sidebar</li>
-                            <li><a href="#">Link</a></li>
-                            <li><a href="#">Link</a></li>
-                            <li><a href="#">Link</a></li>
-                        </ul>
+                    <div class="left-sidebar">
+                        <div class="span12 well">
+                            <h2>Event Logger</h2>
+                            <h4>This is the IoT event logger.</h4>
+                            <div id="iot-logger"></div>
+                        </div>
                     </div><!--/.well -->
                 </div><!--/span-->
                 <div class="span9">
@@ -76,31 +162,15 @@
                         <p>This is a template for a simple marketing or informational website. It includes a large callout called the hero unit and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
                         <p><a class="btn btn-primary btn-large">Learn more »</a></p>
                     </div>
-                    <div class="row-fluid">
-                        <div class="span12">
-                            <canvas id="synoptic"></canvas>
+                    <div class="row-fluid">                        
+                        <div class="span12 well">
+                            <h2>Sinoptic</h2>
+                            <canvas id="iot-canvas"></canvas>
+                            <p id="no_cav" style="display:none;">You need a Canvas-compatible browser to view canvas area.</p>
                         </div>
-                    </div>
-                    <div class="row-fluid">
-                        <div class="span4">
-                            <h2>Heading</h2>
-                            <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-                            <p><a class="btn" href="#">View details »</a></p>
-                        </div><!--/span-->
-                        <div class="span4">
-                            <h2>Heading</h2>
-                            <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-                            <p><a class="btn" href="#">View details »</a></p>
-                        </div><!--/span-->
-                        <div class="span4">
-                            <h2>Heading</h2>
-                            <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-                            <p><a class="btn" href="#">View details »</a></p>
-                        </div><!--/span-->
-                    </div><!--/row-->                    
+                    </div>                                
                 </div><!--/span-->
             </div><!--/row-->
-
             <hr>
             <footer class="footer">
                 <p class="muted credit">Powered by GDG Brescia & T4SM</p>
