@@ -6,95 +6,105 @@
         <title>IoT Dashboard - Powered by GDG Brescia & T4SM</title>
         <link rel="stylesheet" href="css/bootstrap.min.css" >
         <link rel="stylesheet" href="css/font-awesome.css" >
+        <link rel="stylesheet" href="css/iot.css" >
         <style type="text/css">
             body {
                 padding-top: 20px;
                 padding-bottom: 40px;
-            }
-
-            /* Custom container */
-            .container-narrow {
-                margin: 0 auto;
-                max-width: 700px;
-            }
-            .container-narrow > hr {
-                margin: 30px 0;
-            }
-
-            /* Main marketing message and sign up button */
-            .jumbotron {
-                margin: 60px 0;
-                text-align: center;
-            }
-            .jumbotron h1 {
-                font-size: 72px;
-                line-height: 1;
-            }
-            .jumbotron .btn {
-                font-size: 21px;
-                padding: 14px 24px;
-            }
-
-            /* Supporting marketing content */
-            .marketing {
-                margin: 60px 0;
-            }
-            .marketing p + h4 {
-                margin-top: 28px;
-            }
+                position: relative;
+                z-index: 0;
+            }            
         </style>
-
         <script type="text/javascript" src="js/jquery-1.9.0.min.js"></script>
         <script type="text/javascript" src="js/bootstrap.js"></script>
     </head>
-    <body>
-        <div class="container-narrow">
-
-            <div class="masthead">
-                <ul class="nav nav-pills pull-right">
-                    <li class="active"><a href="/index.htm">Home</a></li>
-                    <li><a href="/index.htm#about">About</a></li>
-                    <li><a href="/index.htm#contact">Contact</a></li>
-                </ul>
-                <h3 class="muted">IoT Dashboard</h3>
+    <body data-spy="scroll" data-target=".navbar">
+        <a href="https://github.com/GDGBrescia/iot-dashboard" title="Fork me on GitHub" target="_blank"><img id="forkme" src="img/fork-me.png" /></a>
+        <header class="header">               
+            <div class="navbar navbar-fixed-top">
+                <div class="navbar-inner">
+                    <div class="container">
+                        <a class="brand" href="#" style="padding-top: 6px; padding-bottom: 0px;">
+                            <img class="iot-small-logo" src="img/IOT-dashboard-02.jpg" />
+                        </a>
+                        <ul class="nav">
+                            <li class="divider-vertical"></li>
+                            <li class="active"><a href="/index.htm#home">Home</a></li>
+                            <li><a href="/index.htm#about">About</a></li>
+                            <li><a href="/index.htm#contact">Contact</a></li>
+                            <li class="divider-vertical"></li>
+                        </ul>
+                    </div>
+                </div>
             </div>
+        </header>
+        <div class="container-narrow">
             <hr>
-            <div class="jumbotron">
+            <div id="home" class="jumbotron well">
                 <img src="img/IOT-dashboard-02.jpg" />
                 <p>
                     This is a T4SM project powered by the Google Developer Group Brescia.
                 </p>
                 <p  class="lead">Display National Instrument hardware signals with Web 2.0 technologies.</p>
-                <a class="btn btn-large btn-success" href="/dashboard.htm">Go to the dashboard</a>
+                <a class="btn btn-large btn-success" href="/dashboard.htm">
+                    <i class=" icon-dashboard"></i>
+                    Go to the dashboard</a>
+                <a class="btn btn-large btn-primary" href="https://github.com/GDGBrescia/iot-dashboard">
+                    <i class="icon-github"></i>
+                    Fork on GitHub</a>
             </div>
-
-            <hr>
-
             <div class="row-fluid marketing">
                 <div class="span6">
                     <h4>Twitter Bootstrap</h4>
-                    <p>Donec id elit non mi porta gravida at eget metus. Maecenas faucibus mollis interdum.</p>
+                    <p>Bootstrap is a sleek, intuitive, and powerful front-end framework for faster and easier web development, created and maintained by Mark Otto and Jacob Thornton.</p>
 
                     <h4>Angular.js</h4>
-                    <p>Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Cras mattis consectetur purus sit amet fermentum.</p>
+                    <p>AngularJS is a toolset for building the framework most suited to your application development. It is fully extensible and works well with other libraries.
+                        Every feature can be modified or replaced to suit your unique development workflow and feature needs. Read on to find out how</p>
 
                     <h4>JQuery</h4>
-                    <p>Maecenas sed diam eget risus varius blandit sit amet non magna.</p>
+                    <p>jQuery is a fast, small, and feature-rich JavaScript library. 
+                        It makes things like HTML document traversal and manipulation, event handling, animation, and Ajax much 
+                        simpler with an easy-to-use API that works across a multitude of browsers. With a combination of versatility and extensbility, 
+                        jQuery has changed the way that millions of people write JavaScript.</p>
                 </div>
-
                 <div class="span6">
                     <h4>HTML5 & Canvas</h4>
-                    <p>Donec id elit non mi porta gravida at eget metus. Maecenas faucibus mollis interdum.</p>
-
+                    <p>HTML5 is the ubiquitous platform for the web. Whether you're a mobile web developer, an enterprise with specific business needs,
+                        or a serious game dev looking to explore the web as a new platform, HTML5 has something for you!</p>
                     <h4>Google Charts</h4>
-                    <p>Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Cras mattis consectetur purus sit amet fermentum.</p>
+                    <p>Google Chart Tools provide a perfect way to visualize data on your website. From simple line charts to complex hierarchical tree maps,
+                        the chart galley provides a large number of well-designed chart types. Populating your data is easy using the provided client- and server-side tools.</p>
 
-                    <h4>SCCT Data library</h4>
-                    <p>Maecenas sed diam eget risus varius blandit sit amet non magna.</p>
+                    <h4>SCCT (Smartphone & Cross-platform Communication Toolkit)</h4>
+                    <p>SCCT is a powerful library that allows you to create true distributed computing solutions in a smooth fashion. Data are organized 
+                        automatically by SCCT tasks.</p>
+
                 </div>
             </div>
-
+            <div class="row-fluid marketing">
+                <div class="span12 well">
+                    <img src="/img/github_hero.png" class="img-rounded feature-logo" />
+                    <img src="/img/twitter-bootstrap.jpg" class="img-rounded feature-logo" />
+                    <img src="/img/html5.png" class="img-rounded feature-logo" />
+                    <img src="/img/angular.png" class="img-rounded feature-logo" />
+                    <img src="/img/gchart.jpg" class="img-rounded feature-logo" />
+                    <img src="/img/jquery.png" class="img-rounded feature-logo" />
+                    <img src="/img/scct.jpg" class="img-rounded feature-logo" />
+                </div>
+            </div>            
             <hr>
+            <div id="about" class="row-fluid marketing">
+
+            </div>
+            <div id="contact" class="row-fluid marketing">
+                <div class="span6">
+                    GDG Brescia
+                </div>
+                <div class="span6">
+                    T4SM
+                </div>
+            </div>
 
             <footer class="footer">
                 <div class="container">

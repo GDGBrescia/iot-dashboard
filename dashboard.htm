@@ -7,14 +7,13 @@
         <link rel="stylesheet" href="css/bootstrap.min.css" >
         <link rel="stylesheet" href="css/bootstrap-responsive.min.css" >
         <link rel="stylesheet" href="css/font-awesome.css" >
+        <link rel="stylesheet" href="css/iot.css" >
         <style type="text/css">
-
             body {
                 padding-top: 60px;
                 padding-bottom: 40px;
-            }
-            .sidebar {
-                padding: 9px 0;
+                position: relative;
+                z-index: 0;
             }
             #iot-canvas{
                 width: 800px;
@@ -123,28 +122,25 @@
         </script>
     </head>
     <body>        
-        <div class="navbar navbar-inverse navbar-fixed-top">
-            <div class="navbar-inner">
-                <div class="container-fluid">
-                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </a>
-                    <a class="brand" href="#">Internet of Things</a>
-                    <div class="nav-collapse collapse">
-                        <p class="navbar-text pull-right">
-                            This is a T4SM project powered by the Google Developer Group Brescia
-                        </p>
+        <a href="https://github.com/GDGBrescia/iot-dashboard" title="Fork me on GitHub" target="_blank"><img id="forkme" src="img/fork-me.png" /></a>
+        <header class="header">               
+            <div class="navbar navbar-fixed-top">
+                <div class="navbar-inner">
+                    <div class="container-narrow">
+                        <a class="brand" href="/index.htm" style="padding-top: 6px; padding-bottom: 0px;">
+                            <img class="iot-small-logo" src="img/IOT-dashboard-02.jpg" />
+                        </a>
                         <ul class="nav">
-                            <li class="active"><a href="/index.htm">Home</a></li>
+                            <li class="divider-vertical"></li>
+                            <li class="active"><a href="/index.htm#home">Home</a></li>
                             <li><a href="/index.htm#about">About</a></li>
                             <li><a href="/index.htm#contact">Contact</a></li>
+                            <li class="divider-vertical"></li>
                         </ul>
-                    </div><!--/.nav-collapse -->
+                    </div>
                 </div>
             </div>
-        </div>
+        </header>
         <div class="container-fluid">
             <div class="row-fluid">
                 <div class="span3">

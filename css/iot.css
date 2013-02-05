@@ -1,0 +1,74 @@
+/* 
+    Document   : iot.css
+    Created on : 5-feb-2013, 12.25.11
+    Author     : dario Olivini <xflofoxx@gmail.com>
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+root { 
+    display: block;
+}
+
+/* Custom container */
+.container-narrow {
+    margin: 0 auto;
+    max-width: 968px;
+}
+.container-narrow > hr {
+    margin: 30px 0;
+}
+
+#forkme{
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    z-index: 9999;
+}
+/* Main marketing message and sign up button */
+.jumbotron {
+    margin: 60px 0;
+    text-align: center;
+}
+.jumbotron h1 {
+    font-size: 72px;
+    line-height: 1;
+}
+.jumbotron .btn {
+    font-size: 21px;
+    padding: 14px 24px;
+}
+/* Supporting marketing content */
+.marketing {
+    margin: 60px 0;
+}
+.marketing p + h4 {
+    margin-top: 28px;
+}
+
+.img-rounded{
+    -webkit-border-radius: 12px;
+    -moz-border-radius: 12px;
+    border-radius: 12px;
+}
+
+img.feature-logo{
+    height: 60px;
+    margin: 5px;
+}
+.features{
+    list-style-type: none;
+    text-align: center;
+}
+.features li{
+    display: inline-block;
+    float: left;
+}
+.features p{
+    text-align: justify;
+}
+
+.iot-small-logo{
+    width: 95px;
+    height: 25px;
+}
