@@ -45,7 +45,9 @@ root {
 .marketing p + h4 {
     margin-top: 28px;
 }
-
+.logos{
+    text-align: center;
+}
 .img-rounded{
     -webkit-border-radius: 12px;
     -moz-border-radius: 12px;

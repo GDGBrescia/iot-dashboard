@@ -29,8 +29,8 @@
             //Oggetto Logger
             function Logger(msg,obj){
                 var logger=$("#iot-logger"),
-                    currDate=new Date();
-                    logger.prepend(currDate.toLocaleString()+" - "+msg+" "+obj.toString()+"\n<br>");
+                currDate=new Date();
+                logger.prepend(currDate.toLocaleString()+" - "+msg+" "+obj.toString()+"\n<br>");
                 console.log(obj);                                        
             };
             
@@ -122,9 +122,8 @@
         </script>
     </head>
     <body>        
-        <a href="https://github.com/GDGBrescia/iot-dashboard" title="Fork me on GitHub" target="_blank"><img id="forkme" src="img/fork-me.png" /></a>
         <header class="header">               
-            <div class="navbar navbar-fixed-top">
+            <div class="navbar navbar-fixed-top navbar-inverse">
                 <div class="navbar-inner">
                     <div class="container-narrow">
                         <a class="brand" href="/index.htm" style="padding-top: 6px; padding-bottom: 0px;">
@@ -137,6 +136,10 @@
                             <li><a href="/index.htm#contact">Contact</a></li>
                             <li class="divider-vertical"></li>
                         </ul>
+                        <a class="btn btn-primary pull-right" href="https://github.com/GDGBrescia/iot-dashboard">
+                            <i class="icon-github"></i>
+                            Fork on GitHub</a>
+
                     </div>
                 </div>
             </div>
