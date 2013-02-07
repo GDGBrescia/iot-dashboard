@@ -18,7 +18,7 @@
         <script type="text/javascript" src="js/jquery-1.9.0.min.js"></script>
         <script type="text/javascript" src="js/bootstrap.js"></script>
     </head>
-    <body data-spy="scroll" data-target=".navbar">
+    <body>
         <header class="header">               
             <div class="navbar navbar-fixed-top navbar-inverse">
                 <div class="navbar-inner">
@@ -50,31 +50,7 @@
                     Go to the dashboard</a>
             </div>        
         </header>
-        <div class="container">
-            <hr>
-            <div class="row-fluid logos">
-                <div class="span12">
-                    <a href="http://twitter.github.com/bootstrap/" target="_blank">
-                        <img src="/img/twitter-bootstrap.jpg" class="img-rounded feature-logo" />
-                    </a>
-                    <a href="http://fortawesome.github.com/Font-Awesome/" target="_blank">
-                        <img src="/img/FontAwesome.png" class="img-rounded feature-logo" />
-                    </a>
-                    <a href="http://www.w3.org/html/wg/drafts/html/master/" target="_blank">
-                        <img src="/img/html5.png" class="feature-logo" />
-                    </a>
-                    <a href="http://angularjs.org/" target="_blank">
-                        <img src="/img/angular.png" class="feature-logo" />
-                    </a>
-                    <a href="http://jquery.com/" target="_blank">
-                        <img src="/img/jquery.png" class="img-rounded feature-logo" />
-                    </a>
-                    <a href="http://toolsforsmartminds.com/products/labview_html5.php" target="_blank">
-                        <img src="/img/scct.jpg" class="img-rounded feature-logo" />
-                    </a>
-                </div>
-            </div>
-            <hr>
+        <div class="container">            
             <div class="row-fluid marketing">
                 <div class="span6">
                     <h4>Twitter Bootstrap & Font Awesome</h4>
@@ -104,14 +80,61 @@
 
                 </div>
             </div>            
+            <div class="row-fluid logos">
+                <div class="span12">
+                    <a href="http://twitter.github.com/bootstrap/" target="_blank">
+                        <img src="/img/twitter-bootstrap.jpg" class="img-rounded feature-logo" />
+                    </a>
+                    <a href="http://fortawesome.github.com/Font-Awesome/" target="_blank">
+                        <img src="/img/FontAwesome.png" class="img-rounded feature-logo" />
+                    </a>
+                    <a href="http://www.w3.org/html/wg/drafts/html/master/" target="_blank">
+                        <img src="/img/html5.png" class="feature-logo" />
+                    </a>
+                    <a href="http://angularjs.org/" target="_blank">
+                        <img src="/img/angular.png" class="feature-logo" />
+                    </a>
+                    <a href="http://jquery.com/" target="_blank">
+                        <img src="/img/jquery.png" class="img-rounded feature-logo" />
+                    </a>
+                    <a href="http://toolsforsmartminds.com/products/labview_html5.php" target="_blank">
+                        <img src="/img/scct.jpg" class="img-rounded feature-logo" />
+                    </a>
+                </div>
+            </div>
             <hr>
             <div id="about" class="row-fluid marketing">
                 <div class="span12">
-                    <h4>Projects goals</h4>
-                    <p class="muted">
-                        <i>Soon available</i>
-                    </p>
-                    <p><strong>SCCT Documentation </strong><a href="/libscct/doc/SCCT_for_HTML5_user_guide.pdf" target="_blank">SCCT_for_HTML5_user_guide.pdf</a></p>
+                    
+                    
+                    <h4>Introduction</h4>
+                    <p>Usually, Complex automation systems are supplied of poor user interfaces. Often, software engineers don’t dedicate enough attention 
+                        to the usability of system consoles and their panels, because automation system front ends are designed to be used by “skilled” operators.
+                        With the large communication band today available, it’s possible to create distributed computing systems for real-time signals. 
+                        Transferring real-time data over the net allows engineers and scientist to better understand fast phenomena and to control dynamic processes 
+                        more precisely. In this branch of software, a key role is played by the usability and quick response of the user interface.</p>
+ 
+                    <h4>The Goal</h4>
+                    <p>We simulate a fast production system, capable to generate multiple data per second. the goal is to create a dynamic user interface 
+                        capable to represent real-time phenomena, The open source project has to take advantage of the modern technologies and graphic 
+                        tools available on the net.<br>
+                        Reading and writing data through web services (restful or SOAP) is very easy, but in some cases not the best choice. 
+                        When a critical system is monitored, you have to be sure that:
+                    <ul>
+                        <li>no signal component is left back, to ensure correct data analysis and to log data properly,</li>
+                        <li>no message from the server is lost, to guarantee to remote users the right comprehension of what is going on.</li>
+                    </ul>
+                    <strong>In such cases, the use of direct TCP connections between server and clients (through websockets for Javascript apps) has to 
+                        be taken in right consideration.</strong>
+                </p>
+                <h4>Communication Library</h4>
+                <strong>SCCT (Smartphone and Cross-platform Communication Toolkit)</strong> is a communication library created for the automation systems. 
+                SCCT is capable to transfer data from one server to many clients with direct TCP connections and data are transferred in binary format to optimize 
+                band consume and CPU utilization. SCCT includes high level primitives that organize received packages into queues with background task, 
+                and manages communication with the server in an intuitive manner.<br>
+                SCCT is available of a large set of different platforms: LabVIEW, HTML5, Java, Android, iOs, ANSI-C under Linux.
+                </p>    
+                <p><strong>SCCT Documentation </strong><a href="/libscct/doc/SCCT_for_HTML5_user_guide.pdf" target="_blank">SCCT_for_HTML5_user_guide.pdf</a></p>
                 </div>
             </div>
             <hr>
@@ -122,11 +145,11 @@
                             <img src="img/gdglogo.jpg">
                         </a>
                     </h4>
-                    <h5>Il Google Developer Group di Brescia </h5>
+                    <h5>Google Developer Group Brescia</h5>
                     <p>
-                        Il Google Developer Group di Brescia è formato da un gruppo di persone appassionate e affascinate dalla tecnologia. 
-                        Vogliamo formare una community sul territorio che si affianchi alle realtà tecniche già presenti e insieme a loro contribuisca 
-                        alla crescita del panorama tecnologico bresciano, il tutto con un occhio rivolto agli strumenti offerti dal Big G.
+                        The Google Developer Group of Brescia consists of a group of people who are passionate and fascinated by technology.<br>
+                        We want to form a community in the area that will parallel the realities existing techniques and with them contribute to 
+                        the growth of the technological landscape Brescia, all with an eye to the tools offered by the Big G.
                     </p>
                     <p><strong>Blog Ufficiale: </strong><a href="http://gdgbrescia.blogspot.it/" target="_blank">http://gdgbrescia.blogspot.it</a></p>
                     <p><strong>Pagina G+: </strong><a href="https://plus.google.com/u/0/b/104091916976470214422/104091916976470214422/posts/p/pub" target="_blank">GDG Brescia</a></p>
