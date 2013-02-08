@@ -152,10 +152,62 @@
                     // Browser doesn't support CANVAS
                     $("#no_cav").show();
                 }
+                
+                //ask for connection
+                
+                var connected=false;
+                
+                $('#connectionModal').modal({keyboard: false,backdrop:"static"});
+                $('#connectionModal #connect').click(function(){                
+                    alert("Connected");
+                    connected=true;
+                    $('#connectionModal').modal('hide');
+                });
+                
             });
         </script>
     </head>
-    <body>        
+    <body>   
+        <div id="connectionModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <h3 id="myModalLabel">Connect to server</h3>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <fieldset>
+                        <legend>Insert server parameters</legend>
+                        <div class="control-group">
+                            <label class="control-label">Server IP:</label>
+                            <div class="controls">
+                                <input type="text" placeholder="localhost">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">Server port:</label>
+                            <div class="controls">
+                                <input type="text" placeholder="3000">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">API key:</label>
+                            <div class="controls">
+                                <input type="text" placeholder="scs">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">Timeout:</label>
+                            <div class="controls">
+                                <input type="text" placeholder="20.00">
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="connect" class="btn btn-primary" data-loading-text="Connecting..." data-toggle="button">Connect</button>
+            </div>
+        </div>
         <header class="header">               
             <div class="navbar navbar-fixed-top navbar-inverse">
                 <div class="navbar-inner">
