@@ -128,14 +128,45 @@
                         <strong>In such cases, the use of direct TCP connections between server and clients (through websockets for Javascript apps) has to 
                             be taken in right consideration.</strong>
                     </p>
-                    <h4>Communication Library</h4>
+                    <h4>The simulated system: SIMULATED CUTTING SYSTEM (SCS)</h4>
                     <p>
-                        <strong>SCCT (Smartphone and Cross-platform Communication Toolkit)</strong> is a communication library created for the automation systems. 
-                        SCCT is capable to transfer data from one server to many clients with direct TCP connections and data are transferred in binary format to optimize 
-                        band consume and CPU utilization. SCCT includes high level primitives that organize received packages into queues with background task, 
-                        and manages communication with the server in an intuitive manner.<br>
-                        SCCT is available of a large set of different platforms: LabVIEW, HTML5, Java, Android, iOs, ANSI-C under Linux.
-                    </p>    
+                        We will simulate a Cutting system, that is a plant composed by the following units:
+                    </p>
+                    <ul>
+                        <li>Motor controls the speed production is done: higher speed means more products/unit of time.</li>
+                        <li>Multiple-blade cutter, driven by the motor.</li>
+                        <li>Injection circuit, to pump hot fluid.</li>
+                        <li>Cooling system to control the plant temperature.</li>
+                        <li>Hardware controller with some modules for I/O purposes.</li>
+                    </ul>          
+                    <p>
+                        The plant produces different objects from a fluid hot plastic, the plastic is warmed by a specific unit. Fluid temperature 
+                        and pressure are monitored. Fluid temperature and pressure cannot exceed their upper values otherwise pressure 
+                        and temperature alarms are fired. The electrical motor drives a cutter, used to shape different products. The system 
+                        can produce different products, generally indicated with name  product type 1, product type 2, etc. Fluid is injected 
+                        into moulds of different types and the cutter shapes the products. For the purposes of the case study, it’ not very 
+                        important that such production system exists. Real systems are probably more complex, but for this case study we 
+                        need a simple model capable to generate fast data with a certain degree of coherence.
+                    </p>
+                    <p><strong>Technical specifications </strong><a href="http://www.toolsforsmartminds.com/case-studies/SCS/SCS%20-%20technical%20specifications.pdf" target="_blank">Simulated Cutting System.pdf</a></p>
+                    <h4>RESOURCES<h4>                       
+                            <p>The following resources are available to developers:</p>
+                            <h5>SERVER</h5>
+                            <p>SCS is available online at the following address:<br>
+                            SCS stand-alone application is available for free download at <br>
+                            <a href="http://www.toolsforsmartminds.com/case-studies/SCS/simulator.zip" target="_blank">http://www.toolsforsmartminds.com/case-studies/SCS/simulator.zip</a><br>
+                            SCS server with Installer and LabVIEW Runtime Engine is available for free download at <br>
+                            <a href="http://www.toolsforsmartminds.com/case-studies/SCS/SCS-simulator+installer.zip" target="_blank">http://www.toolsforsmartminds.com/case-studies/SCS/SCS-simulator+installer.zip</a><br>
+                            <h5>CLIENTS</h5>
+                            <p>Clients are available at the following links: 
+http://www.toolsforsmartminds.com/case-studies/SCS/client.zip
+SCS client with Installer and LabVIEW Runtime Engine is available for free download at  
+http://www.toolsforsmartminds.com/case-studies/SCS/SCS-client+installer.zip
+SCCT LIBRARIES
+SCCT libraries for different platforms and development languages are available at 
+http://www.toolsforsmartminds.com/products/SCCT.php
+an introduction to SCCT libraries is available in the SCCT White paper at the following link: 
+http://www.toolsforsmartminds.com/pdf/White%20paper%20SCCT.pdf  
                     <p><strong>SCCT Documentation </strong><a href="/libscct/doc/SCCT_for_HTML5_user_guide.pdf" target="_blank">SCCT_for_HTML5_user_guide.pdf</a></p>
                 </div>
             </div>
