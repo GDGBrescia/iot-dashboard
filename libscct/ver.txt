@@ -1,0 +1,7 @@
+Date: 20121001
+GeminiLab SCCT HTML5 library
+libscct_56_dataType4
+
+For info visit:
+http://www.geminilab.org
+http://toolsforsmartminds.com

@@ -1,0 +1,19 @@
+div, form {
+  margin: 1em auto;
+}
+
+#speedometer1 {
+  width: 145px;
+  height: 145px;
+  border: 0px dotted red;
+}
+
+#speedometer2 {
+  width: 145px;
+  height: 145px;
+  border: 0px dotted red;
+}
+
+#controls {
+  width: 180px;
+}

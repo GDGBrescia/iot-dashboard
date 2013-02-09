@@ -1,0 +1,275 @@
+<!DOCTYPE HTML>
+<head>
+	<style>
+		html,body{font:normal 0.9em arial,helvetica;}
+		#msg {width:330px;}
+	</style>
+	<script language='javascript'>
+		var libScctPath = "libscct_56_dataType4";
+	</script>
+	
+	
+	<script src="libscct_56_dataType4/libscct.js"></script>
+	
+	<script src="other_libraries/html5.js"></script> 
+    <script src="other_libraries/RGraph/libraries/RGraph.common.core.js" ></script> 
+	<script src="other_libraries/RGraph/libraries/RGraph.line.js"></script>
+	
+	
+	<link rel="stylesheet" type="text/css" href="libspeedometer/speedometer.css" media="screen" />
+	<script type="text/javascript" src="libspeedometer/xcanvas.js"></script>
+	<script type="text/javascript" src="libspeedometer/tbe.js"></script>
+	<script type="text/javascript" src="libspeedometer/digitaldisplay.js"></script>
+	<script type="text/javascript" src="libspeedometer/speedometer.js"></script>
+	<script type="text/javascript" src="libspeedometer/themes/default.js"></script>
+
+	<script type="text/javascript">
+	  var speedometer;
+	  document.addEventListener ("DOMContentLoaded", function() {
+		document.removeEventListener ("DOMContentLoaded", arguments.callee, false);
+		speedometer1 = new Speedometer ('speedometer1', {theme: 'default',max:250});
+		speedometer1.draw ();
+		speedometer2 = new Speedometer ('speedometer2', {theme: 'default2',max:50});
+		speedometer2.draw ();
+	  }, false);
+	</script>
+	
+	<script type='text/javascript'>
+		var scctChannel = new SCCTChannel();
+		//scctChannel.useGCloud("t4sm.blogdns.com");
+		/*****************************************************************************/
+		/*                  EVENT HANDLERS REGISTRATION                              */
+		/*****************************************************************************/
+		scctChannel.connectionOpenedHandler         = onOpened;
+		scctChannel.connectionRefusedHandler		= onRefused;
+		scctChannel.connectionClosedHandler			= onClosed;		
+		scctChannel.streamStartedHandler			= onStarted;
+		scctChannel.streamStoppedHandler			= onStopped;
+		scctChannel.configurationDataArrivedHandler = onConfigurationDataArrived;
+		scctChannel.analogDataArrivedHandler        = onAnalogDataArrived;
+		scctChannel.digitalDataArrivedHandler       = onDigitalDataArrived;
+		scctChannel.customXMLDataArrivedHandler     = onCustomXMLDataArrived;
+		scctChannel.messageDataArrivedHandler		= onMessageDataArrived;
+		/*****************************************************************************/
+		
+		/*****************************************************************************/
+		/*                        EVENT HANDLERS DEFINITION                          */
+		/*****************************************************************************/
+		var oldSpeeder1Value = 0;
+		var oldSpeeder2Value = 0;
+		var isconnected = false;
+		
+		function onOpened()
+		{			
+			isconnected = true;
+			scctChannel.start();
+		}
+		
+		function onClosed()
+		{
+			alert("Connection closed from remote host");
+			isconnected = false;
+		}
+		
+		function onRefused()
+		{
+			alert(scctChannel.reasonOfConnectionFailure);
+			
+			document.getElementById("connectButton").style.color     = "#black";
+			document.getElementById("stopButton").style.color        = "#AAAAAA";
+			document.getElementById("line1Blinker").style.background = "#EEEEEE";
+			document.getElementById("line2Blinker").style.background = "#EEEEEE";
+			
+			var buttons = document.getElementsByTagName("button");
+			for(var i=0;i<4;i++){
+				document.getElementById("b"+(i+1)).style.color="#AAAAAA";
+				document.getElementById("b"+(i+1)).style.fontWeight="";
+			}
+			speedometer1.update(0);
+			speedometer2.update(0);
+			
+			document.getElementById("connectButton").style.color="black";
+			
+			isconnected = false;
+		}
+		
+		function onStarted()
+		{
+			var buttons = document.getElementsByTagName("button");
+			for(var i=0;i<4;i++){
+				document.getElementById("b"+(i+1)).style.color="black";
+				document.getElementById("b"+(i+1)).style.fontWeight="bold";
+			}
+			
+			document.getElementById("connectButton").style.color="#AAAAAA";
+			document.getElementById("stopButton").style.color = "black";
+		}
+		
+		function onStopped()
+		{
+			document.getElementById("connectButton").style.color     = "#black";
+			document.getElementById("stopButton").style.color        = "#AAAAAA";
+			document.getElementById("line1Blinker").style.background = "#EEEEEE";
+			document.getElementById("line2Blinker").style.background = "#EEEEEE";
+			
+			var buttons = document.getElementsByTagName("button");
+			for(var i=0;i<4;i++){
+				document.getElementById("b"+(i+1)).style.color="#AAAAAA";
+				document.getElementById("b"+(i+1)).style.fontWeight="";
+			}
+			speedometer1.update(0);
+			speedometer2.update(0);
+			
+			document.getElementById("connectButton").style.color="black";
+		}
+		
+		function onConfigurationDataArrived()
+		{
+			var configurationData = scctChannel.getConfigurationData();
+			if (configurationData != null)
+				;//console.log(configurationData);
+		}
+		
+		var arrives=0;
+		
+		function onAnalogDataArrived()
+		{
+			//console.log("AnalogDataArrived");
+			arrives++;
+			var analogData = scctChannel.getAnalogData();
+			if (analogData != null && analogData.channels!=null && analogData.channels[0]!=null){
+				var modulo=1;
+				if (navigator.userAgent.indexOf("iPad")>=0)
+					modulo=8;
+				if (arrives%modulo==0){
+					//console.log("onAnalogDataArrived");
+					pushNuovoValore(analogData.channels[0][0],analogData.channels[1][0]);
+					speedometer1.update(parseInt(analogData.channels[0][0]));
+					speedometer2.update(parseInt(parseFloat(analogData.channels[1][0])*10));
+				}
+			}
+		}
+		
+		function onDigitalDataArrived()
+		{
+			var digitalData = scctChannel.getDigitalData();
+			if (digitalData != null){
+				//console.log("onDigitalDataArrived");
+				
+				if (digitalData.lines[0]==true){
+					document.getElementById("line1Blinker").style.background = "#00FF00";
+					document.getElementById("line1Blinker").innerHTML = "System ON";
+				}
+				else{
+					document.getElementById("line1Blinker").style.background = "#FF4444";
+					document.getElementById("line1Blinker").innerHTML = "System OFF";
+				}
+				if (digitalData.lines[1]==true){
+					document.getElementById("line2Blinker").style.background = "#00FF00";
+					document.getElementById("line2Blinker").innerHTML = "Door CLOSED";
+				}
+				else{
+					document.getElementById("line2Blinker").style.background = "#FF4444";
+					document.getElementById("line2Blinker").innerHTML = "Door OPENED";
+				}
+			}
+		}
+		
+		function onCustomXMLDataArrived()
+		{
+			var customXMLData = scctChannel.getCustomXMLData();
+			//console.log("custom xml arrived: " + customXMLData.xml_data);
+		}
+		
+		function onMessageDataArrived()
+		{
+			var messageData = scctChannel.getMessageData();
+			//console.log("message arrived: " + messageData.message + " with code " + messageData.code);
+		}
+			
+		/*****************************************************************************/
+	</script>
+	
+	
+	<script type='text/javascript'>
+		/*****************************************************************************/
+		/*                        SPECIFIC PURPOSE CODE                              */
+		/*****************************************************************************/
+		function switchOn()
+		{
+			scctChannel.sendMessageData("switchOn",20);
+		}	
+		
+		function switchOff()
+		{
+			scctChannel.sendMessageData("switchOff",20);
+		}
+		
+		function openDoor()
+		{
+			scctChannel.sendMessageData("openDoor",0);
+		}
+		
+		function closeDoor()
+		{
+			scctChannel.sendMessageData("closeDoor",0);
+		}
+		
+		function connect(){
+			if (!isconnected){
+				scctChannel.connectToPublisher("t4sm.blogdns.com",
+										  8083,
+										  "OvenDemo",
+										  '20.00',"");
+			}
+			else
+				scctChannel.start();
+		}
+		
+		function close_connection()
+		{
+			scctChannel.stop();
+		}
+				
+		
+		/*****************************************************************************/
+	</script>
+	
+</head>
+<body style='background:lightblue;' onload='creaLinea();'>
+	<div style='font-weight:bold;font-size:14px;margin:0 auto;width:686px;text-align:center;color:white;background:#4092BD;padding-left:2px;padding-right:2px;padding-bottom:5px;padding-top:5px;border-top-left-radius:20px;border:solid #888888 1px; border-top-right-radius:20px;'>
+		<!--<b>Server </b><input id='finalipaddress' style='border-radius:10px;font-weight:bold;width:150px;' value=''></input>
+		<b>Port </b><input id='finalport' style='border-radius:10px;font-weight:bold;width:30px;' value='8083'></input>
+		<b>Api-Key </b><input id='apikey' style='border-radius:10px;font-weight:bold;width:100px;' value='OvenDemo'></input>-->
+		HTML5 OvenDemo Client
+		<button id="connectButton" style='border-radius:15px;' onclick="connect()">Start</button>
+		<button id="stopButton" style='border-radius:15px;color:#AAAAAA' onclick="close_connection()">Stop</button>
+	</div>
+	<div id='divOrange' style='width:690px; margin:0 auto;background:#AAAAAA;border:solid #888888 1px;'>
+			<div style='text-align:center;margin:0 auto;padding-top:5px;padding-bottom:5px;border-right:solid #888888 1px;border-left:solid #888888 1px;'>
+				<button id="b1" style='color:#AAAAAA;border-radius:10px;' onmouseover='if(isconnected)this.style.background="yellow"' onmouseout='this.style.background="#CCCCCC"' onclick="switchOn()"> System On </button>
+				<button id="b2" style='color:#AAAAAA;border-radius:10px;' onmouseover='if(isconnected)this.style.background="yellow"' onmouseout='this.style.background="#CCCCCC"' onclick="switchOff()">System Off</button>
+				<button id="b3" style='color:#AAAAAA;border-radius:10px;' onmouseover='if(isconnected)this.style.background="yellow"' onmouseout='this.style.background="#CCCCCC"' onclick="openDoor()"> Open Door </button>
+				<button id="b4" style='color:#AAAAAA;border-radius:10px;' onmouseover='if(isconnected)this.style.background="yellow"' onmouseout='this.style.background="#CCCCCC"' onclick="closeDoor()">Close Door</button>
+			</div>
+			<div id="monitor" style='background:white;width:692px;margin:0 auto;margin-left:-1px;border-top:solid #888888 1px;'>
+				<div style='margin:0;border-left:solid #555555 1px;background:white;border-bottom:solid #555555 1px;width:510px;float:left;padding-top:0px'>
+					<canvas id="line9" width="510" height="300" style='margin-left:2px;'>[No canvas support]</canvas>
+					<div id='digitalDataPanel' style='background:white;width:680px;margin:0 auto;text-align:center;height:20px;padding-top:10px;padding-bottom:10px' >
+						<div style='margin:0 auto;text-align:center;width:305px'>
+							<div id="line1Blinker" style='border-radius:10px;float:left;margin:0 auto;width:150px;height:20px;background:lightgray;border:solid #777777 1px;text-align:center;font-weight:bold;'>Heating System Status</div>
+							<div id="line2Blinker" style='border-radius:10px;float:left;margin:0 auto;width:150px;height:20px;background:lightgray;border:solid #777777 1px;text-align:center;font-weight:bold'>Door Status</div>
+						</div>
+					</div>
+				</div>
+				<div id="speeders" style='margin:0;border-right:solid #555555 1px;border-bottom:solid #555555 1px;width:180px;background:white;float:left;padding-top:10px;padding-bottom:43px;margin 0 auto;'>
+					<div style='left:0px;margin:0 auto;' id="speedometer1" ></div>
+					<div style='left:0px;margin:0 auto;' id="speedometer2"></div>
+				</div>
+			</div>
+			<div id='debug' style='margin:0 ;width:680px;padding:5px;border:solid #555555 1px;border-top:solid black 0px;font-weight:bold;color:black;background:#888888;text-align:center;float:left;margin-left:-1px;border-bottom-left-radius:20px;border-bottom-right-radius:20px;'>
+				Copyright by T4SM and GeminiLab
+			</div>
+			
+	</div>
+</body>
