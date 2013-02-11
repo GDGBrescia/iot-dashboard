@@ -13,7 +13,7 @@ var scctChannel = new SCCTChannel();
  **/
 function init(){
     scctChannel.connectToPublisher(
-        '127.0.0.1', //IP ADDRESS
+        '10.0.0.1', //IP ADDRESS
         '8080', //PORT
         'JFSMSKFV83H0834HG0', //API KEY
         3600 //TIMEOUT

@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en" ng-app="iotDash" >
+    <head>
+        <meta charset="utf-8">
+        <meta name="Description" content="">
+        <title>IoT Dashboard - Powered by GDG Brescia & T4SM</title>
+        <link rel="stylesheet" href="css/bootstrap.min.css" >
+        <link rel="stylesheet" href="css/bootstrap-responsive.min.css" >
+        <link rel="stylesheet" href="css/font-awesome.css" >
+        <link rel="stylesheet" href="css/iot.css" >
+        <style type="text/css">
+            body {
+                padding-top: 60px;
+                padding-bottom: 40px;
+                position: relative;
+                z-index: 0;
+            }          
+            /* app css stylesheet */
+
+            .menu {
+                list-style: none;
+                border-bottom: 0.1em solid black;
+                margin-bottom: 2em;
+                padding: 0 0 0.5em;
+            }
+
+            .menu:before {
+                content: "[";
+            }
+
+            .menu:after {
+                content: "]";
+            }
+
+            .menu > li {
+                display: inline;
+            }
+
+            .menu > li:before {
+                content: "|";
+                padding-right: 0.3em;
+            }
+
+            .menu > li:nth-child(1):before {
+                content: "";
+                padding: 0;
+            }
+            .help-inline:before {
+                content: "[";
+            }
+
+            .help-inline:after {
+                content: "]";
+            }
+
+
+        </style>        
+    </head>
+    <body>
+        <header class="header">               
+            <div class="navbar navbar-fixed-top navbar-inverse">
+                <div class="navbar-inner">
+                    <div class="container-fluid">
+                        <a class="brand" href="index.html">
+                            IOT Dashboard <span class="badge badge-info">v <span app-version></span></span>
+                        </a>                        
+                        <ul class="nav">
+                            <li class="divider-vertical"></li>
+                            <li class="active"><a href="/index.html#home">Home</a></li>                            
+                            <li class="divider-vertical"></li>                            
+                        </ul>
+                        <a class="btn btn-primary pull-right" href="https://github.com/GDGBrescia/iot-dashboard" target="_blank">
+                            <i class="icon-github"></i>
+                            Fork on GitHub</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <div class="container-fluid" ng-view></div>        
+        <hr>
+        <div class="container-fluid" ng-logger></div>
+        <hr>
+        <footer class="footer container-fluid">
+           <p ng-controller="ClockCtrl">Current time is: {{ time.now }}</p>                                    
+            <p class="muted credit">Powered by GDG Brescia & T4SM</p>
+            <p class="muted credit">Code licensed under the
+                <a href="http://www.gnu.org/licenses/gpl-2.0.html" target="_blank">
+                    GNU General Public License, version 2</a>.
+                Documentation licensed under <a href="http://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a>.
+            </p>
+        </footer>
+        
+        <!-- In production use:
+        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.4/angular.min.js"></script>
+        -->
+        <script src="lib/angular/angular.js"></script>
+        <script src="js/app.js"></script>
+        <script src="js/services.js"></script>
+        <script src="js/controllers.js"></script>
+        <script src="js/filters.js"></script>
+        <script src="js/directives.js"></script>
+    </body>
+</html>
