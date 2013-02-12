@@ -1,20 +1,26 @@
+/*
+ *
+ *
+ *
+ **/
+
 function iotDashboard(channel) {//},driver){
     
     //The dashboard is connected to the server
-    this._connected=false;
-    this._ready=false;
+    var _connected=false;
+    var _ready=false;
     //Connected GETTER
     this.isConnected=function(){
-        return this._connected;
+        return _connected;
     };    
     this.setConnected=function(connected){
-        this._connected=connected;
+        _connected=connected;
     }
     this.isReady=function(){
-        return this._ready;
+        return _ready;
     };
     this.setReady=function(ready){
-        this._ready=ready;
+        _ready=ready;
     }
 
 
@@ -35,22 +41,24 @@ function iotDashboard(channel) {//},driver){
     //this._driver=driver;
     
     this.connect=function(host,port,apikey,tout){
-        if(this.getChannel()!=null){
-            this.getChannel().connectToPublisher(
+        var self=this;  //self=>iotDashboard
+        if(self.getChannel()!=null){
+           self.getChannel().connectToPublisher(
                 host, //'t4sm.blogdns.com', //IP ADDRESS
                 port, //'8089', //PORT
                 apikey, //'SCS', //API KEY
                 tout //3600 //TIMEOUT
                 );
-            //add the event handlers of the channel (this part is now static...
-            this.getChannel().connectionOpenedHandler= function(){
+            //add the event handlers of the channel (this part is now static...            
+            self.getChannel().connectionOpenedHandler= function(){
                 //start data stream
-                this.setReady(true);
-                console.log("Channel is ready: "+this.isReady());
+                _ready=true;
+                console.log("Channel is ready: "+_ready);
             //To stop data stream, call:
             //scctChannel.stop();
             };
         }
+        self.setReady(_ready);
         
     }
     
