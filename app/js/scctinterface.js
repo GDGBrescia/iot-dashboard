@@ -13,9 +13,9 @@ var scctChannel = new SCCTChannel();
  **/
 function init(){
     scctChannel.connectToPublisher(
-        '10.0.0.1', //IP ADDRESS
-        '8080', //PORT
-        'JFSMSKFV83H0834HG0', //API KEY
+        't4sm.blogdns.com', //IP ADDRESS
+        '8089', //PORT
+        'SCS', //API KEY
         3600 //TIMEOUT
     );
 }
@@ -26,7 +26,7 @@ function init(){
 scctChannel.connectionOpenedHandler = function(){
     //start data stream
     scctChannel.start();
-    
+    console.log(scctChannel);
     //To stop data stream, call:
     //scctChannel.stop();
 }
