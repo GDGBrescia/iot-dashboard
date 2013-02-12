@@ -4,7 +4,7 @@
  *
  **/
 
-function iotDashboard(channel) {//},driver){
+function iotDashboard(channel){ //},driver){
     
     //The dashboard is connected to the server
     var _connected=false;
