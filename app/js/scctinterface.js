@@ -26,9 +26,11 @@ function init(){
 scctChannel.connectionOpenedHandler = function(){
     //start data stream
     scctChannel.start();
-    console.log(scctChannel);
+    console.log(scctChannel);    
     //To stop data stream, call:
     //scctChannel.stop();
+    console.log(scctChannel);
+    
 }
 
 /*
@@ -98,7 +100,8 @@ scctChannel.customXMLDataArrivedHandler = function(){
         var customXMLData = scctChannel.getCustomXMLData();
         if (customXMLData != null){
             console.log(customXMLData);
-            //...
+            //call the iotDash.buildGUI function
+            
         }
     }
 }
@@ -189,4 +192,4 @@ scctChannel.streamStoppedHandler = function(){
 }
 
 
-init();
+//init();

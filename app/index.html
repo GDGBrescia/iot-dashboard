@@ -25,6 +25,10 @@
 
         <script type="text/javascript" src="lib/jquery-1.9.0.min.js"></script>
         <script type="text/javascript" src="lib/bootstrap/bootstrap.js"></script>
+        <script type="text/javascript">
+            var libScctPath="/app/lib/libscct";
+            var libGeminiSocketPath="/app/lib/libscct/libgeminisocket";
+        </script>
         <script type="text/javascript" src="lib/libscct/libscct.js"></script>        
         <script type="text/javascript" src="js/app.js"></script> 
         <script type="text/javascript" src="js/scctinterface.js"></script> 
@@ -157,15 +161,34 @@
                 }
                 
                 //ask for connection
+                var scctChannel = new SCCTChannel();
+                var iotDash=new iotDashboard(scctChannel);   //create the dashboard with the SCCTChannel
                 
-                var connected=false;
                 
                 $('#connectionModal').modal({keyboard: false,backdrop:"static"});
-                $('#connectionModal #connect').click(function(){                
-                    alert("Connected");
-                    connected=true;
+                $('#connectionModal #connect').click(function(e){
+                    
+                    var host=$("#server-host").val();
+                    var port=$("#server-port").val();
+                    var apikey=$("#server-apikey").val();
+                    var tout=$("#server-tout").val();
+                    iotDash.connect(host,port,apikey,tout);
+                    
+                    console.log(iotDash);
+                    console.log(iotDash.isRead());
+                    
                     $('#connectionModal').modal('hide');
-                });
+                    /*
+                    if(scctChannel!=null){
+                        scctChannel.connectToPublisher(
+                        't4sm.blogdns.com', //IP ADDRESS
+                        '8089', //PORT
+                        'SCS', //API KEY
+                        3600 //TIMEOUT
+                    );
+                    }
+                    */
+                });                
                 
             });
         </script>
@@ -177,31 +200,31 @@
                 <h3 id="myModalLabel">Connect to server</h3>
             </div>
             <div class="modal-body">
-                <form class="form-horizontal">
+                <form id="connectionForm" class="form-horizontal">
                     <fieldset>
                         <legend>Insert server parameters</legend>
                         <div class="control-group">
                             <label class="control-label">Server IP:</label>
                             <div class="controls">
-                                <input type="text" placeholder="localhost">
+                                <input id="server-host" type="text" placeholder="localhost">
                             </div>
                         </div>
                         <div class="control-group">
                             <label class="control-label">Server port:</label>
                             <div class="controls">
-                                <input type="text" placeholder="3000">
+                                <input id="server-port" type="text" placeholder="3000">
                             </div>
                         </div>
                         <div class="control-group">
                             <label class="control-label">API key:</label>
                             <div class="controls">
-                                <input type="text" placeholder="scs">
+                                <input id="server-apikey" type="text" placeholder="scs">
                             </div>
                         </div>
                         <div class="control-group">
                             <label class="control-label">Timeout:</label>
                             <div class="controls">
-                                <input type="text" placeholder="20.00">
+                                <input id="server-tout" type="text" placeholder="20.00">
                             </div>
                         </div>
                     </fieldset>
