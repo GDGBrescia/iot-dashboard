@@ -75,33 +75,33 @@
                 console.log(obj);                                        
             };
             
-			/*
-			 * set a cookie in the browser wiht the given name and value, that lasts for the given number of days
-			 */
-			function setCookie(name,value,exdays)
-			{
-				var exdate=new Date();
-				exdate.setDate(exdate.getDate() + exdays);
-				var value=escape(value) + ((exdays==null) ? "" : "; expires="+exdate.toUTCString());
-				document.cookie=name + "=" + value;
-			}
-			/*
-			 * try to retrive the value of the cookie with the given name
-			 */
-			function getCookie(name)
-			{
-				var i,x,y,ARRcookies=document.cookie.split(";");
-				for (i=0;i<ARRcookies.length;i++)
-				{
-					x=ARRcookies[i].substr(0,ARRcookies[i].indexOf("="));
-					y=ARRcookies[i].substr(ARRcookies[i].indexOf("=")+1);
-					x=x.replace(/^\s+|\s+$/g,"");
-					if (x==name)
-						{
-						return unescape(y);
-						}
-				}
-			}
+            /*
+             * set a cookie in the browser wiht the given name and value, that lasts for the given number of days
+             */
+            function setCookie(name,value,exdays)
+            {
+                var exdate=new Date();
+                exdate.setDate(exdate.getDate() + exdays);
+                var value=escape(value) + ((exdays==null) ? "" : "; expires="+exdate.toUTCString());
+                document.cookie=name + "=" + value;
+            }
+            /*
+             * try to retrive the value of the cookie with the given name
+             */
+            function getCookie(name)
+            {
+                var i,x,y,ARRcookies=document.cookie.split(";");
+                for (i=0;i<ARRcookies.length;i++)
+                {
+                    x=ARRcookies[i].substr(0,ARRcookies[i].indexOf("="));
+                    y=ARRcookies[i].substr(ARRcookies[i].indexOf("=")+1);
+                    x=x.replace(/^\s+|\s+$/g,"");
+                    if (x==name)
+                    {
+                        return unescape(y);
+                    }
+                }
+            }
 
 			
             //On document load load the canvas..
@@ -112,11 +112,11 @@
                 var scctChannel = new SCCTChannel();
                 var iotDash=new iotDashboard(scctChannel);   //create the dashboard with the SCCTChannel
                 
-				// try to retrive connections parameters from cookies
-				if (getCookie('host')){$("#server-host").val(getCookie('host'));}
-				if (getCookie('port')){$("#server-port").val(getCookie('port'));}
-				if (getCookie('apikey')){$("#server-apikey").val(getCookie('apikey'));}
-				if (getCookie('tout')){$("#server-tout").val(getCookie('tout'));}
+                // try to retrive connections parameters from cookies
+                if (getCookie('host')){$("#server-host").val(getCookie('host'));}
+                if (getCookie('port')){$("#server-port").val(getCookie('port'));}
+                if (getCookie('apikey')){$("#server-apikey").val(getCookie('apikey'));}
+                if (getCookie('tout')){$("#server-tout").val(getCookie('tout'));}
 				
                 $('#connectionModal').modal({keyboard: false,backdrop:"static"});
                 $('#connectionModal #connect').click(function(e){
@@ -126,11 +126,11 @@
                     var apikey=$("#server-apikey").val();
                     var tout=$("#server-tout").val();
 					
-					//set connection parameters in cookies
-					setCookie('host',host,7);
-					setCookie('port',port,7);
-					setCookie('apikey',apikey,7);
-					setCookie('tout',tout,7);
+                    //set connection parameters in cookies
+                    setCookie('host',host,7);
+                    setCookie('port',port,7);
+                    setCookie('apikey',apikey,7);
+                    setCookie('tout',tout,7);
 					
                     iotDash.connect(host,port,apikey,tout);
                     console.log(iotDash);
@@ -144,7 +144,7 @@
                         3600 //TIMEOUT
                     );
                     }
-                    */
+                     */
                 });                
                 
                 $('#startStream').click(function(e){
@@ -229,15 +229,10 @@
                         </div>
                     </div>
                     <div class="left-sidebar">
-                        <div class="span12 well">                            
-                            <p><b>Connected system:</b><br> <span id="system_name">Nome sistema</span></p>
-                            <p id="system_description">Descrizione sistema</p>
+                        <div class="span12 well">                         
                             <p>Prodotti disponibili: <span id="system_availableProductTypes">0</span></p>
                             <p>Velocità massima motore: <span id="system_maxMotorSpeed">0</span> RPM</p>
-                            <hr>
-                            <div id="system_hw">
-                                
-                            </div>
+                            <div id="system_hw"></div>
                             <hr>
                             <p>
                                 <a id="startStream" class="btn btn-primary">Start Stream</a>
@@ -249,14 +244,12 @@
                 </div><!--/span-->
                 <div class="span9">
                     <div class="hero-unit">
-                        <div id="chart_div"></div>                             
+                        <h2 id="system_name"></h2>
+                        <p id="system_description">Descrizione sistema</p>                        
                     </div>
-                    <div class="row-fluid">                        
-                        <div class="span12 well">
-                            <h2>CHANNELS</h2>
-                            <div id="iot_channels"></div>
-                        </div>
-                    </div>                                
+                    <div id="iot_channels" class="row-fluid">
+
+                    </div>
                 </div><!--/span-->
             </div><!--/row-->
             <hr>
