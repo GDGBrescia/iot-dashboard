@@ -74,7 +74,41 @@ function iotDashboard(channel){ //},driver){
             _channel.connectionClosedHandler = onConnectionClosed();
             
             _channel.streamStartedHandler = onStreamStarted();
-            _channel.streamStoppedHandler = onStreamClosed();
+            _channel.streamStoppedHandler = onStreamClosed();                       
+            
+            _channel.analogDataArrivedHandler = function(){
+                if(_channel.getAvailableAnalogDataCount() > 0){
+                    var analogData = _channel.getAnalogData();
+                    if (analogData!=null) {
+                        console.log(analogData);
+                        if(analogData.num_channels>1){
+                            $.each(analogData.channels, function(key, value){
+                                var id="sid"+analogData.commonData.source_id+"cid"+key;
+                                $("#"+id).text(value.toString());
+                            });
+                        }else{
+                            $.each(analogData.channels[0], function(key, value){
+                                var id="sid"+analogData.commonData.source_id+"cid"+key;
+                                $("#"+id).text(value);
+                            });
+                        }
+                    }
+
+                }    
+            }            
+            
+            _channel.digitalDataArrivedHandler = function(){
+                if(_channel.getAvailableDigitalDataCount() > 0) {
+                    var digitalData = _channel.getDigitalData();
+                    if (digitalData != null){
+                        console.log(digitalData);
+                        $.each(digitalData.lines, function(key, value){
+                            var id="sid"+digitalData.common_data.source_id+"cid"+key;
+                            $("#"+id).text(value);
+                        });
+                    }
+                }
+            }
             
             _channel.customXMLDataArrivedHandler=function(){
                 var customXMLData = _channel.getCustomXMLData();
@@ -112,7 +146,6 @@ function iotDashboard(channel){ //},driver){
                             'analogDataCount':$(this).find('analogDataCount').text(),
                             'analogData':[{}]
                         }
-                        console.log(tSource);
                         if(tSource.digitalDataCount>0){
                             var ddata=[];
                             $(this).find('digitalData item').each(function(){
@@ -145,6 +178,7 @@ function iotDashboard(channel){ //},driver){
                     self.refreshGui();
                 }
             }
+            _ready=true;
         }
     }
     
@@ -193,12 +227,28 @@ function iotDashboard(channel){ //},driver){
     }
     
     this.startStream=function(){
+        console.log(this.isReady());
         if(this.isReady()){
-            _ready.start();
+            console.log("Stream started...");
+            _channel.start();
+        }
+        
+    }
+     this.stopStream=function(){
+        console.log(this.isReady());
+        if(this.isReady()){
+            console.log("Stream stopped...");
+            _channel.stop();
         }
         
     }
     
+    this.pulse=function(){
+        var _pulseImg=$("#pulse");
+        $(_pulseImg).attr('src','/app/img/green-light.png').fadeIn('fast', function(){
+            $(this).attr('src','/app/img/red-light.png');
+        });
+    }
     
     // This function bind to the interface...
     this.refreshGui=function(){
@@ -224,9 +274,9 @@ function iotDashboard(channel){ //},driver){
             $(_systemMaxMotorSpeedNode).html(_systemJson.systemMaxMotorSpeed);
             
             var hwTpl="<div>"
-                +_systemJson.systemHw.controllerModule
-                +" [Moduli installati: "+_systemJson.systemHw.installedModules+"]"
-                +"<ul>";
+            +_systemJson.systemHw.controllerModule
+            +" [Moduli installati: "+_systemJson.systemHw.installedModules+"]"
+            +"<ul>";
             $.each(_systemJson.systemHw.modules,function(){
                 hwTpl = hwTpl + "<li>Name: " + this.name;
                 hwTpl = hwTpl + " - Slot: " + this.slot+"</li>";
@@ -236,7 +286,9 @@ function iotDashboard(channel){ //},driver){
             $(_systemHwNode).html(hwTpl);
             
             
-            var channelsTpl=$("<div/>",{'class':'channel span12 well'});
+            var channelsTpl=$("<div/>",{
+                'class':'channel span12 well'
+            });
             var channelTplUl=$("<ul/>");
             
             $.each(_systemJson.sources,function(){
@@ -245,28 +297,35 @@ function iotDashboard(channel){ //},driver){
                     +"description: "+source.description+"<br>"
                     +"# digital channels: "+source.digitalDataCount+"<br>"
                     +"# analogic channels: "+source.analogDataCount+"</li>");
-                    if(source.digitalDataCount>0){
-                        var tableTpl="<table><tr><th>Name</th><th>Description</th><th>Valore</th></tr>";
-                        $.each(source.digitalData,function(){                               
-                            tableTpl=tableTpl+"<tr><td>"+this.name+"</td><td>"+this.description+"</td><td>n.d.</td></tr>";
-                        });
-                        tableTpl=tableTpl+"</table>";
-                        $(sourceTpl).append(tableTpl);
-                    }
-                    if(source.analogDataCount>0){
-                        var tableTpl="<table><tr><th>Name</th><th>Description</th><th>Min</th><th>Max</th><th>Units</th><th>SamplingRate</th></tr>";
-                        $.each(source.analogData,function(){                               
-                            tableTpl=tableTpl+"<tr><td>"+this.name
-                                +"</td><td>"+this.description
-                                +"</td><td>"+this.minValue
-                                +"</td><td>"+this.maxValue
-                                +"</td><td>"+this.units
-                                +"</td><td>"+this.samplingRate
-                                +"</td></tr>";
-                        });
-                        tableTpl=tableTpl+"</table>";
-                        $(sourceTpl).append(tableTpl);
-                    }
+                if(source.digitalDataCount>0){
+                    var tableTpl="<table><tr><th>Name</th><th>Description</th><th>Valore</th></tr>";
+                    var i=0;
+                    $.each(source.digitalData,function(){                               
+                        tableTpl=tableTpl+"<tr><td>"+this.name
+                        +"</td><td>"
+                        +this.description+"</td><td id='sid"+source.id+"cid"+i+"'>n.d.</td></tr>";
+                        i++;
+                    });
+                    tableTpl=tableTpl+"</table>";
+                    $(sourceTpl).append(tableTpl);
+                }
+                if(source.analogDataCount>0){
+                    var tableTpl="<table><tr><th>Name</th><th>Description</th><th>Min</th><th>Max</th><th>Units</th><th>SamplingRate</th><th>Current value</th></tr>";
+                    var i=0;
+                    $.each(source.analogData,function(){                               
+                        tableTpl=tableTpl+"<tr><td>"+this.name
+                        +"</td><td>"+this.description
+                        +"</td><td>"+this.minValue
+                        +"</td><td>"+this.maxValue
+                        +"</td><td>"+this.units
+                        +"</td><td>"+this.samplingRate
+                        +"</td><td id='sid"+source.id+"cid"+i+"'>n.d.</td>"
+                        +"</tr>";
+                        i++;
+                    });
+                    tableTpl=tableTpl+"</table>";
+                    $(sourceTpl).append(tableTpl);
+                }
                 $(channelTplUl).append(sourceTpl);                
             })
             $(_channelsNode).append(channelsTpl.append(channelTplUl));

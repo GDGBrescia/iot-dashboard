@@ -63,8 +63,8 @@
                     'height':300};
 
                 // Instantiate and draw our chart, passing in some options.
-                var chart = new google.visualization.BarChart(document.getElementById('chart_div'));
-                chart.draw(data, options);
+                //var chart = new google.visualization.BarChart(document.getElementById('chart_div'));
+                //chart.draw(data, options);
             }
             
             //Oggetto Logger
@@ -149,8 +149,11 @@
                 
                 $('#startStream').click(function(e){
                     e.preventDefault();                    
-                    console.log("Stream started...");
                     iotDash.startStream();
+                });
+                $('#stopStream').click(function(e){
+                    e.preventDefault();                    
+                    iotDash.stopStream();
                 });
             });
         </script>
@@ -229,7 +232,8 @@
                         </div>
                     </div>
                     <div class="left-sidebar">
-                        <div class="span12 well">                         
+                        <div class="span12 well">   
+                            <p><img id="pulse" src="/app/img/red-light.png"></p>
                             <p>Prodotti disponibili: <span id="system_availableProductTypes">0</span></p>
                             <p>Velocità massima motore: <span id="system_maxMotorSpeed">0</span> RPM</p>
                             <div id="system_hw"></div>
