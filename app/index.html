@@ -75,95 +75,14 @@
                 console.log(obj);                                        
             };
             
-            //Oggetto CanvasElement
-            // per ora solo rettangoli...            
-            function CanvasElement(id,color,left,top,width,height){
-                this._id=id;
-                this._color=color;
-                this._x=left;
-                this._y=top;
-                this._width=width;
-                this._height=height;
-                
-                this.draw=function(context){
-                    context.fillStyle= this._color;
-                    context.fillRect(this._x, this._y, this._width, this._height);
-                };
-                
-                this.checkClicked=function(x,y){
-                    Logger("Y: "+this._y+" X:"+this._x+" -- Y: "+y+" X:"+x,this);
-                    if (y > this._y && y < this._y + this._height 
-                        && x > this._x && x < this._x + this._width) {
-                        alert("Clicked "+this.id);
-                        return true;
-                    }else{
-                        return false;
-                    }
-                }
-                
-                this.onclick=function(){
-                    Logger("Clicked on CanvasElement [id:"+this._id+"]", this);
-                }
-                
-            };
-            
+                     
             //On document load load the canvas..
             $(document).ready(function(){
                 
-                var canvas=$("#iot-canvas")[0],
-                canvasLeft = canvas.offsetLeft,
-                canvasTop = canvas.offsetTop,
-                canvasElements=new Array();
-            
-                
-                if (canvas.getContext) {
-                    var ctx = canvas.getContext("2d");
-                    ctx.strokeStyle = "#0000AA";
-
-                    // Choose a color
-                                        
-                    var rect1=new CanvasElement(1, "red", 0, 0, 50, 20);
-                    var rect2=new CanvasElement(2, "blue", 0, 26, 50, 20);
-                    var rect3=new CanvasElement(3, "green", 0, 52, 50, 20);
-                    var rect4=new CanvasElement(4, "yellow", 0, 78, 50, 20);
-                    
-                    canvasElements[0]=rect1;
-                    canvasElements[1]=rect2;
-                    canvasElements[2]=rect3;
-                    canvasElements[3]=rect4;
-                    
-                    //drow elements...
-                    canvasElements.forEach(function(element) {                            
-                        element.draw(ctx);
-                    });
-                        
-                    //addEventListener
-                    canvas.addEventListener('click', function(event) {                        
-                        var x = event.pageX - canvasLeft,
-                        y = event.pageY - canvasTop;
-                        
-                        Logger("Canvas Y: "+canvasTop+" X:"+canvasLeft+" -- Y: "+y+" X:"+x,this);
-                        
-                        
-                        // Collision detection between clicked offset and element.
-                        canvasElements.forEach(function(element) {
-                            var clicked=element.checkClicked(y,x);
-                            if (clicked){
-                                alert("EXSTERNAL Clicked "+element.id);
-                            }
-                        });
-
-                    }, false);
-                    
-                } else {
-                    // Browser doesn't support CANVAS
-                    $("#no_cav").show();
-                }
                 
                 //ask for connection
                 var scctChannel = new SCCTChannel();
                 var iotDash=new iotDashboard(scctChannel);   //create the dashboard with the SCCTChannel
-                
                 
                 $('#connectionModal').modal({keyboard: false,backdrop:"static"});
                 $('#connectionModal #connect').click(function(e){
@@ -173,10 +92,7 @@
                     var apikey=$("#server-apikey").val();
                     var tout=$("#server-tout").val();
                     iotDash.connect(host,port,apikey,tout);
-                    
                     console.log(iotDash);
-                    console.log(iotDash.isReady());
-                    
                     $('#connectionModal').modal('hide');
                     /*
                     if(scctChannel!=null){
@@ -190,6 +106,11 @@
                     */
                 });                
                 
+                $('#startStream').click(function(e){
+                    e.preventDefault();                    
+                    console.log("Stream started...");
+                    iotDash.startStream();
+                });
             });
         </script>
     </head>
@@ -265,6 +186,24 @@
                             <h4>This is the IoT event logger.</h4>
                             <div id="iot-logger"></div>
                         </div>
+                    </div>
+                    <div class="left-sidebar">
+                        <div class="span12 well">                            
+                            <p><b>Connected system:</b><br> <span id="system_name">Nome sistema</span></p>
+                            <p id="system_description">Descrizione sistema</p>
+                            <p>Prodotti disponibili: <span id="system_availableProductTypes">0</span></p>
+                            <p>Velocità massima motore: <span id="system_maxMotorSpeed">0</span> RPM</p>
+                            <hr>
+                            <div id="system_hw">
+                                
+                            </div>
+                            <hr>
+                            <p>
+                                <a id="startStream" class="btn btn-primary">Start Stream</a>
+                                <a id="stopStream" class="btn btn-warning">Stop Stream</a>
+                            </p>
+                            <p id="system_conn_parameters"></p>
+                        </div>
                     </div><!--/.well -->
                 </div><!--/span-->
                 <div class="span9">
@@ -273,9 +212,8 @@
                     </div>
                     <div class="row-fluid">                        
                         <div class="span12 well">
-                            <h2>Sinoptic</h2>
-                            <canvas id="iot-canvas"></canvas>
-                            <p id="no_cav" style="display:none;">You need a Canvas-compatible browser to view canvas area.</p>
+                            <h2>CHANNELS</h2>
+                            <div id="iot_channels"></div>
                         </div>
                     </div>                                
                 </div><!--/span-->

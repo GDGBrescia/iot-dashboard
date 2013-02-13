@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<documentType>SystemConfiguration</documentType>
+	<systemName>Simulated Cutting system -Production Plant with LabVIEW</systemName>
+	<systemDescription>This plant produces up to 8 different types of items</systemDescription>
+	<availableProductTypes>8</availableProductTypes>
+	<maxMotorSpeed>100</maxMotorSpeed>
+	<hardwareDescription>
+		<controller>
+			<model>NI cDAQ 9138</model>
+		</controller>
+		<installedModules>4</installedModules>
+		<modules>
+			<module>
+				<name>NI 9205</name>
+				<slot>1</slot>
+			</module>
+			<module>
+				<name>NI 9205</name>
+				<slot>2</slot>
+			</module>
+			<module>
+				<name>NI 9215</name>
+				<slot>3</slot>
+			</module>
+			<module>
+				<name>NI 9401</name>
+				<slot>4</slot>
+			</module>
+		</modules>
+	</hardwareDescription>
+	<sourceCount>7</sourceCount>
+	<sources>
+		<source>
+			<id>1</id>
+			<description>alarms</description>
+			<digitalDataCount>7</digitalDataCount>
+			<digitalData>
+				<item>
+					<name>Module 1 failure</name>
+					<description></description>
+				</item>
+				<item>
+					<name>Module 2 failure</name>
+					<description></description>
+				</item>
+				<item>
+					<name>Module 3 failure</name>
+					<description></description>
+				</item>
+				<item>
+					<name>Module 4 failure</name>
+					<description></description>
+				</item>
+				<item>
+					<name>System Over Temperature</name>
+					<description></description>
+				</item>
+				<item>
+					<name>Fluid Over Temperature</name>
+					<description></description>
+				</item>
+				<item>
+					<name>Fluid Over Pressure</name>
+					<description></description>
+				</item>
+			</digitalData>
+			<analogDataCount>0</analogDataCount>
+			<analogData></analogData>
+		</source>
+		<source>
+			<id>2</id>
+			<description>system states</description>
+			<digitalDataCount>7</digitalDataCount>
+			<digitalData>
+			<item>
+	<name>Power</name>
+	<description></description>
+	</item>
+	<item>
+	<name>Motor Ready</name>
+	<description></description>
+	</item>
+	<item>
+	<name>Cutter armed</name>
+	<description></description>
+	</item>
+	<item>
+	<name>Cooling System Active</name>
+	<description></description>
+	</item>
+	<item>
+	<name>Injection Circuit Open</name>
+	<description></description>
+	</item>
+	<item>
+	<name>Motor Off</name>
+	<description></description>
+	</item>
+	<item>
+	<name>CS Automatic Mode</name>
+	<description></description>
+	</item>
+	</digitalData>
+	<analogDataCount>0</analogDataCount>
+	<analogData></analogData>
+	</source>
+		<source>
+	<id>3</id>
+	<description>enabledTypes</description>
+	<digitalDataCount>8</digitalDataCount>
+	<digitalData>
+	<item>
+	<name>Type 1 enabled</name>
+	<description></description>
+	</item>
+	<item>
+	<name>Type 2 enabled</name>
+	<description></description>
+	</item>
+	<item>
+	<name>Type 3 enabled</name>
+	<description></description>
+	</item>
+	<item>
+	<name>Type 4 enabled</name>
+	<description></description>
+	</item>
+	<item>
+	<name>Type 5 enabled</name>
+	<description></description>
+	</item>
+	<item>
+	<name>Type 6 enabled</name>
+	<description></description>
+	</item>
+	<item>
+	<name>Type 7 enabled</name>
+	<description></description>
+	</item>
+	<item>
+	<name>Type 8 enabled</name>
+	<description></description>
+	</item>
+	</digitalData>
+	<analogDataCount>0</analogDataCount>
+	<analogData></analogData>
+	</source>
+		<source>
+	<id>100</id>
+	<description>Motor Speed</description>
+	<digitalDataCount>0</digitalDataCount>
+	<digitalData></digitalData>
+	<analogDataCount>2</analogDataCount>
+	<analogData>
+	<item>
+	<name>Motor target speed</name>
+	<description></description>
+	<minValue>0</minValue>
+	<maxValue>200</maxValue>
+	<units>RPM</units>
+	<samplingRate>50</samplingRate>
+	</item>
+	<item>
+	<name>Motor actual speed</name>
+	<description></description>
+	<minValue>0</minValue>
+	<maxValue>200</maxValue>
+	<units>RPM</units>
+	<samplingRate>50</samplingRate>
+	</item>
+	</analogData>
+	</source>
+		<source>
+	<id>101</id>
+	<description>pressure on blades</description>
+	<digitalDataCount>0</digitalDataCount>
+	<digitalData></digitalData>
+	<analogDataCount>8</analogDataCount>
+	<analogData>
+	<item>
+	<name>Pressure on Blade 1</name>
+	<description></description>
+	<minValue>0</minValue>
+	<maxValue>1500</maxValue>
+	<units>Pa</units>
+	<samplingRate>50</samplingRate>
+	</item>
+	<item>
+	<name>Pressure on Blade 2</name>
+	<description></description>
+	<minValue>0</minValue>
+	<maxValue>1500</maxValue>
+	<units>Pa</units>
+	<samplingRate>50</samplingRate>
+	</item>
+	<item>
+	<name>Pressure on Blade 3</name>
+	<description></description>
+	<minValue>0</minValue>
+	<maxValue>1500</maxValue>
+	<units>Pa</units>
+	<samplingRate>50</samplingRate>
+	</item>
+	<item>
+	<name>Pressure on Blade 4</name>
+	<description></description>
+	<minValue>0</minValue>
+	<maxValue>1500</maxValue>
+	<units>Pa</units>
+	<samplingRate>50</samplingRate>
+	</item>
+	<item>
+	<name>Pressure on Blade 5</name>
+	<description></description>
+	<minValue>0</minValue>
+	<maxValue>1500</maxValue>
+	<units>Pa</units>
+	<samplingRate>50</samplingRate>
+	</item>
+	<item>
+	<name>Pressure on Blade 6</name>
+	<description></description>
+	<minValue>0</minValue>
+	<maxValue>1500</maxValue>
+	<units>Pa</units>
+	<samplingRate>50</samplingRate>
+	</item>
+	<item>
+	<name>Pressure on Blade 7</name>
+	<description></description>
+	<minValue>0</minValue>
+	<maxValue>1500</maxValue>
+	<units>Pa</units>
+	<samplingRate>50</samplingRate>
+	</item>
+	<item>
+	<name>Pressure on Blade 8</name>
+	<description></description>
+	<minValue>0</minValue>
+	<maxValue>1500</maxValue>
+	<units>Pa</units>
+	<samplingRate>50</samplingRate>
+	</item>
+	</analogData>
+	</source>
+		<source>
+	<id>200</id>
+	<description>Low Speed Signals</description>
+	<digitalDataCount>0</digitalDataCount>
+	<digitalData></digitalData>
+	<analogDataCount>4</analogDataCount>
+	<analogData>
+	<item>
+	<name>system Temperature</name>
+	<description></description>
+	<minValue>0</minValue>
+	<maxValue>100</maxValue>
+	<units>C</units>
+	<samplingRate>10</samplingRate>
+	</item>
+	<item>
+	<name>Fluid Pressure</name>
+	<description></description>
+	<minValue>0</minValue>
+	<maxValue>100</maxValue>
+	<units>Pa</units>
+	<samplingRate>10</samplingRate>
+	</item>
+	<item>
+	<name>Fluid qty</name>
+	<description></description>
+	<minValue>0</minValue>
+	<maxValue>100</maxValue>
+	<units>L</units>
+	<samplingRate>10</samplingRate>
+	</item>
+	<item>
+	<name>Fluid Temperature</name>
+	<description></description>
+	<minValue>0</minValue>
+	<maxValue>100</maxValue>
+	<units>C</units>
+	<samplingRate>10</samplingRate>
+	</item>
+	</analogData>
+	</source>
+		<source>
+	<id>201</id>
+	<description>Counters</description>
+	<digitalDataCount>0</digitalDataCount>
+	<digitalData></digitalData>
+	<analogDataCount>8</analogDataCount>
+	<analogData>
+	<item>
+	<name>Products Type 1</name>
+	<description></description>
+	<minValue>0</minValue>
+	<maxValue>10000</maxValue>
+	<units>pieces</units>
+	<samplingRate>10</samplingRate>
+	</item>
+	<item>
+	<name>Products Type 2</name>
+	<description></description>
+	<minValue>0</minValue>
+	<maxValue>10000</maxValue>
+	<units>pieces</units>
+	<samplingRate>10</samplingRate>
+	</item>
+	<item>
+	<name>Products Type 3</name>
+	<description></description>
+	<minValue>0</minValue>
+	<maxValue>10000</maxValue>
+	<units>pieces</units>
+	<samplingRate>10</samplingRate>
+	</item>
+	<item>
+	<name>Products Type 4</name>
+	<description></description>
+	<minValue>0</minValue>
+	<maxValue>10000</maxValue>
+	<units>pieces</units>
+	<samplingRate>10</samplingRate>
+	</item>
+	<item>
+	<name>Products Type 5</name>
+	<description></description>
+	<minValue>0</minValue>
+	<maxValue>10000</maxValue>
+	<units>pieces</units>
+	<samplingRate>10</samplingRate>
+	</item>
+	<item>
+	<name>Products Type 6</name>
+	<description></description>
+	<minValue>0</minValue>
+	<maxValue>10000</maxValue>
+	<units>pieces</units>
+	<samplingRate>10</samplingRate>
+	</item>
+	<item>
+	<name>Products Type 7</name>
+	<description></description>
+	<minValue>0</minValue>
+	<maxValue>10000</maxValue>
+	<units>pieces</units>
+	<samplingRate>10</samplingRate>
+	</item>
+	<item>
+	<name>Products Type 8</name>
+	<description></description>
+	<minValue>0</minValue>
+	<maxValue>10000</maxValue>
+	<units>pieces</units>
+	<samplingRate>10</samplingRate>
+	</item>
+
+
+	</analogData>
+	</source>
+	</sources>
+</document>
