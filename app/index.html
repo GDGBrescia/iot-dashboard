@@ -75,7 +75,35 @@
                 console.log(obj);                                        
             };
             
-                     
+			/*
+			 * set a cookie in the browser wiht the given name and value, that lasts for the given number of days
+			 */
+			function setCookie(name,value,exdays)
+			{
+				var exdate=new Date();
+				exdate.setDate(exdate.getDate() + exdays);
+				var value=escape(value) + ((exdays==null) ? "" : "; expires="+exdate.toUTCString());
+				document.cookie=name + "=" + value;
+			}
+			/*
+			 * try to retrive the value of the cookie with the given name
+			 */
+			function getCookie(name)
+			{
+				var i,x,y,ARRcookies=document.cookie.split(";");
+				for (i=0;i<ARRcookies.length;i++)
+				{
+					x=ARRcookies[i].substr(0,ARRcookies[i].indexOf("="));
+					y=ARRcookies[i].substr(ARRcookies[i].indexOf("=")+1);
+					x=x.replace(/^\s+|\s+$/g,"");
+					if (x==name)
+						{
+						return unescape(y);
+						}
+				}
+			}
+
+			
             //On document load load the canvas..
             $(document).ready(function(){
                 
@@ -84,6 +112,12 @@
                 var scctChannel = new SCCTChannel();
                 var iotDash=new iotDashboard(scctChannel);   //create the dashboard with the SCCTChannel
                 
+				// try to retrive connections parameters from cookies
+				if (getCookie('host')){$("#server-host").val(getCookie('host'));}
+				if (getCookie('port')){$("#server-port").val(getCookie('port'));}
+				if (getCookie('apikey')){$("#server-apikey").val(getCookie('apikey'));}
+				if (getCookie('tout')){$("#server-tout").val(getCookie('tout'));}
+				
                 $('#connectionModal').modal({keyboard: false,backdrop:"static"});
                 $('#connectionModal #connect').click(function(e){
                     
@@ -91,6 +125,13 @@
                     var port=$("#server-port").val();
                     var apikey=$("#server-apikey").val();
                     var tout=$("#server-tout").val();
+					
+					//set connection parameters in cookies
+					setCookie('host',host,7);
+					setCookie('port',port,7);
+					setCookie('apikey',apikey,7);
+					setCookie('tout',tout,7);
+					
                     iotDash.connect(host,port,apikey,tout);
                     console.log(iotDash);
                     $('#connectionModal').modal('hide');
