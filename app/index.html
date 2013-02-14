@@ -155,6 +155,15 @@
                     e.preventDefault();                    
                     iotDash.stopStream();
                 });
+                
+                $(window).bind("beforeunload", function() { 
+                         return "Do you really want to close?";
+                    }
+                )
+                $(window).unload(function(){
+                    alert("Goodbye!");
+                    iotDash.disconnect();
+                });
             });
         </script>
     </head>

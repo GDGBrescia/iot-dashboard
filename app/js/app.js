@@ -55,6 +55,8 @@ function iotDashboard(channel){ //},driver){
         'sources':[{}]
     };
     
+    this.digitalSources=[];
+    this.analogSources=[];
     
     //this._driver=driver;
     
@@ -80,7 +82,6 @@ function iotDashboard(channel){ //},driver){
                 if(_channel.getAvailableAnalogDataCount() > 0){
                     var analogData = _channel.getAnalogData();
                     if (analogData!=null) {
-                        console.log(analogData);
                         if(analogData.num_channels>1){
                             $.each(analogData.channels, function(key, value){
                                 var id="sid"+analogData.commonData.source_id+"cid"+key;
@@ -88,7 +89,7 @@ function iotDashboard(channel){ //},driver){
                             });
                         }else{
                             $.each(analogData.channels[0], function(key, value){
-                                var id="sid"+analogData.commonData.source_id+"cid"+key;
+                                var id="sid"+analogData.commonData.source_id+"cid"+key;                                
                                 $("#"+id).text(value);
                             });
                         }
@@ -101,9 +102,13 @@ function iotDashboard(channel){ //},driver){
                 if(_channel.getAvailableDigitalDataCount() > 0) {
                     var digitalData = _channel.getDigitalData();
                     if (digitalData != null){
-                        console.log(digitalData);
                         $.each(digitalData.lines, function(key, value){
                             var id="sid"+digitalData.common_data.source_id+"cid"+key;
+                            if(value){
+                                $("#"+id).css('background-color',"#00FF00");
+                            }else{
+                                $("#"+id).css('background-color',"#FF4444");
+                            }
                             $("#"+id).text(value);
                         });
                     }
@@ -182,6 +187,9 @@ function iotDashboard(channel){ //},driver){
         }
     }
     
+    this.disconnect=function(){
+        _channel.close();
+    }
     
     /* CHANNEL HANDLERS */
     function onConnectionOpened(){
@@ -234,7 +242,7 @@ function iotDashboard(channel){ //},driver){
         }
         
     }
-     this.stopStream=function(){
+    this.stopStream=function(){
         console.log(this.isReady());
         if(this.isReady()){
             console.log("Stream stopped...");
