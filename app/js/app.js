@@ -1,10 +1,5 @@
-/*
- *
- *
- *
- **/
 
-function iotDashboard(channel){ //},driver){
+function IotDashboard(channel){ //},driver){
     
     //The dashboard is connected to the server
     var _connected=false;
@@ -55,9 +50,10 @@ function iotDashboard(channel){ //},driver){
         'sources':[{}]
     };
     
-    this.digitalSources=[];
-    this.analogSources=[];
-    
+    this.signals=[];    
+    this.addSignal=function(signal){
+        this.signals.push(signal);
+    }
     //this._driver=driver;
     
     this.connect=function(host,port,apikey,tout){
@@ -143,26 +139,46 @@ function iotDashboard(channel){ //},driver){
                     
                     var sources=[];                    
                     $(_configXml).find('source').each(function(){
-                        var tSource={
-                            'id' : $(this).find('id').text(),
-                            'description':$(this).find('source description').text(),
-                            'digitalDataCount':$(this).find('source digitalDataCount').text(),
-                            'digitalData':[{}],
-                            'analogDataCount':$(this).find('analogDataCount').text(),
-                            'analogData':[{}]
-                        }
+                        var sourceid=$(this).find('id').text(),
+                            desc=$(this).find('source description').text(),
+                            tSource={
+                                'id' : sourceid,
+                                'description':desc,
+                                'digitalDataCount':$(this).find('source digitalDataCount').text(),
+                                'digitalData':[{}],
+                                'analogDataCount':$(this).find('analogDataCount').text(),
+                                'analogData':[{}]
+                            };                            
                         if(tSource.digitalDataCount>0){
                             var ddata=[];
+                            var i=0;
                             $(this).find('digitalData item').each(function(){
+                                var name=$(this).find('name').text(),
+                                desc=$(this).find('description').text();
                                 ddata.push({
-                                    'name':$(this).find('name').text(),
-                                    'description':$(this).find('description').text()
+                                    'name':name,
+                                    'description':desc
                                 });
-                            });
+                                //DIGITAL SIGNALS IDENTIFICATION - refer to SCS specs document
+                                sourceid=parseInt(sourceid);
+                                switch(sourceid){
+                                    case 1 :    //ALARMS SOURCE
+                                        self.addSignal(new AlarmDSignal(sourceid,i, name, desc));
+                                        break;
+                                    case 2 :    //EVENTS SOURCE
+                                        self.addSignal(new EventDSignal(sourceid,i, name, desc));
+                                        break;
+                                    case 3 :    //PRODUCT TYPES ENABLE SOURCE
+                                        self.addSignal(new ProductTypeDSignal(sourceid,i, name, desc));
+                                        break;
+                                }
+                                i++;
+                            });                            
                             tSource.digitalData=ddata;
                         }
                         if(tSource.analogDataCount>0){
                             var adata=[];
+                            var i=0;
                             $(this).find('analogData item').each(function(){
                                 adata.push({
                                     'name':$(this).find('name').text(),
@@ -172,6 +188,23 @@ function iotDashboard(channel){ //},driver){
                                     'units':$(this).find('units').text(),
                                     'samplingRate':$(this).find('samplingRate').text()
                                 });
+                                //DIGITAL SIGNALS IDENTIFICATION - refer to SCS specs document
+                                sourceid=parseInt(sourceid);
+                                switch(sourceid){
+                                    case 100 :    //MOTOR SPEED
+                                        self.addSignal(new SpeedASignal(sourceid,i, name, desc));
+                                        break;
+                                    case 101 :    //GENERAL ANALOGIC SOURCE
+                                        self.addSignal(new ASignal(sourceid,i, name, desc));
+                                        break;
+                                    case 200 :    //SLOW RATE SIGNAL SOURCE
+                                        self.addSignal(new SlowRateASignal(sourceid,i, name, desc));
+                                        break;
+                                    case 201 :    //PRODUCT COUNT SOURCE
+                                        self.addSignal(new ProductCountASignal(sourceid,i, name, desc));
+                                        break;
+                                }
+                                i++;
                             });                            
                             tSource.analogData=adata;
                         }
@@ -179,86 +212,62 @@ function iotDashboard(channel){ //},driver){
                         sources.push(tSource);
                     });                   
                     _systemJson.sources=sources;
-                    
-                    self.refreshGui();
+                    console.log(_systemJson);
+                }else{
+                    console.log('CustomXmlData is null!');
                 }
+                //check if the sygnals are registered...
+                console.log(self);
             }
             _ready=true;
+            _connected=true;
+        }else{
+            console.log("Channel is null!");
         }
-    }
+        /* CHANNEL HANDLERS */
+        function onConnectionOpened(){
+            //start data stream
+            _ready=true;
+            _connected=true;
+            console.log("Channel is ready: "+_ready);
+        //To stop data stream, call:
+        //scctChannel.stop();
+        }
     
-    this.disconnect=function(){
-        _channel.close();
-    }
-    
-    /* CHANNEL HANDLERS */
-    function onConnectionOpened(){
-        //start data stream
-        _ready=true;
-        _connected=true;
-        console.log("Channel is ready: "+_ready);
-    //To stop data stream, call:
-    //scctChannel.stop();
-    }
-    
-    /*
+        /*
     * Connection refused message
     */
-    function onConnectionRefused(){
-        console.log('Connection is refused');
-        console.log(_channel.reasonOfConnectionFailure);
-        _ready=false;
-        _connected=false;
-    }
+        function onConnectionRefused(){
+            console.log('Connection is refused');
+            console.log(_channel.reasonOfConnectionFailure);
+            _ready=false;
+            _connected=false;
+        }
 
-    /*
+        /*
     * Connection closed message
     */
-    function onConnectionClosed(){
-        console.log('Connection is closed');
-    }
+        function onConnectionClosed(){
+            console.log('Connection is closed');
+        }
 
-    /*
+        /*
     * Stream started message
     */
-    function onStreamStarted(){
-        console.log('The connection is started');
+        function onStreamStarted(){
+            console.log('The connection is started');
 
-    }
+        }
 
-    /*
+        /*
     * Stream stopped message
     */
-    function onStreamClosed(){
-        console.log('The connection is stopped');
+        function onStreamClosed(){
+            console.log('The connection is stopped');
+
+        }
 
     }
-    
-    this.startStream=function(){
-        console.log(this.isReady());
-        if(this.isReady()){
-            console.log("Stream started...");
-            _channel.start();
-        }
-        
-    }
-    this.stopStream=function(){
-        console.log(this.isReady());
-        if(this.isReady()){
-            console.log("Stream stopped...");
-            _channel.stop();
-        }
-        
-    }
-    
-    this.pulse=function(){
-        var _pulseImg=$("#pulse");
-        $(_pulseImg).attr('src','/app/img/green-light.png').fadeIn('fast', function(){
-            $(this).attr('src','/app/img/red-light.png');
-        });
-    }
-    
-    // This function bind to the interface...
     this.refreshGui=function(){
         // DOM Nodes
         var _systemNameNode=$("#system_name");
@@ -268,7 +277,7 @@ function iotDashboard(channel){ //},driver){
         var _systemMaxMotorSpeedNode=$("#system_maxMotorSpeed");
         var _systemHwNode=$("#system_hw");      
         var _channelsNode=$("#iot_channels");
-        
+        console.log(_systemJson);
         if(_systemJson!=null){
             
             //Config string...
@@ -338,10 +347,42 @@ function iotDashboard(channel){ //},driver){
             })
             $(_channelsNode).append(channelsTpl.append(channelTplUl));
             
-            //$(_channelsNode).append(channelTpl);
-            
-            console.log(_systemJson);
-        }        
-    }   
+        //$(_channelsNode).append(channelTpl);            
+        }
+
+    }
+}
+IotDashboard.prototype.disconnect=function(){
+    console.log("Disconnect from server...");
+    if(this.isConnected()){
+        this.getChannel().close();
+        this.setConnected(false);
+        this.setReady(false);
+    }
+}
     
+    
+    
+IotDashboard.prototype.startStream=function(){
+    console.log(this.isReady());
+    if(this.isReady()){
+        console.log("Stream started...");
+        this.getChannel().start();
+    }
+        
+}
+IotDashboard.prototype.stopStream=function(){
+    console.log(this.isReady());
+    if(this.isReady()){
+        console.log("Stream stopped...");
+        this.getChannel().stop();
+    }
+        
+}
+    
+IotDashboard.prototype.pulse=function(){
+    var _pulseImg=$("#pulse");
+    $(_pulseImg).attr('src','/app/img/green-light.png').fadeIn('fast', function(){
+        $(this).attr('src','/app/img/red-light.png');
+    });
 }

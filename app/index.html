@@ -30,8 +30,9 @@
             var libGeminiSocketPath="/app/lib/libscct/libgeminisocket";
         </script>
         <script type="text/javascript" src="lib/libscct/libscct.js"></script>        
+        <script type="text/javascript" src="js/functions.js"></script> 
+        <script type="text/javascript" src="js/signals.js"></script> 
         <script type="text/javascript" src="js/app.js"></script> 
-        <script type="text/javascript" src="js/scctinterface.js"></script> 
         <!--Load the GOOGLE AJAX API-->
         <script type="text/javascript" src="https://www.google.com/jsapi"></script>
         <script type="text/javascript">
@@ -110,7 +111,7 @@
                 
                 //ask for connection
                 var scctChannel = new SCCTChannel();
-                var iotDash=new iotDashboard(scctChannel);   //create the dashboard with the SCCTChannel
+                var iotDash=new IotDashboard(scctChannel);   //create the dashboard with the SCCTChannel
                 
                 // try to retrive connections parameters from cookies
                 if (getCookie('host')){$("#server-host").val(getCookie('host'));}
@@ -145,6 +146,7 @@
                     );
                     }
                      */
+                    iotDash.refreshGui();
                 });                
                 
                 $('#startStream').click(function(e){
