@@ -49,6 +49,9 @@ function IotDashboard(channel){ //},driver){
         'sourceCount':0,
         'sources':[{}]
     };
+    this.getSystemJson=function(){
+        return _systemJson;
+    }
     
     this.signals=[];    
     this.addSignal=function(signal){
@@ -140,15 +143,15 @@ function IotDashboard(channel){ //},driver){
                     var sources=[];                    
                     $(_configXml).find('source').each(function(){
                         var sourceid=$(this).find('id').text(),
-                            desc=$(this).find('source description').text(),
-                            tSource={
-                                'id' : sourceid,
-                                'description':desc,
-                                'digitalDataCount':$(this).find('source digitalDataCount').text(),
-                                'digitalData':[{}],
-                                'analogDataCount':$(this).find('analogDataCount').text(),
-                                'analogData':[{}]
-                            };                            
+                        desc=$(this).find('source description').text(),
+                        tSource={
+                            'id' : sourceid,
+                            'description':desc,
+                            'digitalDataCount':$(this).find('source digitalDataCount').text(),
+                            'digitalData':[{}],
+                            'analogDataCount':$(this).find('analogDataCount').text(),
+                            'analogData':[{}]
+                        };                            
                         if(tSource.digitalDataCount>0){
                             var ddata=[];
                             var i=0;
@@ -213,17 +216,23 @@ function IotDashboard(channel){ //},driver){
                     });                   
                     _systemJson.sources=sources;
                     console.log(_systemJson);
+                    console.log(self.getSystemJson());
                 }else{
                     console.log('CustomXmlData is null!');
                 }
-                //check if the sygnals are registered...
-                console.log(self);
             }
+            //check if the sygnals are registered...
+            console.log(self);
             _ready=true;
             _connected=true;
+             return true;
         }else{
+            _ready=false;
+            _connected=false;
             console.log("Channel is null!");
+            return false;
         }
+    
         /* CHANNEL HANDLERS */
         function onConnectionOpened(){
             //start data stream
@@ -233,10 +242,10 @@ function IotDashboard(channel){ //},driver){
         //To stop data stream, call:
         //scctChannel.stop();
         }
-    
+
         /*
-    * Connection refused message
-    */
+        * Connection refused message
+        */
         function onConnectionRefused(){
             console.log('Connection is refused');
             console.log(_channel.reasonOfConnectionFailure);
@@ -245,29 +254,30 @@ function IotDashboard(channel){ //},driver){
         }
 
         /*
-    * Connection closed message
-    */
+        * Connection closed message
+        */
         function onConnectionClosed(){
             console.log('Connection is closed');
+            _connected=false;
         }
 
         /*
-    * Stream started message
-    */
+        * Stream started message
+        */
         function onStreamStarted(){
             console.log('The connection is started');
-
+            _connected=true;
         }
 
         /*
-    * Stream stopped message
-    */
+        * Stream stopped message
+        */
         function onStreamClosed(){
             console.log('The connection is stopped');
 
-        }
-
-    }
+        }       
+   }
+    
     this.refreshGui=function(){
         // DOM Nodes
         var _systemNameNode=$("#system_name");
@@ -359,21 +369,20 @@ IotDashboard.prototype.disconnect=function(){
         this.setConnected(false);
         this.setReady(false);
     }
-}
-    
-    
+}     
     
 IotDashboard.prototype.startStream=function(){
     console.log(this.isReady());
-    if(this.isReady()){
+    if(this.isReady() && this.isConnected()){
         console.log("Stream started...");
+        console.log(this.getChannel());
         this.getChannel().start();
     }
         
 }
 IotDashboard.prototype.stopStream=function(){
     console.log(this.isReady());
-    if(this.isReady()){
+    if(this.isReady() && this.isConnected()){
         console.log("Stream stopped...");
         this.getChannel().stop();
     }

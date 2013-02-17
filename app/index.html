@@ -132,10 +132,6 @@
                     setCookie('port',port,7);
                     setCookie('apikey',apikey,7);
                     setCookie('tout',tout,7);
-					
-                    iotDash.connect(host,port,apikey,tout);
-                    console.log(iotDash);
-                    $('#connectionModal').modal('hide');
                     /*
                     if(scctChannel!=null){
                         scctChannel.connectToPublisher(
@@ -145,8 +141,14 @@
                         3600 //TIMEOUT
                     );
                     }
-                     */
-                    iotDash.refreshGui();
+                     */		
+                    if(iotDash.connect(host,port,apikey,tout)){
+                        console.log(iotDash);
+                        $('#connectionModal').modal('hide');                        
+                        iotDash.refreshGui();
+                    }else{
+                        alert('Impossibile connettersi');
+                    }
                 });                
                 
                 $('#startStream').click(function(e){
