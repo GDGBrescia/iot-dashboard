@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="it" ng-app>
+<html lang="it">
     <head>
         <meta charset="utf-8">
         <meta name="Description" content="">
@@ -20,7 +20,6 @@
                 height: 300px;
                 border: 1px inset #333;
             }
-
         </style>
 
         <script type="text/javascript" src="lib/jquery-1.9.0.min.js"></script>
@@ -168,6 +167,11 @@
                     alert("Goodbye!");
                     iotDash.disconnect();
                 });
+                
+                $('.channel h2 > a').on('click',function(){
+                   $('#iot-rowdata').toggle('fast');
+                });
+                
             });
         </script>
     </head>
@@ -256,16 +260,27 @@
                                 <a id="stopStream" class="btn btn-warning">Stop Stream</a>
                             </p>
                             <p id="system_conn_parameters"></p>
-                        </div>
+                        </div>                        
                     </div><!--/.well -->
                 </div><!--/span-->
                 <div class="span9">
                     <div class="hero-unit">
                         <h2 id="system_name"></h2>
                         <p id="system_description">Descrizione sistema</p>                        
+                    </div>                                       
+                    <div id="channels" class="row-fluid channel">
+                        <div class="span12 well">
+                            <h2><a href="#" title="Click to toggle data.">Alarms</a></h2>
+                            <h4></h4>
+                            <ul id="iot-alarms" class="row-fluid"></ul>
+                        </div>
                     </div>
-                    <div id="iot_channels" class="row-fluid">
-
+                    <div id="rowdata" class="row-fluid channel">
+                        <div class="span12 well">
+                            <h2><a href="#" title="Click to toggle data.">Row Data</a></h2>
+                            <h4>This is the row data passed from the SCS system.</h4>
+                            <div id="iot-rowdata"></div>
+                        </div>
                     </div>
                 </div><!--/span-->
             </div><!--/row-->

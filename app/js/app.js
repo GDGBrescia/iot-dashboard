@@ -108,14 +108,14 @@ function IotDashboard(channel){ //},driver){
                             var dyLid=digitalData.common_data.source_id+"_"+key;
                             if(value){
                                 $("#"+id).css('background-color',"#00FF00");
-                                $("#"+dyLid).css('background-color',"#00FF00");
+                                //$("#"+dyLid).css('background-color',"#00FF00");
                             }else{
                                 $("#"+id).css('background-color',"#FF4444");
-                                $("#"+dyLid).css('background-color',"#FF4444");
+                                //$("#"+dyLid).css('background-color',"#FF4444");
                             }
                             $("#"+id).text(value);
                             $("#"+dyLid).text(value);
-                            console.log($("#"+dyLid));
+                            $("#"+dyLid).parent().removeClass('status-'+(!value)).addClass('status-'+value);
                         });
                     }
                 }
@@ -292,7 +292,8 @@ function IotDashboard(channel){ //},driver){
         var _systemAvailableProductTypesNode=$("#system_availableProductTypes");
         var _systemMaxMotorSpeedNode=$("#system_maxMotorSpeed");
         var _systemHwNode=$("#system_hw");      
-        var _channelsNode=$("#iot_channels");    
+        var _rowdataNode=$("#iot-rowdata");
+        var _alarmsNode=$("#iot-alarms");        
         //ROWDATA
         if(_systemJson!=null){
             console.log(_systemJson);
@@ -360,14 +361,17 @@ function IotDashboard(channel){ //},driver){
                 }
                 $(channelTplUl).append(sourceTpl);                
             })
-            $(_channelsNode).append(channelsTpl.append(channelTplUl));
+            $(_rowdataNode).append(channelsTpl.append(channelTplUl));
             
         //$(_channelsNode).append(channelTpl);        
         }
         
         //DYNAMIC ELEMENTS
         $.each(this.signals,function(){
-            this.render(_channelsNode);
+            console.log(this instanceof AlarmDSignal);
+            if(this instanceof AlarmDSignal){
+                this.render(_alarmsNode);
+            }
         });
     }
     
