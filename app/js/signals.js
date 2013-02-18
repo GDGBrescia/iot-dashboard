@@ -12,7 +12,8 @@ function Signal(sid,lineid,type,name,description){
     this.name=name;
     this.description=description;
     this.icon;
-    this.chart;    
+    this.chart;
+    this.tpl;
     
     this.data;
     this.options;
@@ -30,18 +31,41 @@ Signal.prototype.render = function(to){
     this.createChart(this.data,this.options);
     
     to.appendChild(this.containerEl);
-}
-Signal.prototype.createTitle=function(){
-    var chartTitle=$("<h1/>");
-    chartTitle.createTextNode(this._name);    
-    this.containerEl.appendChild(chartTitle);    
+    
+    to.appendChild(parseTemplate(this.tpl,this));
 }
 
+Signal.prototype.parseTemplate=function(tmpl,data){
+    var regexp;
+ 
+    for (placeholder in data) {
+ 
+        // useremo le parantesi graffe per
+        // identificare i placeholder
+        regexp = new RegExp('{' + placeholder + '}', 'g');
+ 
+        tmpl = tmpl.replace(regexp, data[placeholder]);
+ 
+    }
+ 
+    return tmpl;
+}
+
+Signal.prototype.createTitle=function(){
+    var chartTitle=$("<h1/>");
+    chartTitle.createTextNode(this._name);  
+    this.containerEl.appendChild(chartTitle);    
+}
+Signal.prototype.render=function(to){
+    console.log(this);
+    var html=this.parseTemplate(this.tpl,this);    
+    to.append(html);
+}
 
 /* DIGITAL SIGNAL */
 function DSignal(sid,lineid,name,description){    
-    Signal.call(this, sid,lineid,SignalTypes.DIGITAL,name, description);    
-    this.currentValue;
+    this.currentValue=false;
+    Signal.call(this, sid,lineid,SignalTypes.DIGITAL,name, description);        
 }
 DSignal.inherits(Signal);
 DSignal.prototype.getValue=function(){
@@ -49,6 +73,7 @@ DSignal.prototype.getValue=function(){
 }
 DSignal.prototype.setValue=function(value){
     this.currentValue=value;
+    
 }
 
 /* ALARM SIGNAL */
@@ -58,6 +83,7 @@ function AlarmDSignal(sid,lineid,name,description){
     this.containerEl=$("<div/>",{
         'class':'span3 alarm'
     });
+    this.tpl="<div class='dsignal-alarm'><h4>{sourceId}.{lineId}<br>{name}</h4><p>{description}</p>Current value: <span id='{sourceId}_{lineId}'>{currentValue}</span></div>";
 }
 AlarmDSignal.inherits(DSignal);
 
@@ -68,6 +94,7 @@ function EventDSignal(sid,lineid,name,description){
     this.containerEl=$("<div/>",{
         'class':'span3 event'
     });    
+    this.tpl="<div class='dsignal-event'><h4>{sourceId}.{lineId}<br>{name}</h4><p>{description}</p>Current value: <span id='{sourceId}_{lineId}'>{currentValue}</span></div>";
 }
 EventDSignal.inherits(DSignal);
 
@@ -78,6 +105,7 @@ function ProductTypeDSignal(sid,lineid,name,description){
     this.containerEl=$("<div/>",{
         'class':'span3 product-type'
     });
+    this.tpl="<div class='dsignal-ptype'><h4>{sourceId}.{lineId}<br>{name}</h4><p>{description}</p>Current value: <span id='{sourceId}_{lineId}'>{currentValue}</span></div>";
 }
 ProductTypeDSignal.inherits(DSignal);
 
@@ -88,6 +116,7 @@ function ASignal(sid,lineid,name,description){
     this.containerEl=$("<div/>",{
         'class':'span3 analogic'
     });
+    this.tpl="<div class='asignal'><h4>{sourceId}.{lineId}<br>{name}</h4><p>{description}</p>Current value: <span id='{sourceId}_{lineId}'>{currentValue}</span></div>";
 }
 ASignal.inherits(Signal);
 /* DEFAULT IS A COLUMN CHART */
@@ -104,6 +133,7 @@ function SpeedASignal(sid,lineid,name,description){
     this.containerEl=$("<div/>",{
         'class':'span3 speed'
     });
+    this.tpl="<div class='asignal-speed'><h4>{sourceId}.{lineId}<br>{name}</h4><p>{description}</p>Current value: <span id='{sourceId}_{lineId}'>{currentValue}</span></div>";
 }
 SpeedASignal.inherits(ASignal);
 
@@ -113,6 +143,7 @@ function SlowRateASignal(sid,lineid,name,description){
     this.containerEl=$("<div/>",{
         'class':'span3 speed'
     });
+    this.tpl="<div class='asignal-slow'><h4>{sourceId}.{lineId}<br>{name}</h4><p>{description}</p>Current value: <span id='{sourceId}_{lineId}'>{currentValue}</span></div>";
 }
 SlowRateASignal.inherits(ASignal);
 
@@ -122,6 +153,7 @@ function ProductCountASignal(sid,lineid,name,description){
     this.containerEl=$("<div/>",{
         'class':'span3 speed'
     });
+    this.tpl="<div class='asignal-pcount'><h4>{sourceId}.{lineId}<br>{name}</h4><p>{description}</p>Current value: <span id='{sourceId}_{lineId}'>{currentValue}</span></div>";
 }
 ProductCountASignal.inherits(ASignal);
 

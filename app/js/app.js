@@ -30,6 +30,8 @@ function IotDashboard(channel){ //},driver){
             this.stopStream();
             this.setConnected(false);
             _channel=ch;
+        }else{
+            _channel=ch;   
         }
     }
 
@@ -103,12 +105,17 @@ function IotDashboard(channel){ //},driver){
                     if (digitalData != null){
                         $.each(digitalData.lines, function(key, value){
                             var id="sid"+digitalData.common_data.source_id+"cid"+key;
+                            var dyLid=digitalData.common_data.source_id+"_"+key;
                             if(value){
                                 $("#"+id).css('background-color',"#00FF00");
+                                $("#"+dyLid).css('background-color',"#00FF00");
                             }else{
                                 $("#"+id).css('background-color',"#FF4444");
+                                $("#"+dyLid).css('background-color',"#FF4444");
                             }
                             $("#"+id).text(value);
+                            $("#"+dyLid).text(value);
+                            console.log($("#"+dyLid));
                         });
                     }
                 }
@@ -215,8 +222,7 @@ function IotDashboard(channel){ //},driver){
                         sources.push(tSource);
                     });                   
                     _systemJson.sources=sources;
-                    console.log(_systemJson);
-                    console.log(self.getSystemJson());
+                    self.refreshGui();
                 }else{
                     console.log('CustomXmlData is null!');
                 }
@@ -225,7 +231,7 @@ function IotDashboard(channel){ //},driver){
             console.log(self);
             _ready=true;
             _connected=true;
-             return true;
+            return true;
         }else{
             _ready=false;
             _connected=false;
@@ -276,7 +282,7 @@ function IotDashboard(channel){ //},driver){
             console.log('The connection is stopped');
 
         }       
-   }
+    }
     
     this.refreshGui=function(){
         // DOM Nodes
@@ -286,18 +292,17 @@ function IotDashboard(channel){ //},driver){
         var _systemAvailableProductTypesNode=$("#system_availableProductTypes");
         var _systemMaxMotorSpeedNode=$("#system_maxMotorSpeed");
         var _systemHwNode=$("#system_hw");      
-        var _channelsNode=$("#iot_channels");
-        console.log(_systemJson);
+        var _channelsNode=$("#iot_channels");    
+        //ROWDATA
         if(_systemJson!=null){
-            
+            console.log(_systemJson);
             //Config string...
             $(_systemConnectionParametersNode).html("<pre>"+_connectionJsonString+"</pre>");           
-            
+           
             // build/rebuild the gui
-            $(_systemNameNode).html(_systemJson.systemName);
-            $(_systemDescriptionNode).html(_systemJson.systemDescription);
-            
-            $(_systemAvailableProductTypesNode).html(_systemJson.systemAvailableProductTypes);
+            $(_systemNameNode).html(_systemJson.systemName);            
+            $(_systemDescriptionNode).html(_systemJson.systemDescription);           
+            $(_systemAvailableProductTypesNode).html(_systemJson.systemAvailableProductTypes);            
             $(_systemMaxMotorSpeedNode).html(_systemJson.systemMaxMotorSpeed);
             
             var hwTpl="<div>"
@@ -357,41 +362,45 @@ function IotDashboard(channel){ //},driver){
             })
             $(_channelsNode).append(channelsTpl.append(channelTplUl));
             
-        //$(_channelsNode).append(channelTpl);            
+        //$(_channelsNode).append(channelTpl);        
+        }
+        
+        //DYNAMIC ELEMENTS
+        $.each(this.signals,function(){
+            this.render(_channelsNode);
+        });
+    }
+    
+    this.disconnect=function(){
+    
+        console.log("Disconnect from server...");
+        console.log(this.isConnected());
+        if(this.isConnected()){
+            this.getChannel().close();
+            this.setConnected(false);
+            this.setReady(false);
+        }
+    }     
+    
+    this.startStream=function(){
+        if(_ready && _connected){
+            var _pulseImg=$("#pulse");
+            $(_pulseImg).attr('src','/app/img/green-light.png').fadeIn('fast');            
+            console.log("Stream started...");
+            console.log(_channel);
+            _channel.start();
         }
 
     }
-}
-IotDashboard.prototype.disconnect=function(){
-    console.log("Disconnect from server...");
-    if(this.isConnected()){
-        this.getChannel().close();
-        this.setConnected(false);
-        this.setReady(false);
-    }
-}     
     
-IotDashboard.prototype.startStream=function(){
-    console.log(this.isReady());
-    if(this.isReady() && this.isConnected()){
-        console.log("Stream started...");
-        console.log(this.getChannel());
-        this.getChannel().start();
-    }
+    this.stopStream=function(){
+        if(_ready && _connected){
+            var _pulseImg=$("#pulse");
+            $(_pulseImg).attr('src','/app/img/red-light.png').fadeIn('fast');
+            
+            console.log("Stream stopped...");
+            _channel.stop();
+        }
         
-}
-IotDashboard.prototype.stopStream=function(){
-    console.log(this.isReady());
-    if(this.isReady() && this.isConnected()){
-        console.log("Stream stopped...");
-        this.getChannel().stop();
-    }
-        
-}
-    
-IotDashboard.prototype.pulse=function(){
-    var _pulseImg=$("#pulse");
-    $(_pulseImg).attr('src','/app/img/green-light.png').fadeIn('fast', function(){
-        $(this).attr('src','/app/img/red-light.png');
-    });
+    }    
 }

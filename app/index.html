@@ -141,11 +141,11 @@
                         3600 //TIMEOUT
                     );
                     }
-                     */		
-                    if(iotDash.connect(host,port,apikey,tout)){
-                        console.log(iotDash);
+                     */	
+                    var connected=iotDash.connect(host,port,apikey,tout);
+                    if(connected==true){
                         $('#connectionModal').modal('hide');                        
-                        iotDash.refreshGui();
+                        //iotDash.refreshGui();   //called too early....
                     }else{
                         alert('Impossibile connettersi');
                     }
