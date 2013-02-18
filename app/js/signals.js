@@ -15,6 +15,8 @@ function Signal(sid,lineid,type,name,description){
     this.chart;
     this.tpl;
     
+    this.node;
+    
     this.data;
     this.options;
     /* GETTER SETTER */
@@ -22,6 +24,7 @@ function Signal(sid,lineid,type,name,description){
 }
 
 /* Class for rendering the signal */
+/*
 Signal.prototype.render = function(to){
     this.containerEl=$("<div/>",{
         'class':'span3'
@@ -35,6 +38,7 @@ Signal.prototype.render = function(to){
     to.appendChild(parseTemplate(this.tpl,this));
 }
 
+*/
 Signal.prototype.parseTemplate=function(tmpl,data){
     var regexp;
  
@@ -50,16 +54,29 @@ Signal.prototype.parseTemplate=function(tmpl,data){
  
     return tmpl;
 }
-
+/*
 Signal.prototype.createTitle=function(){
     var chartTitle=$("<h1/>");
     chartTitle.createTextNode(this._name);  
     this.containerEl.appendChild(chartTitle);
 }
+*/
 Signal.prototype.render=function(to){
+    console.log("Render");    
+    this.node=to;
     var html=this.parseTemplate(this.tpl,this);    
-    to.append(this.containerEl.append(html));
+    this.node.append(this.containerEl.append(html));
 }
+Signal.prototype.redraw=function(){
+    console.log("Redraw");
+    if(this.node!=null){
+        var oldHtml=this.parseTemplate(this.tpl,{currentValue:!this.currentValue});
+        oldHtml=this.parseTemplate(oldHtml,this);
+        var html=this.parseTemplate(this.tpl,this);    
+        this.node.replaceChild(this.containerEl.append(html),this.containerEl.append(oldHtml));
+    }
+}
+
 
 /* DIGITAL SIGNAL */
 function DSignal(sid,lineid,name,description){    
@@ -72,7 +89,6 @@ DSignal.prototype.getValue=function(){
 }
 DSignal.prototype.setValue=function(value){
     this.currentValue=value;
-    
 }
 
 /* ALARM SIGNAL */
@@ -80,9 +96,9 @@ function AlarmDSignal(sid,lineid,name,description){
     //call the parent constructor
     DSignal.call(this, sid,lineid,name, description);
     this.containerEl=$("<li/>",{
-        'class':'dsignal-alarm'
+        'class':'dsignal-alarm span3'
     });
-    this.tpl="<div class='status-{currentValue}'><h4>{sourceId}.{lineId}<br>{name}</h4><p>{description}</p>Current value: <span id='{sourceId}_{lineId}'>{currentValue}</span></div>";
+    this.tpl="<div class='thumbnail status-{currentValue}'><img src='/app/img/green-light.png'><div class='caption'><h3>{sourceId}.{lineId} - {name}</h3><p>{description}</p><p>Current value: <span id='{sourceId}_{lineId}'>{currentValue}</span></p></div></div>";
 }
 AlarmDSignal.inherits(DSignal);
 
@@ -91,9 +107,9 @@ function EventDSignal(sid,lineid,name,description){
     //call the parent constructor
     DSignal.call(this, sid,lineid,name, description);
     this.containerEl=$("<li/>",{
-        'class':'dsignal-event'
+        'class':'dsignal-event span3'
     });  
-    this.tpl="<div class='dsignal-event'><h4>{sourceId}.{lineId}<br>{name}</h4><p>{description}</p>Current value: <span id='{sourceId}_{lineId}'>{currentValue}</span></div>";
+    this.tpl="<div class='thumbnail status-{currentValue}'><h3>{sourceId}.{lineId} - {name}</h3><p>{description}</p>Current value: <span id='{sourceId}_{lineId}'>{currentValue}</span></div>";
 }
 EventDSignal.inherits(DSignal);
 

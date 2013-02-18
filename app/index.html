@@ -169,7 +169,7 @@
                 });
                 
                 $('.channel h2 > a').on('click',function(){
-                   $('#iot-rowdata').toggle('fast');
+                   $(this).next('div').toggle();
                 });
                 
             });
@@ -268,11 +268,18 @@
                         <h2 id="system_name"></h2>
                         <p id="system_description">Descrizione sistema</p>                        
                     </div>                                       
-                    <div id="channels" class="row-fluid channel">
+                    <div id="alarms" class="row-fluid channel">
                         <div class="span12 well">
                             <h2><a href="#" title="Click to toggle data.">Alarms</a></h2>
                             <h4></h4>
-                            <ul id="iot-alarms" class="row-fluid"></ul>
+                            <ul id="iot-alarms" class="thumbnails"></ul>
+                        </div>
+                    </div>
+                    <div id="events" class="row-fluid channel">
+                        <div class="span12 well">
+                            <h2><a href="#" title="Click to toggle data.">Events</a></h2>
+                            <h4></h4>
+                            <ul id="iot-events" class="thumbnails"></ul>
                         </div>
                     </div>
                     <div id="rowdata" class="row-fluid channel">

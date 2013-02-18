@@ -83,10 +83,6 @@ img.feature-logo{
 #iot-alarms .dsignal-alarm{
     margin: 0px 6px 5px 0px;
     color: white;
-    display: inline-block;
-    float: left;
-    height: 240px;    
-    width: 140px;
 }
 #iot-alarms .dsignal-alarm > div{
     padding: 5px 10px;
