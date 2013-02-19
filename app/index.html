@@ -159,28 +159,29 @@
                     iotDash.stopStream();
                 });
 				
-				// controls -----
-				$('#iot-controls-cooling-enable').click(function(e){
-					e.preventDefault();
-					iotDash.sendMessageData('switchCoolingSystemOn',0);
-				});
-				$('#iot-controls-cooling-disable').click(function(e){
-					e.preventDefault();
-					iotDash.sendMessageData('switchCoolingSystemOff',0);
-				});
-				// end controls -
+                // controls -----
+                $('#iot-controls-cooling-enable').click(function(e){
+                    e.preventDefault();
+                    console.log(iotDash);
+                    iotDash.sendMessageData('switchCoolingSystemOn',0);
+                });
+                $('#iot-controls-cooling-disable').click(function(e){
+                    e.preventDefault();
+                    iotDash.sendMessageData('switchCoolingSystemOff',0);
+                });
+                // end controls -
                 
                 $(window).bind("beforeunload", function() { 
-                         return "Do you really want to close?";
-                    }
-                )
+                    return "Do you really want to close?";
+                }
+            )
                 $(window).unload(function(){
                     alert("Goodbye!");
                     iotDash.disconnect();
                 });
                 
                 $('.channel h2 > a').on('click',function(){
-                   $(this).next('div').toggle();
+                    $(this).next('div').toggle();
                 });
                 
             });
@@ -273,15 +274,15 @@
                             <p id="system_conn_parameters"></p>
                         </div>                        
                     </div><!--/.well -->
-					<div class="left-sidebar">
+                    <div class="left-sidebar">
                         <div class="span12 well">  
-							<h2><a title="Click to toggle controls" href="#">Controls</a></h2>
-							<div id="iot-controls">
-								<div class="well">
-									<button id="iot-controls-cooling-enable" class="btn btn-info">Enable cooling system</button>
-									<button id="iot-controls-cooling-disable" class="btn btn-warning" style="display:none;">Disable cooling system</button>
-								</div>
-							</div>
+                            <h2><a title="Click to toggle controls" href="#">Controls</a></h2>
+                            <div id="iot-controls">
+                                <div class="well">
+                                    <button id="iot-controls-cooling-enable" class="btn btn-info">Enable cooling system</button>
+                                    <button id="iot-controls-cooling-disable" class="btn btn-warning" style="display:none;">Disable cooling system</button>
+                                </div>
+                            </div>
                         </div>                        
                     </div><!--/.well -->
                 </div><!--/span-->

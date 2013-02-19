@@ -41,18 +41,26 @@ Signal.prototype.render = function(to){
 */
 Signal.prototype.parseTemplate=function(tmpl,data){
     var regexp;
- 
-    for (placeholder in data) {
- 
+    var tempTpl=tmpl;
+    if(tmpl.toLowerCase().indexOf(".html") >= 0){
+       console.log(tmpl.toLowerCase().indexOf(".html"));        
+       $.ajax({
+            type: 'GET',
+            url: tmpl,
+            success: function(data) {
+                tempTpl = data;
+            },
+            async: false
+            // async to false so that we don't access an empty variable before the request is finished
+        });
+    }    
+    for (placeholder in data) { 
         // useremo le parantesi graffe per
         // identificare i placeholder
-        regexp = new RegExp('{' + placeholder + '}', 'g');
- 
-        tmpl = tmpl.replace(regexp, data[placeholder]);
- 
+        regexp = new RegExp('{' + placeholder + '}', 'g'); 
+        tempTpl = tempTpl.replace(regexp, data[placeholder]); 
     }
- 
-    return tmpl;
+    return tempTpl;
 }
 /*
 Signal.prototype.createTitle=function(){
@@ -69,18 +77,23 @@ Signal.prototype.render=function(to){
 }
 Signal.prototype.redraw=function(){
     console.log("Redraw");
+    console.log(this.node);
+    /*
     if(this.node!=null){
         var oldHtml=this.parseTemplate(this.tpl,{currentValue:!this.currentValue});
         oldHtml=this.parseTemplate(oldHtml,this);
         var html=this.parseTemplate(this.tpl,this);    
         this.node.replaceChild(this.containerEl.append(html),this.containerEl.append(oldHtml));
     }
+    */
 }
 
 
 /* DIGITAL SIGNAL */
 function DSignal(sid,lineid,name,description){    
     this.currentValue=false;
+    //code for command management
+    this.buttons=[];
     Signal.call(this, sid,lineid,SignalTypes.DIGITAL,name, description);        
 }
 DSignal.inherits(Signal);
@@ -98,7 +111,7 @@ function AlarmDSignal(sid,lineid,name,description){
     this.containerEl=$("<li/>",{
         'class':'dsignal-alarm span3'
     });
-    this.tpl="<div class='thumbnail status-{currentValue}'><img src='/app/img/green-light.png'><div class='caption'><h3>{sourceId}.{lineId} - {name}</h3><p>{description}</p><p>Current value: <span id='{sourceId}_{lineId}'>{currentValue}</span></p></div></div>";
+    this.tpl="/app/views/alarm-signal.html";
 }
 AlarmDSignal.inherits(DSignal);
 
@@ -109,9 +122,14 @@ function EventDSignal(sid,lineid,name,description){
     this.containerEl=$("<li/>",{
         'class':'dsignal-event span3'
     });  
-    this.tpl="<div class='thumbnail status-{currentValue}'><h3>{sourceId}.{lineId} - {name}</h3><p>{description}</p>Current value: <span id='{sourceId}_{lineId}'>{currentValue}</span></div>";
+    this.tpl="/app/views/event-signal.html";
 }
 EventDSignal.inherits(DSignal);
+
+EventDSignal.prototype.redraw=function(){
+    Signal.redraw();
+    console.log('Manage the button');
+}
 
 /* EVENT SIGNAL */
 function ProductTypeDSignal(sid,lineid,name,description){
@@ -119,8 +137,8 @@ function ProductTypeDSignal(sid,lineid,name,description){
     DSignal.call(this, sid,lineid,name, description);
     this.containerEl=$("<li/>",{
         'class':'dsignal-ptype'
-    });  
-    this.tpl="<div class='dsignal-ptype'><h4>{sourceId}.{lineId}<br>{name}</h4><p>{description}</p>Current value: <span id='{sourceId}_{lineId}'>{currentValue}</span></div>";
+    });
+    this.tpl="/app/views/ptype-signal.html";
 }
 ProductTypeDSignal.inherits(DSignal);
 
@@ -130,8 +148,8 @@ function ASignal(sid,lineid,name,description){
     Signal.call(this, sid,lineid,SignalTypes.ANALOGIC,name, description);
     this.containerEl=$("<li/>",{
         'class':'asignal'
-    }); 
-    this.tpl="<div class='asignal'><h4>{sourceId}.{lineId}<br>{name}</h4><p>{description}</p>Current value: <span id='{sourceId}_{lineId}'>{currentValue}</span></div>";
+    });
+    this.tpl="/app/views/analogic-signal.html";
 }
 ASignal.inherits(Signal);
 /* DEFAULT IS A COLUMN CHART */
@@ -148,7 +166,7 @@ function SpeedASignal(sid,lineid,name,description){
     this.containerEl=$("<li/>",{
         'class':'asignal-speed'
     });
-    this.tpl="<div class='asignal-speed'><h4>{sourceId}.{lineId}<br>{name}</h4><p>{description}</p>Current value: <span id='{sourceId}_{lineId}'>{currentValue}</span></div>";
+    this.tpl="/app/views/speed-signal.html";
 }
 SpeedASignal.inherits(ASignal);
 
@@ -158,7 +176,7 @@ function SlowRateASignal(sid,lineid,name,description){
     this.containerEl=$("<li/>",{
         'class':'asignal-slow'
     });
-    this.tpl="<div class='asignal-slow'><h4>{sourceId}.{lineId}<br>{name}</h4><p>{description}</p>Current value: <span id='{sourceId}_{lineId}'>{currentValue}</span></div>";
+    this.tpl="/app/views/slow-signal.html";
 }
 SlowRateASignal.inherits(ASignal);
 
@@ -167,8 +185,7 @@ function ProductCountASignal(sid,lineid,name,description){
     ASignal.call(this, sid,lineid,name, description);
     this.containerEl=$("<li/>",{
         'class':'asignal-pcount'
-    });
-    this.tpl="<div class='asignal-pcount'><h4>{sourceId}.{lineId}<br>{name}</h4><p>{description}</p>Current value: <span id='{sourceId}_{lineId}'>{currentValue}</span></div>";
+    });    
+    this.tpl="/app/views/count-signal.html";
 }
 ProductCountASignal.inherits(ASignal);
-

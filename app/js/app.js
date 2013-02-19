@@ -61,12 +61,12 @@ function IotDashboard(channel){ //},driver){
     }
     this.getSignal=function(sourceId,lineId){
         var signal=null;
-         $.each(this.signals, function(key,value){
-           if(value.sourceId==sourceId && value.lineId==lineId){
-               signal=this;
-               return false;
-           }
-           return true;
+        $.each(this.signals, function(key,value){
+            if(value.sourceId==sourceId && value.lineId==lineId){
+                signal=this;
+                return false;
+            }
+            return true;
         });
         return signal;
     };
@@ -118,15 +118,16 @@ function IotDashboard(channel){ //},driver){
                             var dyLid=digitalData.common_data.source_id+"_"+key;
                             if(value){
                                 $("#"+id).css('background-color',"#00FF00");
-                                //$("#"+dyLid).css('background-color',"#00FF00");
+                            //$("#"+dyLid).css('background-color',"#00FF00");
                             }else{
                                 $("#"+id).css('background-color',"#FF4444");
-                                //$("#"+dyLid).css('background-color',"#FF4444");
+                            //$("#"+dyLid).css('background-color',"#FF4444");
                             }
                             $("#"+id).text(value);
                             //$("#"+dyLid).text(value);
                             //$("#"+dyLid).parent().removeClass('status-'+(!value)).addClass('status-'+value);
                             var dyLine=self.getSignal(digitalData.common_data.source_id, key);
+                            
                             if(dyLine!= null){
                                 console.log(dyLid);
                                 console.log(dyLine)
@@ -138,6 +139,7 @@ function IotDashboard(channel){ //},driver){
                 }
             }
             
+            //HANDLER OF THE SYSTEM CONFIGURATION
             _channel.customXMLDataArrivedHandler=function(){
                 var customXMLData = _channel.getCustomXMLData();
                 if (customXMLData != null){
@@ -395,24 +397,24 @@ function IotDashboard(channel){ //},driver){
         });
 		
 		
-		// TODO: maybe thus code can be done better...
-		var coolingSignal = this.getSignal(2,3);
-		if (!coolingSignal.getValue()) {
-			$('#iot-controls-cooling-enable').show();
-			$('#iot-controls-cooling-disable').hide();
-		} else {
-			$('#iot-controls-cooling-enable').hide();
-			$('#iot-controls-cooling-disable').show();
-		}
+        // TODO: maybe thus code can be done better...
+        var coolingSignal = this.getSignal(2,3);
+        if (!coolingSignal.getValue()) {
+            $('#iot-controls-cooling-enable').show();
+            $('#iot-controls-cooling-disable').hide();
+        } else {
+            $('#iot-controls-cooling-enable').hide();
+            $('#iot-controls-cooling-disable').show();
+        }
     }
 	
-	/*
-	 * Function to send commands from the client to the server.
-	 */
-	this.sendMessageData=function(message,code){
-		console.log("Sending message: "+message+"; "+code);
-		_channel.sendMessageData(message,code,1,"IOT Dashboard HTML5 client");
-	}
+    /*
+        * Function to send commands from the client to the server.
+        */
+    this.sendMessageData=function(message,code){
+        console.log("Sending message: "+message+"; "+code);
+        _channel.sendMessageData(message,code,1,"IOT Dashboard HTML5 client");
+    }
     
     this.disconnect=function(){
     
@@ -440,7 +442,6 @@ function IotDashboard(channel){ //},driver){
             $(_pulseImg).attr('src','/app/img/red-light.png').fadeIn('fast');            
             console.log("Stream stopped...");
             _channel.stop();
-        }
-        
+        }        
     }    
 }
