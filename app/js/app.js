@@ -393,7 +393,26 @@ function IotDashboard(channel){ //},driver){
                 this.render(_eventsNode);
             }
         });
+		
+		
+		// TODO: maybe thus code can be done better...
+		var coolingSignal = this.getSignal(2,3);
+		if (!coolingSignal.getValue()) {
+			$('#iot-controls-cooling-enable').show();
+			$('#iot-controls-cooling-disable').hide();
+		} else {
+			$('#iot-controls-cooling-enable').hide();
+			$('#iot-controls-cooling-disable').show();
+		}
     }
+	
+	/*
+	 * Function to send commands from the client to the server.
+	 */
+	this.sendMessageData=function(message,code){
+		console.log("Sending message: "+message+"; "+code);
+		_channel.sendMessageData(message,code,1,"IOT Dashboard HTML5 client");
+	}
     
     this.disconnect=function(){
     
