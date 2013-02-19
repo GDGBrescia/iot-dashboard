@@ -39,6 +39,15 @@ Signal.prototype.render = function(to){
 }
 
 */
+
+/**
+  * This function is used to bind the HTML template to a json object.
+  * Is mainly used in the render and redraw functions.
+  * 
+  * @var tmpl - the HTML layout or the relative URL to the file that contains 
+  *             the HTML
+  * @var data - the json object to bind to the layout
+  */
 Signal.prototype.parseTemplate=function(tmpl,data){
     var regexp;
     var tempTpl=tmpl;
