@@ -143,14 +143,48 @@
                 });
 				
                 // controls -----
-                $('#iot-controls-cooling-enable').click(function(e){
+                $('#iot-controls-2-5-enable').click(function(e){
                     e.preventDefault();
-                    console.log(iotDash);
+					console.log("Turn motor on");
+                    iotDash.sendMessageData('switchMotorOn',100);
+                });
+                $('#iot-controls-2-5-disable').click(function(e){
+                    e.preventDefault();
+					console.log("Turn motor off");
+                    iotDash.sendMessageData('switchMotorOff',0);
+                });
+				
+                $('#iot-controls-2-3-enable').click(function(e){
+                    e.preventDefault();
+					console.log("Turn cooling on");
                     iotDash.sendMessageData('switchCoolingSystemOn',0);
                 });
-                $('#iot-controls-cooling-disable').click(function(e){
+                $('#iot-controls-2-3-disable').click(function(e){
                     e.preventDefault();
+					console.log("Turn cooling off");
                     iotDash.sendMessageData('switchCoolingSystemOff',0);
+                });
+				
+				$('#iot-controls-2-2-enable').click(function(e){
+                    e.preventDefault();
+					console.log("Turn cutter on");
+                    iotDash.sendMessageData('armcutter',0);
+                });
+                $('#iot-controls-2-2-disable').click(function(e){
+                    e.preventDefault();
+					console.log("Turn cutter off");
+                    iotDash.sendMessageData('disarmCutter',0);
+                });
+				
+				$('#iot-controls-2-4-enable').click(function(e){
+                    e.preventDefault();
+					console.log("Open injection");
+                    iotDash.sendMessageData('openInjectionCircuit',0);
+                });
+                $('#iot-controls-2-4-disable').click(function(e){
+                    e.preventDefault();
+					console.log("Close injection");
+                    iotDash.sendMessageData('closeInjectioncircuit',0);
                 });
                 // end controls -
                 
@@ -262,8 +296,20 @@
                             <h2><a title="Click to toggle controls" href="#">Controls</a></h2>
                             <div id="iot-controls">
                                 <div class="well">
-                                    <button id="iot-controls-cooling-enable" class="btn btn-info">Enable cooling system</button>
-                                    <button id="iot-controls-cooling-disable" class="btn btn-warning" style="display:none;">Disable cooling system</button>
+                                    <button id="iot-controls-2-5-enable" class="btn btn-info" data-toggle="button">Activate motor</button>
+                                    <button id="iot-controls-2-5-disable" class="btn btn-warning" data-toggle="button" style="display:none;">Deactivate motor</button>
+                                </div>
+                                <div class="well">
+                                    <button id="iot-controls-2-3-enable" class="btn btn-info" data-toggle="button">Enable cooling system</button>
+                                    <button id="iot-controls-2-3-disable" class="btn btn-warning" data-toggle="button"  style="display:none;">Disable cooling system</button>
+                                </div>
+								<div class="well">
+                                    <button id="iot-controls-2-2-enable" class="btn btn-info" data-toggle="button">Arm cutter</button>
+                                    <button id="iot-controls-2-2-disable" class="btn btn-warning" data-toggle="button" style="display:none;">Disarm cutter</button>
+                                </div>
+								<div class="well">
+                                    <button id="iot-controls-2-4-enable" class="btn btn-info" data-toggle="button">Open injection circuit</button>
+                                    <button id="iot-controls-2-4-disable" class="btn btn-warning" data-toggle="button" style="display:none;">Close injection circuit</button>
                                 </div>
                             </div>
                         </div>                        

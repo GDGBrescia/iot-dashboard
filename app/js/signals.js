@@ -76,6 +76,12 @@ Signal.prototype.beforeRender=function(){
 Signal.prototype.afterRender=function(){
     console.log("Signal before render");    
 }
+Signal.prototype.beforeRedraw=function(){
+    console.log("Signal before redraw");    
+}
+Signal.prototype.afterRedraw=function(){
+    console.log("Signal before redraw");    
+}
 Signal.prototype.render=function(to){
     this.beforeRender();
     console.log("Render: "+this.sourceId+"_"+this.lineId);    
@@ -86,11 +92,13 @@ Signal.prototype.render=function(to){
 }
 
 Signal.prototype.redraw=function(){
+    this.beforeRedraw();
     console.log("Redraw: "+this.sourceId+"_"+this.lineId);
     //get node...
     var html=this.parseTemplate(this.tpl,this);
     //$(this.sourceId+"_"+this.lineId).append(this.containerEl.append(html));
     $("#"+this.sourceId+"_"+this.lineId).replaceWith($(html));
+	this.afterRedraw();
 }
 
 
@@ -119,14 +127,6 @@ function AlarmDSignal(sid,lineid,name,description){
     this.tpl="/app/views/alarm-signal.html";
 }
 AlarmDSignal.inherits(DSignal);
-AlarmDSignal.prototype.beforeRender=function(){
-    console.log("AlarmDSignal before render");
-    
-}
-AlarmDSignal.prototype.afterRender=function(){
-    console.log("AlarmDSignal before render");
-    
-}
 
 /* EVENT SIGNAL */
 function EventDSignal(sid,lineid,name,description){
@@ -136,8 +136,25 @@ function EventDSignal(sid,lineid,name,description){
         'class':'dsignal-event span3'
     });  
     this.tpl="/app/views/event-signal.html";
+	this.enableButton={};
+	this.disableButton={};
 }
 EventDSignal.inherits(DSignal);
+EventDSignal.prototype.setButtons=function(enableButton,disableButton){
+    this.enableButton=enableButton;
+	this.disableButton=disableButton;
+}
+EventDSignal.prototype.checkButtons=function(){
+	if (!this.getValue()){
+		if(this.enableButton) {this.enableButton.show();}
+		if(this.disableButton){this.disableButton.hide();}
+	} else {
+		if(this.enableButton) {this.enableButton.hide();}
+		if(this.disableButton){this.disableButton.show();}
+	}
+}
+EventDSignal.prototype.beforeRedraw=EventDSignal.prototype.checkButtons;
+EventDSignal.prototype.beforeRender=EventDSignal.prototype.checkButtons;
 
 /* EVENT SIGNAL */
 function ProductTypeDSignal(sid,lineid,name,description){

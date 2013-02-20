@@ -196,7 +196,11 @@ function IotDashboard(channel){ //},driver){
                                         self.addSignal(new AlarmDSignal(sourceid,i, name, desc));
                                         break;
                                     case 2 :    //EVENTS SOURCE
-                                        self.addSignal(new EventDSignal(sourceid,i, name, desc));
+                                        var eventSignal = new EventDSignal(sourceid,i, name, desc);
+										if($('#iot-controls-'+sourceid+'-'+i+'-enable') && $('#iot-controls-'+sourceid+'-'+i+'-disable')){
+											eventSignal.setButtons($('#iot-controls-'+sourceid+'-'+i+'-enable'),$('#iot-controls-'+sourceid+'-'+i+'-disable'));
+										}
+										self.addSignal(eventSignal);
                                         break;
                                     case 3 :    //PRODUCT TYPES ENABLE SOURCE
                                         self.addSignal(new ProductTypeDSignal(sourceid,i, name, desc));
@@ -406,22 +410,11 @@ function IotDashboard(channel){ //},driver){
                 this.render(_speedNode);
             }
         });
-		
-		
-        // TODO: maybe thus code can be done better...
-        var coolingSignal = this.getSignal(2,3);
-        if (!coolingSignal.getValue()) {
-            $('#iot-controls-cooling-enable').show();
-            $('#iot-controls-cooling-disable').hide();
-        } else {
-            $('#iot-controls-cooling-enable').hide();
-            $('#iot-controls-cooling-disable').show();
-        }
     }
 	
     /*
-        * Function to send commands from the client to the server.
-        */
+     * Function to send commands from the client to the server.
+     */
     this.sendMessageData=function(message,code){
         console.log("Sending message: "+message+"; "+code);
         _channel.sendMessageData(message,code,1,"IOT Dashboard HTML5 client");
