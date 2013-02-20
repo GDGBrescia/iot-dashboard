@@ -70,18 +70,19 @@ Signal.prototype.parseTemplate=function(tmpl,data){
     }
     return tempTpl;
 }
-/*
-Signal.prototype.createTitle=function(){
-    var chartTitle=$("<h1/>");
-    chartTitle.createTextNode(this._name);  
-    this.containerEl.appendChild(chartTitle);
+Signal.prototype.beforeRender=function(){
+    console.log("Signal before render");    
 }
-*/
+Signal.prototype.afterRender=function(){
+    console.log("Signal before render");    
+}
 Signal.prototype.render=function(to){
+    this.beforeRender();
     console.log("Render: "+this.sourceId+"_"+this.lineId);    
-    this.node=to;
-    var html=this.parseTemplate(this.tpl,this);    
-    this.node.append(this.containerEl.append(html));
+    this.node=to;    
+    var html=this.parseTemplate(this.tpl,this);
+    this.node.append(this.containerEl.append(html));    
+    this.afterRender();
 }
 
 Signal.prototype.redraw=function(){
@@ -110,7 +111,7 @@ DSignal.prototype.setValue=function(value){
 
 /* ALARM SIGNAL */
 function AlarmDSignal(sid,lineid,name,description){
-    //call the parent constructor
+    //call the parent constructor    
     DSignal.call(this, sid,lineid,name, description);
     this.containerEl=$("<li/>",{
         'class':'dsignal-alarm span3'
@@ -118,6 +119,14 @@ function AlarmDSignal(sid,lineid,name,description){
     this.tpl="/app/views/alarm-signal.html";
 }
 AlarmDSignal.inherits(DSignal);
+AlarmDSignal.prototype.beforeRender=function(){
+    console.log("AlarmDSignal before render");
+    
+}
+AlarmDSignal.prototype.afterRender=function(){
+    console.log("AlarmDSignal before render");
+    
+}
 
 /* EVENT SIGNAL */
 function EventDSignal(sid,lineid,name,description){
