@@ -97,3 +97,51 @@ img.feature-logo{
     background-color: lightgreen;
     border: 2px solid green;
 }
+
+#iot-events{
+    list-style-type: none;
+}
+#iot-events .dsignal-alarm{
+    margin: 0px 6px 5px 0px;
+    color: white;
+}
+#iot-events .dsignal-alarm > div{
+    padding: 5px 10px;
+    height: 100%;
+}
+
+#iot-events .status-true{
+    background-color: lightcoral;
+    border: 2px solid red;
+}
+#iot-events .status-false{
+    background-color: lightgreen;
+    border: 2px solid green;
+}
+
+
+#iot-pcount .asignal-pcount{
+    background-color: white;
+}
+#iot-pcount .asignal-pcount-content{
+    position: relative;
+    padding: 0px 10px;
+    text-align: center;
+    background-image: url('/app/img/signals/count-bkg.png');
+    background-repeat: repeat-y;
+    background-position: center center;
+}
+#iot-pcount .top{
+    background-color: #1DAB83;
+    color: white;
+    text-align: center;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+}
+#iot-pcount .top > img{    
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    display: none;
+}

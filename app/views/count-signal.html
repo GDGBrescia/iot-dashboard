@@ -1,1 +1,9 @@
-<div class='asignal-pcount'><h4>{sourceId}.{lineId}<br>{name}</h4><p>{description}</p>Current value: <span id='{sourceId}_{lineId}'>{currentValue}</span></div>
+<div id='{sourceId}_{lineId}' class='asignal-pcount-content'>
+    <div class="top">
+        <b>{sourceId}.{lineId}<br>{name}</b>
+        <h4>Pezzi prodotti</h4>
+        <h1>{currentCount}</h1>
+        <img class="alert" src="/app/img/signals/count-alert.png" >
+    </div>
+    <img class="bottom" src="/app/img/signals/count-base.png" >
+</div>

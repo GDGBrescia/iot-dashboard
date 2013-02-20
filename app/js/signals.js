@@ -17,10 +17,10 @@ function Signal(sid,lineid,type,name,description){
     
     this.node;
     
-    this.data;
+    this.data=[];
     this.options;
     /* GETTER SETTER */
-    return this;
+    //return this;
 }
 
 /* Class for rendering the signal */
@@ -51,8 +51,7 @@ Signal.prototype.render = function(to){
 Signal.prototype.parseTemplate=function(tmpl,data){
     var regexp;
     var tempTpl=tmpl;
-    if(tmpl.toLowerCase().indexOf(".html") >= 0){
-       console.log(tmpl.toLowerCase().indexOf(".html"));        
+    if(tmpl.toLowerCase().indexOf(".html") >= 0){   
        $.ajax({
             type: 'GET',
             url: tmpl,
@@ -62,7 +61,7 @@ Signal.prototype.parseTemplate=function(tmpl,data){
             async: false
             // async to false so that we don't access an empty variable before the request is finished
         });
-    }    
+    }
     for (placeholder in data) { 
         // useremo le parantesi graffe per
         // identificare i placeholder
@@ -79,22 +78,18 @@ Signal.prototype.createTitle=function(){
 }
 */
 Signal.prototype.render=function(to){
-    console.log("Render");    
+    console.log("Render: "+this.sourceId+"_"+this.lineId);    
     this.node=to;
     var html=this.parseTemplate(this.tpl,this);    
     this.node.append(this.containerEl.append(html));
 }
+
 Signal.prototype.redraw=function(){
-    console.log("Redraw");
-    console.log(this.node);
-    /*
-    if(this.node!=null){
-        var oldHtml=this.parseTemplate(this.tpl,{currentValue:!this.currentValue});
-        oldHtml=this.parseTemplate(oldHtml,this);
-        var html=this.parseTemplate(this.tpl,this);    
-        this.node.replaceChild(this.containerEl.append(html),this.containerEl.append(oldHtml));
-    }
-    */
+    console.log("Redraw: "+this.sourceId+"_"+this.lineId);
+    //get node...
+    var html=this.parseTemplate(this.tpl,this);
+    //$(this.sourceId+"_"+this.lineId).append(this.containerEl.append(html));
+    $("#"+this.sourceId+"_"+this.lineId).replaceWith($(html));
 }
 
 
@@ -103,7 +98,7 @@ function DSignal(sid,lineid,name,description){
     this.currentValue=false;
     //code for command management
     this.buttons=[];
-    Signal.call(this, sid,lineid,SignalTypes.DIGITAL,name, description);        
+    Signal.call(this, sid,lineid,SignalTypes.DIGITAL,name, description);
 }
 DSignal.inherits(Signal);
 DSignal.prototype.getValue=function(){
@@ -135,11 +130,6 @@ function EventDSignal(sid,lineid,name,description){
 }
 EventDSignal.inherits(DSignal);
 
-EventDSignal.prototype.redraw=function(){
-    Signal.redraw();
-    console.log('Manage the button');
-}
-
 /* EVENT SIGNAL */
 function ProductTypeDSignal(sid,lineid,name,description){
     //call the parent constructor
@@ -152,6 +142,10 @@ function ProductTypeDSignal(sid,lineid,name,description){
 ProductTypeDSignal.inherits(DSignal);
 
 
+
+
+
+
 /* ANALOGIC SIGNAL */
 function ASignal(sid,lineid,name,description){
     Signal.call(this, sid,lineid,SignalTypes.ANALOGIC,name, description);
@@ -161,16 +155,15 @@ function ASignal(sid,lineid,name,description){
     this.tpl="/app/views/analogic-signal.html";
 }
 ASignal.inherits(Signal);
-/* DEFAULT IS A COLUMN CHART */
-ASignal.prototype.createChart=function(data,options){
-    var chartPanel=$("<div/>");
-    this._chart=new google.visualization.ColumnChart(chartPanel);
-    this._chart.draw(data, options);    
-    this.containerEl.appendChild(chartPanel);
+ASignal.prototype.getValue=function(){
+    return this.currentValue;
+}
+ASignal.prototype.addValue=function(value){
+    this.data.push(value);
 }
 
 function SpeedASignal(sid,lineid,name,description){
-    //call the parent constructor
+    
     ASignal.call(this, sid,lineid,name, description);
     this.containerEl=$("<li/>",{
         'class':'asignal-speed'
@@ -178,6 +171,33 @@ function SpeedASignal(sid,lineid,name,description){
     this.tpl="/app/views/speed-signal.html";
 }
 SpeedASignal.inherits(ASignal);
+
+SpeedASignal.prototype.createChart=function(data,options){  
+    if(GOOGLECHARTS_ACTIVE){
+        var chartObj=new google.visualization.Gauge(this.chart);
+        chartObj.draw(data);
+    }else{
+        this.chart="ERROR: GOOGLE CHART DISABLED!"
+    }
+}
+
+SpeedASignal.prototype.render=function(to){
+    console.log("Render: "+this.sourceId+"_"+this.lineId);    
+    this.node=to;    
+    var html=this.parseTemplate(this.tpl,this);    
+    this.node.append(this.containerEl.append(html));
+}
+
+SpeedASignal.prototype.redraw=function(){
+    console.log("Redraw: "+this.sourceId+"_"+this.lineId);
+    //get node...
+    var html=this.parseTemplate(this.tpl,this);
+    var options={};
+    console.log(this.data);
+    this.createChart(this.data, options);
+    $("#"+this.sourceId+"_"+this.lineId).replaceWith($(html));
+}
+
 
 function SlowRateASignal(sid,lineid,name,description){
     //call the parent constructor
@@ -191,9 +211,10 @@ SlowRateASignal.inherits(ASignal);
 
 function ProductCountASignal(sid,lineid,name,description){
     //call the parent constructor
+    this.currentCount=0;
     ASignal.call(this, sid,lineid,name, description);
     this.containerEl=$("<li/>",{
-        'class':'asignal-pcount'
+        'class':'asignal-pcount span3'
     });    
     this.tpl="/app/views/count-signal.html";
 }

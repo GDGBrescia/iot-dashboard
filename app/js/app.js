@@ -97,6 +97,11 @@ function IotDashboard(channel){ //},driver){
                             $.each(analogData.channels, function(key, value){
                                 var id="sid"+analogData.commonData.source_id+"cid"+key;
                                 $("#"+id).text(value.toString());
+                                var anLine=self.getSignal(analogData.commonData.source_id, key);                            
+                                if(anLine!= null){                                
+                                    anLine.addValue(value);
+                                    anLine.redraw();
+                                }
                             });
                         }else{
                             $.each(analogData.channels[0], function(key, value){
@@ -116,21 +121,17 @@ function IotDashboard(channel){ //},driver){
                         $.each(digitalData.lines, function(key, value){
                             var id="sid"+digitalData.common_data.source_id+"cid"+key;
                             var dyLid=digitalData.common_data.source_id+"_"+key;
+                            /* FOR RAW DATA */
                             if(value){
                                 $("#"+id).css('background-color',"#00FF00");
-                            //$("#"+dyLid).css('background-color',"#00FF00");
                             }else{
                                 $("#"+id).css('background-color',"#FF4444");
-                            //$("#"+dyLid).css('background-color',"#FF4444");
                             }
                             $("#"+id).text(value);
-                            //$("#"+dyLid).text(value);
-                            //$("#"+dyLid).parent().removeClass('status-'+(!value)).addClass('status-'+value);
-                            var dyLine=self.getSignal(digitalData.common_data.source_id, key);
                             
-                            if(dyLine!= null){
-                                console.log(dyLid);
-                                console.log(dyLine)
+                            // FOR SYGNALS
+                            var dyLine=self.getSignal(digitalData.common_data.source_id, key);                            
+                            if(dyLine!= null){                                
                                 dyLine.setValue(value);
                                 dyLine.redraw();
                             }
@@ -209,6 +210,8 @@ function IotDashboard(channel){ //},driver){
                             var adata=[];
                             var i=0;
                             $(this).find('analogData item').each(function(){
+                                var name=$(this).find('name').text(),
+                                    desc=$(this).find('description').text();
                                 adata.push({
                                     'name':$(this).find('name').text(),
                                     'description':$(this).find('description').text(),
@@ -314,6 +317,8 @@ function IotDashboard(channel){ //},driver){
         var _rowdataNode=$("#iot-rowdata");
         var _alarmsNode=$("#iot-alarms");
         var _eventsNode=$("#iot-events");
+        var _pcountNode=$("#iot-pcount");
+        var _speedNode=$("#iot-speed");
         //ROWDATA
         if(_systemJson!=null){
             console.log(_systemJson);
@@ -393,6 +398,12 @@ function IotDashboard(channel){ //},driver){
             }
             if(this instanceof EventDSignal){
                 this.render(_eventsNode);
+            }
+            if(this instanceof ProductCountASignal){
+                this.render(_pcountNode);
+            }
+            if(this instanceof SpeedASignal){
+                this.render(_speedNode);
             }
         });
 		
