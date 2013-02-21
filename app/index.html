@@ -33,13 +33,10 @@
         <script type="text/javascript">
             var GOOGLECHARTS_ACTIVE=false;
             // Load the Visualization API and the piechart package.
-            google.load('visualization', '1.0', {'packages':['corechart']});
+            google.load('visualization', '1.0', {packages:["corechart"]});
 
             // Set a callback to run when the Google Visualization API is loaded.
             google.setOnLoadCallback(activateCharts);
-            // Callback that creates and populates a data table,
-            // instantiates the pie chart, passes in the data and
-            // draws it.
             function activateCharts() {
                 GOOGLECHARTS_ACTIVE=true;
             }
@@ -145,45 +142,45 @@
                 // controls -----
                 $('#iot-controls-2-5-enable').click(function(e){
                     e.preventDefault();
-					console.log("Turn motor on");
+                    console.log("Turn motor on");
                     iotDash.sendMessageData('switchMotorOn',100);
                 });
                 $('#iot-controls-2-5-disable').click(function(e){
                     e.preventDefault();
-					console.log("Turn motor off");
+                    console.log("Turn motor off");
                     iotDash.sendMessageData('switchMotorOff',0);
                 });
 				
                 $('#iot-controls-2-3-enable').click(function(e){
                     e.preventDefault();
-					console.log("Turn cooling on");
+                    console.log("Turn cooling on");
                     iotDash.sendMessageData('switchCoolingSystemOn',0);
                 });
                 $('#iot-controls-2-3-disable').click(function(e){
                     e.preventDefault();
-					console.log("Turn cooling off");
+                    console.log("Turn cooling off");
                     iotDash.sendMessageData('switchCoolingSystemOff',0);
                 });
 				
-				$('#iot-controls-2-2-enable').click(function(e){
+                $('#iot-controls-2-2-enable').click(function(e){
                     e.preventDefault();
-					console.log("Turn cutter on");
+                    console.log("Turn cutter on");
                     iotDash.sendMessageData('armcutter',0);
                 });
                 $('#iot-controls-2-2-disable').click(function(e){
                     e.preventDefault();
-					console.log("Turn cutter off");
+                    console.log("Turn cutter off");
                     iotDash.sendMessageData('disarmCutter',0);
                 });
 				
-				$('#iot-controls-2-4-enable').click(function(e){
+                $('#iot-controls-2-4-enable').click(function(e){
                     e.preventDefault();
-					console.log("Open injection");
+                    console.log("Open injection");
                     iotDash.sendMessageData('openInjectionCircuit',0);
                 });
                 $('#iot-controls-2-4-disable').click(function(e){
                     e.preventDefault();
-					console.log("Close injection");
+                    console.log("Close injection");
                     iotDash.sendMessageData('closeInjectioncircuit',0);
                 });
                 // end controls -
@@ -303,11 +300,11 @@
                                     <button id="iot-controls-2-3-enable" class="btn btn-info" data-toggle="button">Enable cooling system</button>
                                     <button id="iot-controls-2-3-disable" class="btn btn-warning" data-toggle="button"  style="display:none;">Disable cooling system</button>
                                 </div>
-								<div class="well">
+                                <div class="well">
                                     <button id="iot-controls-2-2-enable" class="btn btn-info" data-toggle="button">Arm cutter</button>
                                     <button id="iot-controls-2-2-disable" class="btn btn-warning" data-toggle="button" style="display:none;">Disarm cutter</button>
                                 </div>
-								<div class="well">
+                                <div class="well">
                                     <button id="iot-controls-2-4-enable" class="btn btn-info" data-toggle="button">Open injection circuit</button>
                                     <button id="iot-controls-2-4-disable" class="btn btn-warning" data-toggle="button" style="display:none;">Close injection circuit</button>
                                 </div>
@@ -317,10 +314,13 @@
                     <div class="left-sidebar">
                         <div class="span12 well">  
                             <h2><a title="Click to toggle controls" href="#">Motor speed</a></h2>
-                            <div id="iot-speed"></div>
+                            <div id="100_0"></div>
+                             <div id="100_0_ch"></div>
+                            <div id="100_1"></div>
+                             <div id="100_1_ch"></div>
                         </div>                        
                     </div><!--/.well -->                    
-                    
+
                 </div><!--/span-->
                 <div class="span9">
                     <div class="hero-unit">
@@ -329,23 +329,78 @@
                     </div>                                       
                     <div id="alarms" class="row-fluid channel">
                         <div class="span12 well">
-                            <h2><a href="#" title="Click to toggle data.">Alarms</a></h2>
-                            <h4></h4>
-                            <ul id="iot-alarms" class="thumbnails"></ul>
+                            <h2><a href="#" title="Click to toggle data.">Alarms</a></h2>                           
+                            <div id="1_0"></div>
+                            <div id="1_1"></div>
+                            <div id="1_2"></div>
+                            <div id="1_3"></div>
+                            <div id="1_4"></div>
+                            <div id="1_5"></div>
+                            <div id="1_6"></div>
+                            <div id="1_7"></div>                            
                         </div>
                     </div>
                     <div id="events" class="row-fluid channel">
                         <div class="span12 well">
                             <h2><a href="#" title="Click to toggle data.">Events</a></h2>
                             <h4></h4>
-                            <ul id="iot-events" class="thumbnails"></ul>
+                            <table class="table thumbnails">
+                                <tr>
+                                    <td><div id="2_0"></div></td>
+                                    <td><div id="2_1"></div></td>
+                                    <td><div id="2_2"></div></td>
+                                    <td><div id="2_3"></div></td>
+                                </tr>
+                                <tr>
+                                    <td><div id="2_4"></div></td>
+                                    <td><div id="2_5"></div></td>
+                                    <td><div id="2_6"></div></td>
+                                </tr>
+                            </table>
                         </div>
                     </div>
-                    <div id="products" class="row-fluid channel">
-                        <div class="span12 well">
-                            <h2><a href="#" title="Click to toggle data.">Product counter</a></h2>
-                            <h4></h4>
-                            <ul id="iot-pcount" class="thumbnails"></ul>
+                    <div class="row-fluid">
+                        <div class="span3 well">
+                           <div id="3_0"></div>
+                           <div id="101_0"></div>
+                           <div id="201_0"></div>                               
+                        </div>
+                        <div class="span3 well">
+                           <div id="3_1"></div>
+                           <div id="101_1"></div>
+                           <div id="201_1"></div>                               
+                        </div>
+                       <div class="span3 well">
+                           <div id="3_2"></div>
+                           <div id="101_2"></div>
+                           <div id="201_2"></div>                               
+                        </div>
+                        <div class="span3 well">
+                           <div id="3_3"></div>
+                           <div id="101_3"></div>
+                           <div id="201_3"></div>                               
+                        </div>
+                    </div>
+                    <div class="row-fluid">
+                         <div class="span3 well">
+                           <div id="3_4"></div>
+                           <div id="101_4"></div>
+                           <div id="201_4"></div>                               
+                        </div>
+                        <div class="span3 well">
+                           <div id="3_5"></div>
+                           <div id="101_5"></div>
+                           <div id="201_5"></div>                               
+                        </div>
+                       <div class="span3 well">
+                           <div id="3_6"></div>
+                           <div id="101_6"></div>
+                           <div id="201_6"></div>                               
+                        </div>
+                        <div class="span3 well">
+                           <div id="3_7"></div>
+                           <div id="101_7"></div>
+                           <div id="201_7"></div>                               
                         </div>
                     </div>
                     <div id="rowdata" class="row-fluid channel">

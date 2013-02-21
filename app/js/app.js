@@ -230,8 +230,8 @@ function IotDashboard(channel){ //},driver){
                                     case 100 :    //MOTOR SPEED
                                         self.addSignal(new SpeedASignal(sourceid,i, name, desc));
                                         break;
-                                    case 101 :    //GENERAL ANALOGIC SOURCE
-                                        self.addSignal(new ASignal(sourceid,i, name, desc));
+                                    case 101 :    //PRESSURE SOURCE
+                                        self.addSignal(new PressureASignal(sourceid,i, name, desc));
                                         break;
                                     case 200 :    //SLOW RATE SIGNAL SOURCE
                                         self.addSignal(new SlowRateASignal(sourceid,i, name, desc));
@@ -319,10 +319,6 @@ function IotDashboard(channel){ //},driver){
         var _systemMaxMotorSpeedNode=$("#system_maxMotorSpeed");
         var _systemHwNode=$("#system_hw");      
         var _rowdataNode=$("#iot-rowdata");
-        var _alarmsNode=$("#iot-alarms");
-        var _eventsNode=$("#iot-events");
-        var _pcountNode=$("#iot-pcount");
-        var _speedNode=$("#iot-speed");
         //ROWDATA
         if(_systemJson!=null){
             console.log(_systemJson);
@@ -397,6 +393,8 @@ function IotDashboard(channel){ //},driver){
         
         //DYNAMIC ELEMENTS
         $.each(this.signals,function(){
+            this.render();
+            /*
             if(this instanceof AlarmDSignal){
                 this.render(_alarmsNode);
             }
@@ -409,6 +407,7 @@ function IotDashboard(channel){ //},driver){
             if(this instanceof SpeedASignal){
                 this.render(_speedNode);
             }
+            */
         });
     }
 	

@@ -85,9 +85,15 @@ Signal.prototype.afterRedraw=function(){
 Signal.prototype.render=function(to){
     this.beforeRender();
     console.log("Render: "+this.sourceId+"_"+this.lineId);    
-    this.node=to;    
+    var placeholder= $("#"+this.sourceId+"_"+this.lineId);   
     var html=this.parseTemplate(this.tpl,this);
-    this.node.append(this.containerEl.append(html));    
+     if(placeholder){
+        this.node=placeholder;
+        this.node.replaceWith($(html));
+    }else{
+        this.node=to;    
+        this.node.append(this.containerEl.append(html));    
+    }
     this.afterRender();
 }
 
@@ -121,7 +127,7 @@ DSignal.prototype.setValue=function(value){
 function AlarmDSignal(sid,lineid,name,description){
     //call the parent constructor    
     DSignal.call(this, sid,lineid,name, description);
-    this.containerEl=$("<li/>",{
+    this.containerEl=$("<div/>",{
         'class':'dsignal-alarm span3'
     });
     this.tpl="/app/views/alarm-signal.html";
@@ -132,7 +138,7 @@ AlarmDSignal.inherits(DSignal);
 function EventDSignal(sid,lineid,name,description){
     //call the parent constructor
     DSignal.call(this, sid,lineid,name, description);
-    this.containerEl=$("<li/>",{
+    this.containerEl=$("<div/>",{
         'class':'dsignal-event span3'
     });  
     this.tpl="/app/views/event-signal.html";
@@ -160,7 +166,7 @@ EventDSignal.prototype.beforeRender=EventDSignal.prototype.checkButtons;
 function ProductTypeDSignal(sid,lineid,name,description){
     //call the parent constructor
     DSignal.call(this, sid,lineid,name, description);
-    this.containerEl=$("<li/>",{
+    this.containerEl=$("<div/>",{
         'class':'dsignal-ptype'
     });
     this.tpl="/app/views/ptype-signal.html";
@@ -175,10 +181,14 @@ ProductTypeDSignal.inherits(DSignal);
 /* ANALOGIC SIGNAL */
 function ASignal(sid,lineid,name,description){
     Signal.call(this, sid,lineid,SignalTypes.ANALOGIC,name, description);
-    this.containerEl=$("<li/>",{
-        'class':'asignal'
+    this.containerEl=$("<div/>",{
+        'class':'asignal'   
     });
     this.tpl="/app/views/analogic-signal.html";
+    this.chart=$("<div/>",{
+        'id' : this.sourceId+"_"+this.lineId+"_ch",
+        'class':'chart'   
+    });  //empty chart objec...
 }
 ASignal.inherits(Signal);
 ASignal.prototype.getValue=function(){
@@ -191,44 +201,61 @@ ASignal.prototype.addValue=function(value){
 function SpeedASignal(sid,lineid,name,description){
     
     ASignal.call(this, sid,lineid,name, description);
-    this.containerEl=$("<li/>",{
+    this.containerEl=$("<div/>",{
         'class':'asignal-speed'
     });
     this.tpl="/app/views/speed-signal.html";
+    
+    this.createChart=function(){
+       console.log("Create a new google.visualization.Gauge");
+       console.log($("#"+this.sourceId+"_"+this.lineId+"_ch"));
+       var tchart=new google.visualization.Gauge(document.getElementById(this.sourceId+"_"+this.lineId+"_ch"));
+       var gaugeData = new google.visualization.DataTable();
+       gaugeData.addColumn('number', this.name);
+       gaugeData.addRows(1);
+       gaugeData.setCell(0, 0, this.data.pop());
+       var gaugeOptions = {min: 0, max: 120, yellowFrom: 75, yellowTo: 90,
+            redFrom: 91, redTo: 120, minorTicks: 5};
+       tchart.draw(this.data,gaugeOptions);
+    }
 }
 SpeedASignal.inherits(ASignal);
 
-SpeedASignal.prototype.createChart=function(data,options){  
+SpeedASignal.prototype.render=function(){
+    console.log("Render: "+this.sourceId+"_"+this.lineId);
+    //get node...
     if(GOOGLECHARTS_ACTIVE){
-        var chartObj=new google.visualization.Gauge(this.chart);
-        chartObj.draw(data);
-    }else{
-        this.chart="ERROR: GOOGLE CHART DISABLED!"
+        this.createChart();
     }
-}
-
-SpeedASignal.prototype.render=function(to){
-    console.log("Render: "+this.sourceId+"_"+this.lineId);    
-    this.node=to;    
-    var html=this.parseTemplate(this.tpl,this);    
-    this.node.append(this.containerEl.append(html));
+    var html=this.parseTemplate(this.tpl,this);
+    $("#"+this.sourceId+"_"+this.lineId).replaceWith($(html));
 }
 
 SpeedASignal.prototype.redraw=function(){
     console.log("Redraw: "+this.sourceId+"_"+this.lineId);
     //get node...
     var html=this.parseTemplate(this.tpl,this);
-    var options={};
-    console.log(this.data);
-    this.createChart(this.data, options);
+    if(GOOGLECHARTS_ACTIVE){
+        this.createChart();
+    }    
     $("#"+this.sourceId+"_"+this.lineId).replaceWith($(html));
 }
+
+function PressureASignal(sid,lineid,name,description){
+    //call the parent constructor
+    ASignal.call(this, sid,lineid,name, description);
+    this.containerEl=$("<div/>",{
+        'class':'pressure-slow'
+    });
+    this.tpl="/app/views/pressure-signal.html";
+}
+PressureASignal.inherits(ASignal);
 
 
 function SlowRateASignal(sid,lineid,name,description){
     //call the parent constructor
     ASignal.call(this, sid,lineid,name, description);
-    this.containerEl=$("<li/>",{
+    this.containerEl=$("<div/>",{
         'class':'asignal-slow'
     });
     this.tpl="/app/views/slow-signal.html";
@@ -239,7 +266,7 @@ function ProductCountASignal(sid,lineid,name,description){
     //call the parent constructor
     this.currentCount=0;
     ASignal.call(this, sid,lineid,name, description);
-    this.containerEl=$("<li/>",{
+    this.containerEl=$("<div/>",{
         'class':'asignal-pcount span3'
     });    
     this.tpl="/app/views/count-signal.html";

@@ -77,48 +77,24 @@ img.feature-logo{
 
 
 /* SIGNALS */
-#iot-alarms{
-    list-style-type: none;
-}
-#iot-alarms .dsignal-alarm{
-    margin: 0px 6px 5px 0px;
-    color: white;
-}
-#iot-alarms .dsignal-alarm > div{
-    padding: 5px 10px;
-    height: 100%;
-}
 
-#iot-alarms .status-true{
+#alarms .status-true{
     background-color: lightcoral;
     border: 2px solid red;
 }
-#iot-alarms .status-false{
+#alarms .status-false{
     background-color: lightgreen;
     border: 2px solid green;
 }
-
-#iot-events{
-    list-style-type: none;
-}
-#iot-events .dsignal-alarm{
-    margin: 0px 6px 5px 0px;
-    color: white;
-}
-#iot-events .dsignal-alarm > div{
-    padding: 5px 10px;
-    height: 100%;
+#alarms .alarm{
+    font-size: 10px;
+    text-align: center;
 }
 
-#iot-events .status-true{
-    background-color: lightcoral;
-    border: 2px solid red;
+#alarms .alarm img{
+    width: 64px;
+    margin: 0px auto;
 }
-#iot-events .status-false{
-    background-color: lightgreen;
-    border: 2px solid green;
-}
-
 
 #iot-pcount .asignal-pcount{
     background-color: white;
@@ -130,18 +106,4 @@ img.feature-logo{
     background-image: url('/app/img/signals/count-bkg.png');
     background-repeat: repeat-y;
     background-position: center center;
-}
-#iot-pcount .top{
-    background-color: #1DAB83;
-    color: white;
-    text-align: center;
-    position: absolute;
-    top: 0px;
-    left: 0px;
-}
-#iot-pcount .top > img{    
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    display: none;
 }
