@@ -16,8 +16,7 @@ function Signal(sid,lineid,type,name,description,conf){
     this.tpl="";
     this.tplUrl="";
     this.node;
-    
-    this.data=[];
+        
     this.options;    
 }
 
@@ -161,10 +160,6 @@ function ProductTypeDSignal(sid,lineid,name,description,conf){
 ProductTypeDSignal.inherits(DSignal);
 
 
-
-
-
-
 /* ANALOGIC SIGNAL */
 function ASignal(sid,lineid,name,description,conf){
     Signal.call(this, sid,lineid,SignalTypes.ANALOGIC,name, description,conf);
@@ -172,6 +167,14 @@ function ASignal(sid,lineid,name,description,conf){
         'class':'asignal'   
     });
     this.tplUrl="/app/views/analogic-signal.html";    
+    //console.log(conf);
+    if(conf!=null){
+        //this.data= FixedQueue( conf.samplingRate/10 , [] );
+        this.data= FixedQueue( conf.samplingRate/10 , [] );
+    }else{
+        this.data= FixedQueue( 1, [] );
+    }
+    
     this.chartData=[];
     this.chartOptions=[];
 }
@@ -180,7 +183,7 @@ ASignal.prototype.getValue=function(){
     return this.currentValue;
 }
 ASignal.prototype.addValue=function(value){
-    this.data=$.merge($.merge([],this.data),value);
+    this.data.push(value);
 }
 ASignal.prototype.createChart=function(){
     //overloaded...
@@ -200,6 +203,7 @@ function SpeedASignal(sid,lineid,name,description,conf){
 }
 SpeedASignal.inherits(ASignal);
 
+
 function PressureASignal(sid,lineid,name,description,conf){
     //call the parent constructor
     ASignal.call(this, sid,lineid,name, description,conf);
@@ -214,33 +218,33 @@ PressureASignal.inherits(ASignal);
 PressureASignal.prototype.createChart=function(){
     var signal=this;
     var dataArray = [
-    [signal.conf.name, signal.conf.units]
+        [signal.conf.name, signal.conf.units]
     ];
-    dataArray.push([signal.conf.name,0]);    
+    dataArray.push([signal.conf.name,0]);
     this.chartData = google.visualization.arrayToDataTable(dataArray);     
     this.chartOptions = {
         title: signal.conf.name,
-        'width':800,
-        'height':600,
+        width:200,
+        height:300,
+        legend: 'none',
+        /*
         animation:{
             duration: 10,
-            easing: 'in'
-        },
+            easing: 'linear'
+        },*/
         vAxis: {
             minValue:signal.conf.minValue, 
             maxValue:signal.conf.maxValue
             }
     };
-    this.chart = new google.visualization.SteppedAreaChart($("#"+signal.sourceId+"_"+signal.lineId+"_ch")[0]);
+    this.chart = new google.visualization.ColumnChart($("#"+signal.sourceId+"_"+signal.lineId+"_ch")[0]);
     this.chart.draw(this.chartData, this.chartOptions);
 }
 PressureASignal.prototype.updateChart=function(){
-    $.each(this.data, function(key, value){
-        //dataArray.push([signal.conf.name, value]);
-        this.chartData.setValue(0, 1, value);
-    });
+    this.chartData.setValue(0, 1, this.data[this.data.length-1]);
     this.chart.draw(this.chartData, this.chartOptions);
 }
+
 
 PressureASignal.prototype.render=function(){
     //console.log("Render: "+this.sourceId+"_"+this.lineId);
@@ -257,10 +261,14 @@ PressureASignal.prototype.redraw=function(){
     //get node...
     var html=this.parseTemplate(this.tplUrl,this,false);
     if(GOOGLECHARTS_ACTIVE){
-        this.createChart();
+        this.updateChart();
     }    
     $("#"+this.sourceId+"_"+this.lineId).replaceWith($(html));
 }
+
+
+
+
 
 function SlowRateASignal(sid,lineid,name,description,conf){
     //call the parent constructor

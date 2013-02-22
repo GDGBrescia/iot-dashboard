@@ -53,22 +53,13 @@ function IotDashboard(channel){ //},driver){
     };
     this.getSystemJson=function(){
         return _systemJson;
-    }
-    
-    this.signals=[];    
-    this.addSignal=function(signal){
-        this.signals.push(signal);
+    }    
+    this.signals={};
+    this.addSignal=function(sourceId,lineId,signal){
+        this.signals[sourceId+"_"+lineId]=signal;
     }
     this.getSignal=function(sourceId,lineId){
-        var signal=null;
-        $.each(this.signals, function(key,value){
-            if(value.sourceId==sourceId && value.lineId==lineId){
-                signal=this;
-                return false;
-            }
-            return true;
-        });
-        return signal;
+        return this.signals[sourceId+"_"+lineId]
     };
     
     this.connect=function(host,port,apikey,tout){
@@ -93,21 +84,24 @@ function IotDashboard(channel){ //},driver){
                 if(_channel.getAvailableAnalogDataCount() > 0){
                     var analogData = _channel.getAnalogData();
                     if (analogData!=null) {
-                        if(analogData.num_channels>1){
-                            $.each(analogData.channels, function(key, value){
-                                var id="sid"+analogData.commonData.source_id+"cid"+key;
-                                document.getElementById(id).innerHTML=value.toString();
-                                var anLine=self.getSignal(analogData.commonData.source_id, key);
-                                if(anLine!= null){                      
-                                    anLine.addValue(value);
+                        //console.log(analogData);
+                        if(analogData.num_channels>1){                           
+                            for (var i = 0, len = analogData.channels.length; i < len; i++) {
+                                //console.log(analogData.channels[i]);
+                                $("#sid"+analogData.commonData.source_id+"cid"+i).text(analogData.channels[i].toString());
+                                var anLine=self.getSignal(analogData.commonData.source_id, i);
+                                if(anLine!= null){
+                                    for (var ii = 0, len2 = analogData.channels[i].length; ii < len2; ii++) {
+                                        anLine.addValue(analogData.channels[i][ii]);
+                                    }
                                     anLine.redraw();
+                                    self.redrawAllPressureChart();                                    
                                 }
-                            });
+                            };
                         }else{
-                            $.each(analogData.channels[0], function(key, value){
-                                var id="sid"+analogData.commonData.source_id+"cid"+key;                                
-                                document.getElementById(id).innerHTML=value.toString();
-                            });
+                            for (var i = 0, len = analogData.channels[0].length; i < len; i++) {
+                                $("#sid"+analogData.commonData.source_id+"cid"+i).text(analogData.channels[0][i]);
+                            }
                         }
                     }
 
@@ -118,24 +112,24 @@ function IotDashboard(channel){ //},driver){
                 if(_channel.getAvailableDigitalDataCount() > 0) {
                     var digitalData = _channel.getDigitalData();
                     if (digitalData != null){
-                        $.each(digitalData.lines, function(key, value){
-                            var id="sid"+digitalData.common_data.source_id+"cid"+key;
-                            var dyLid=digitalData.common_data.source_id+"_"+key;
-                            /* FOR RAW DATA */
-                            if(value){
-                               document.getElementById(id).style.background="#00FF00";
+                        for (var i = 0, len = digitalData.lines.length; i < len; i++) {
+                            var id="sid"+digitalData.common_data.source_id+"cid"+i;
+                            var dyLid=digitalData.common_data.source_id+"_"+i;
+                            // FOR RAW DATA
+                            if(digitalData.lines[i]){
+                                $("#"+id).css('background-color',"#00FF00");
                             }else{
-                               document.getElementById(id).style.background="#FF4444";
+                                $("#"+id).css('background-color',"#FF4444");
                             }
-                            document.getElementById(id).innerHTML=value.toString();
+                            $("#"+id).text(digitalData.lines[i].toString());
                             
                             // FOR SYGNALS
-                            var dyLine=self.getSignal(digitalData.common_data.source_id, key);                            
+                            var dyLine=self.getSignal(digitalData.common_data.source_id, i);                            
                             if(dyLine!= null){                                
-                                dyLine.setValue(value);
+                                dyLine.setValue(digitalData.lines[i]);
                                 dyLine.redraw();
                             }
-                        });
+                        }
                     }
                 }
             }
@@ -194,17 +188,17 @@ function IotDashboard(channel){ //},driver){
                                 sourceid=parseInt(sourceid);
                                 switch(sourceid){
                                     case 1 :    //ALARMS SOURCE
-                                        self.addSignal(new AlarmDSignal(sourceid,i, name, desc,tddata));
+                                        self.addSignal(sourceid,i,new AlarmDSignal(sourceid,i, name, desc,tddata));
                                         break;
                                     case 2 :    //EVENTS SOURCE
                                         var eventSignal = new EventDSignal(sourceid,i, name, desc,tddata);
                                         if($('#iot-controls-'+sourceid+'-'+i+'-enable') && $('#iot-controls-'+sourceid+'-'+i+'-disable')){
                                             eventSignal.setButtons($('#iot-controls-'+sourceid+'-'+i+'-enable'),$('#iot-controls-'+sourceid+'-'+i+'-disable'));
                                         }
-                                        self.addSignal(eventSignal);
+                                        self.addSignal(sourceid,i,eventSignal);
                                         break;
                                     case 3 :    //PRODUCT TYPES ENABLE SOURCE
-                                        self.addSignal(new ProductTypeDSignal(sourceid,i, name, desc,tddata));
+                                        self.addSignal(sourceid,i,new ProductTypeDSignal(sourceid,i, name, desc,tddata));
                                         break;
                                 }
                                 i++;
@@ -230,16 +224,16 @@ function IotDashboard(channel){ //},driver){
                                 sourceid=parseInt(sourceid);
                                 switch(sourceid){
                                     case 100 :    //MOTOR SPEED
-                                        self.addSignal(new SpeedASignal(sourceid,i, name, desc,tadata));
+                                        self.addSignal(sourceid,i,new SpeedASignal(sourceid,i, name, desc,tadata));
                                         break;
                                     case 101 :    //PRESSURE SOURCE
-                                        self.addSignal(new PressureASignal(sourceid,i, name, desc,tadata));
+                                        self.addSignal(sourceid,i,new PressureASignal(sourceid,i, name, desc,tadata));
                                         break;
                                     case 200 :    //SLOW RATE SIGNAL SOURCE
-                                        self.addSignal(new SlowRateASignal(sourceid,i, name, desc,tadata));
+                                        self.addSignal(sourceid,i,new SlowRateASignal(sourceid,i, name, desc,tadata));
                                         break;
                                     case 201 :    //PRODUCT COUNT SOURCE
-                                        self.addSignal(new ProductCountASignal(sourceid,i, name, desc,tadata));
+                                        self.addSignal(sourceid,i,new ProductCountASignal(sourceid,i, name, desc,tadata));
                                         break;
                                 }
                                 i++;
@@ -256,7 +250,9 @@ function IotDashboard(channel){ //},driver){
                 }
             }
             //check if the sygnals are registered...
+            
             console.log(self);
+            
             _ready=true;
             _connected=true;
             return true;
@@ -350,7 +346,7 @@ function IotDashboard(channel){ //},driver){
                 'class':'channel span12 well'
             });
             var channelTplUl=$("<ul/>");
-            
+            //
             $.each(_systemJson.sources,function(){
                 var source=this;
                 var sourceTpl=$("<li>id: "+source.id+"<br>"
@@ -393,7 +389,19 @@ function IotDashboard(channel){ //},driver){
         //$(_channelsNode).append(channelTpl);        
         }
         
+        //console.log(this.signals);
         //DYNAMIC ELEMENTS
+        $.each(this.signals,function(){
+            this.render();
+        });
+    /*
+        for (var i = 0, len = this.signals.length; i < len; i++) {
+            var s = this.signals[i];
+            s.render();
+            
+        };
+        */
+    /*
         $.each(this.signals,function(){
             //this.render();
             if(this instanceof AlarmDSignal){                
@@ -419,37 +427,48 @@ function IotDashboard(channel){ //},driver){
                 this.render();
             }
         });
-     
-        function pressureChart(signal) {
-            console.log("Assigning pressureChart");
-            console.log(signal);
-            var dataArray = [
-                [signal.conf.name, signal.conf.units]
-            ];
-            dataArray.push([signal.conf.name,0]);
-            console.log(signal.data);
-            $.each(signal.data, function(key, value){
-                console.log(key);
-                console.log(value);
-                //dataArray.push([(int) key, (int) value]);
-            });
-            var data = google.visualization.arrayToDataTable(dataArray); 
-            var options = {
-                title: signal.conf.name,
-                'width':800,
-                'height':600,
-                animation:{
-                    duration: 1000,
-                    easing: 'out'
-                },
-                vAxis: {minValue:signal.conf.minValue, maxValue:signal.conf.maxValue}
-            };
-            console.log($("#"+signal.sourceId+"_"+signal.lineId+"_ch"));
-            var chart = new google.visualization.ColumnChart($("#"+signal.sourceId+"_"+signal.lineId+"_ch")[0]);
-            chart.draw(data, options);
-        }    
+        */
     }
    
+   
+   
+    var allPressureChart=new google.visualization.ColumnChart(document.getElementById("all-pressure-chart"));
+    this.redrawAllPressureChart=function(){
+        /*
+        //CREATE A GRAPH FOR ALL PRESSURE SIGNALS...
+        var options = {
+            width: 400,
+            height: 240,
+            vAxis: {
+                minValue:0, 
+                maxValue:1000
+            },
+            animation: {
+                duration: 1000,
+                easing: 'out'
+            }
+        };
+        var data = new google.visualization.DataTable();
+        // ADD ALL THE PRESSURE SIGNALS...
+        var pb1=this.getSignal(101,0);
+        var pb2=this.getSignal(101,1);
+        var pb3=this.getSignal(101,2);
+        var pb4=this.getSignal(101,3);
+        var pb5=this.getSignal(101,4);
+        var pb6=this.getSignal(101,5);
+        var pb7=this.getSignal(101,6);
+        var pb8=this.getSignal(101,7);        
+
+        data.addColumn('string', 'Blade');
+        data.addColumn('number', 'PA');
+        for (var i = 0, len = 8; i < len; i++) {            
+            var pb=this.getSignal(101,i);
+            //data.addRow([pb.conf.name, pb.data[pb.data.length-1]]);            
+        }
+        
+        allPressureChart.draw(data, options);
+        */
+    }
     /*
      * Function to send commands from the client to the server.
      */
