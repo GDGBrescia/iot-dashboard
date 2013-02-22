@@ -96,9 +96,9 @@ function IotDashboard(channel){ //},driver){
                         if(analogData.num_channels>1){
                             $.each(analogData.channels, function(key, value){
                                 var id="sid"+analogData.commonData.source_id+"cid"+key;
-                                $("#"+id).text(value.toString());
-                                var anLine=self.getSignal(analogData.commonData.source_id, key);                            
-                                if(anLine!= null){                                
+                                document.getElementById(id).innerHTML=value.toString();
+                                var anLine=self.getSignal(analogData.commonData.source_id, key);
+                                if(anLine!= null){                      
                                     anLine.addValue(value);
                                     anLine.redraw();
                                 }
@@ -106,7 +106,7 @@ function IotDashboard(channel){ //},driver){
                         }else{
                             $.each(analogData.channels[0], function(key, value){
                                 var id="sid"+analogData.commonData.source_id+"cid"+key;                                
-                                $("#"+id).text(value);
+                                document.getElementById(id).innerHTML=value.toString();
                             });
                         }
                     }
@@ -123,11 +123,11 @@ function IotDashboard(channel){ //},driver){
                             var dyLid=digitalData.common_data.source_id+"_"+key;
                             /* FOR RAW DATA */
                             if(value){
-                                $("#"+id).css('background-color',"#00FF00");
+                               document.getElementById(id).style.background="#00FF00";
                             }else{
-                                $("#"+id).css('background-color',"#FF4444");
+                               document.getElementById(id).style.background="#FF4444";
                             }
-                            $("#"+id).text(value);
+                            document.getElementById(id).innerHTML=value.toString();
                             
                             // FOR SYGNALS
                             var dyLine=self.getSignal(digitalData.common_data.source_id, key);                            
@@ -183,27 +183,28 @@ function IotDashboard(channel){ //},driver){
                             var ddata=[];
                             var i=0;
                             $(this).find('digitalData item').each(function(){
-                                var name=$(this).find('name').text(),
-                                desc=$(this).find('description').text();
-                                ddata.push({
+                                var name=$(this).find('name').text(),                                
+                                desc=$(this).find('description').text(),
+                                tddata={
                                     'name':name,
                                     'description':desc
-                                });
+                                };
+                                ddata.push(tddata);
                                 //DIGITAL SIGNALS IDENTIFICATION - refer to SCS specs document
                                 sourceid=parseInt(sourceid);
                                 switch(sourceid){
                                     case 1 :    //ALARMS SOURCE
-                                        self.addSignal(new AlarmDSignal(sourceid,i, name, desc));
+                                        self.addSignal(new AlarmDSignal(sourceid,i, name, desc,tddata));
                                         break;
                                     case 2 :    //EVENTS SOURCE
-                                        var eventSignal = new EventDSignal(sourceid,i, name, desc);
-										if($('#iot-controls-'+sourceid+'-'+i+'-enable') && $('#iot-controls-'+sourceid+'-'+i+'-disable')){
-											eventSignal.setButtons($('#iot-controls-'+sourceid+'-'+i+'-enable'),$('#iot-controls-'+sourceid+'-'+i+'-disable'));
-										}
-										self.addSignal(eventSignal);
+                                        var eventSignal = new EventDSignal(sourceid,i, name, desc,tddata);
+                                        if($('#iot-controls-'+sourceid+'-'+i+'-enable') && $('#iot-controls-'+sourceid+'-'+i+'-disable')){
+                                            eventSignal.setButtons($('#iot-controls-'+sourceid+'-'+i+'-enable'),$('#iot-controls-'+sourceid+'-'+i+'-disable'));
+                                        }
+                                        self.addSignal(eventSignal);
                                         break;
                                     case 3 :    //PRODUCT TYPES ENABLE SOURCE
-                                        self.addSignal(new ProductTypeDSignal(sourceid,i, name, desc));
+                                        self.addSignal(new ProductTypeDSignal(sourceid,i, name, desc,tddata));
                                         break;
                                 }
                                 i++;
@@ -215,29 +216,30 @@ function IotDashboard(channel){ //},driver){
                             var i=0;
                             $(this).find('analogData item').each(function(){
                                 var name=$(this).find('name').text(),
-                                    desc=$(this).find('description').text();
-                                adata.push({
+                                desc=$(this).find('description').text(),
+                                tadata={
                                     'name':$(this).find('name').text(),
                                     'description':$(this).find('description').text(),
                                     'minValue':$(this).find('minValue').text(),
                                     'maxValue':$(this).find('maxValue').text(),
                                     'units':$(this).find('units').text(),
                                     'samplingRate':$(this).find('samplingRate').text()
-                                });
+                                };
+                                adata.push(tadata);
                                 //DIGITAL SIGNALS IDENTIFICATION - refer to SCS specs document
                                 sourceid=parseInt(sourceid);
                                 switch(sourceid){
                                     case 100 :    //MOTOR SPEED
-                                        self.addSignal(new SpeedASignal(sourceid,i, name, desc));
+                                        self.addSignal(new SpeedASignal(sourceid,i, name, desc,tadata));
                                         break;
                                     case 101 :    //PRESSURE SOURCE
-                                        self.addSignal(new PressureASignal(sourceid,i, name, desc));
+                                        self.addSignal(new PressureASignal(sourceid,i, name, desc,tadata));
                                         break;
                                     case 200 :    //SLOW RATE SIGNAL SOURCE
-                                        self.addSignal(new SlowRateASignal(sourceid,i, name, desc));
+                                        self.addSignal(new SlowRateASignal(sourceid,i, name, desc,tadata));
                                         break;
                                     case 201 :    //PRODUCT COUNT SOURCE
-                                        self.addSignal(new ProductCountASignal(sourceid,i, name, desc));
+                                        self.addSignal(new ProductCountASignal(sourceid,i, name, desc,tadata));
                                         break;
                                 }
                                 i++;
@@ -361,7 +363,7 @@ function IotDashboard(channel){ //},driver){
                     $.each(source.digitalData,function(){                               
                         tableTpl=tableTpl+"<tr><td>"+this.name
                         +"</td><td>"
-                        +this.description+"</td><td id='sid"+source.id+"cid"+i+"'>n.d.</td></tr>";
+                        +this.description+"</td><td><span id='sid"+source.id+"cid"+i+"'>n.d.</span></td></tr>";
                         i++;
                     });
                     tableTpl=tableTpl+"</table>";
@@ -393,24 +395,61 @@ function IotDashboard(channel){ //},driver){
         
         //DYNAMIC ELEMENTS
         $.each(this.signals,function(){
-            this.render();
-            /*
-            if(this instanceof AlarmDSignal){
-                this.render(_alarmsNode);
+            //this.render();
+            if(this instanceof AlarmDSignal){                
+                this.render();
             }
             if(this instanceof EventDSignal){
-                this.render(_eventsNode);
+                this.render();
             }
             if(this instanceof ProductCountASignal){
-                this.render(_pcountNode);
+                this.render();
             }
             if(this instanceof SpeedASignal){
-                this.render(_speedNode);
+                this.render();
             }
-            */
+            if(this instanceof PressureASignal){
+                //this.createChart=pressureChart(this);
+                this.render();
+            }
+            if(this instanceof SlowRateASignal){
+                this.render();
+            }
+            if(this instanceof ProductCountASignal){
+                this.render();
+            }
         });
+     
+        function pressureChart(signal) {
+            console.log("Assigning pressureChart");
+            console.log(signal);
+            var dataArray = [
+                [signal.conf.name, signal.conf.units]
+            ];
+            dataArray.push([signal.conf.name,0]);
+            console.log(signal.data);
+            $.each(signal.data, function(key, value){
+                console.log(key);
+                console.log(value);
+                //dataArray.push([(int) key, (int) value]);
+            });
+            var data = google.visualization.arrayToDataTable(dataArray); 
+            var options = {
+                title: signal.conf.name,
+                'width':800,
+                'height':600,
+                animation:{
+                    duration: 1000,
+                    easing: 'out'
+                },
+                vAxis: {minValue:signal.conf.minValue, maxValue:signal.conf.maxValue}
+            };
+            console.log($("#"+signal.sourceId+"_"+signal.lineId+"_ch"));
+            var chart = new google.visualization.ColumnChart($("#"+signal.sourceId+"_"+signal.lineId+"_ch")[0]);
+            chart.draw(data, options);
+        }    
     }
-	
+   
     /*
      * Function to send commands from the client to the server.
      */
