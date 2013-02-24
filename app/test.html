@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link rel="stylesheet" href="css/istogram.css" type="text/css">
+		<script type="text/javascript" src="lib/Istogram3DBar.js"></script> 
+	</head>
+	<body>
+		<!-- credits: http://www.paulrhayes.com/experiments/cube/ -->
+		<div id="testContainer1" style="height:200px; margin:40px;"></div>
+		<script type="text/javascript">
+			var uno = new Istogram3DBar(document.getElementById("testContainer1"));
+			var unoheight = 5;
+			uno.setHeight(unoheight);
+		</script>
+		<button onclick=" unoheight=1; uno.setHeight(unoheight); return false;">zero</button>
+		<button onclick=" unoheight+=1; if(unoheight<100){uno.setHeight(unoheight);}else{unoheight=100;} return false;">up</button>
+		<button onclick=" unoheight=50; uno.setHeight(unoheight); return false;">half</button>
+		<button onclick=" unoheight-=1; if(unoheight>0){uno.setHeight(unoheight);}else{unoheight=0;} return false;">down</button>
+		<button onclick=" unoheight=99; uno.setHeight(unoheight); return false;">top</button>
+	</body>
+</html>

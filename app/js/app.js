@@ -84,7 +84,9 @@ function IotDashboard(channel){ //},driver){
                 if(_channel.getAvailableAnalogDataCount() > 0){
                     var analogData = _channel.getAnalogData();
                     if (analogData!=null) {
-                        //console.log(analogData);
+                        if(analogData.commonData.source_id==200){                        
+                            console.log(analogData);
+                        }
                         if(analogData.num_channels>1){                           
                             for (var i = 0, len = analogData.channels.length; i < len; i++) {
                                 //console.log(analogData.channels[i]);
@@ -94,8 +96,7 @@ function IotDashboard(channel){ //},driver){
                                     for (var ii = 0, len2 = analogData.channels[i].length; ii < len2; ii++) {
                                         anLine.addValue(analogData.channels[i][ii]);
                                     }
-                                    anLine.redraw();
-                                    self.redrawAllPressureChart();                                    
+                                    anLine.redraw();       
                                 }
                             };
                         }else{
@@ -432,7 +433,7 @@ function IotDashboard(channel){ //},driver){
    
    
    
-    var allPressureChart=new google.visualization.ColumnChart(document.getElementById("all-pressure-chart"));
+    //var allPressureChart=new google.visualization.ColumnChart(document.getElementById("all-pressure-chart"));
     this.redrawAllPressureChart=function(){
         /*
         //CREATE A GRAPH FOR ALL PRESSURE SIGNALS...

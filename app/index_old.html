@@ -4,11 +4,10 @@
         <meta charset="utf-8">
         <meta name="Description" content="">
         <title>IoT Dashboard - Powered by GDG Brescia & T4SM</title>
-        <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
-        <link rel="stylesheet" href="css/bootstrap-responsive.min.css" type="text/css">
-        <link rel="stylesheet" href="css/font-awesome.css" type="text/css">
-        <link rel="stylesheet" href="css/istogram.css" type="text/css">
-        <link rel="stylesheet" href="css/iot.css" type="text/css">
+        <link rel="stylesheet" href="css/bootstrap.min.css" >
+        <link rel="stylesheet" href="css/bootstrap-responsive.min.css" >
+        <link rel="stylesheet" href="css/font-awesome.css" >
+        <link rel="stylesheet" href="css/iot.css" >
         <style type="text/css">
             body {
                 padding-top: 60px;
@@ -21,29 +20,6 @@
                 height: 300px;
                 border: 1px inset #333;
             }
-            #pulse {
-                width: 64px;
-            }
-            #tab-slow ul,#tab-products ul,
-            #tab-pressures ul{
-                list-style-type: none;                
-            }
-            #tab-slow li,#tab-products li,
-            #tab-pressures li{
-                display: inline-block;                
-            }
-            #tab-slow .iot3dchart,
-            #tab-products .iot3dchart,
-            #tab-pressures .iot3dchart{
-                width: 120px;
-                height: 200px;               
-            }
-            #tab-slow li > div,
-            #tab-products li > div,
-            #tab-pressures li > div{
-                position: relative;
-                height: 100%;
-            }
         </style>
 
         <script type="text/javascript" src="lib/jquery-1.9.0.min.js"></script>
@@ -52,13 +28,24 @@
             var libScctPath="/app/lib/libscct";
             var libGeminiSocketPath="/app/lib/libscct/libgeminisocket";
         </script>
-        <script src="lib/highcharts/highcharts.js"></script>
-        <script src="lib/highcharts/modules/exporting.js"></script>
-        <script type="text/javascript" src="lib/Istogram3DBar.js"></script> 
+        <!--Load the GOOGLE AJAX API-->
+        <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+        <script type="text/javascript">
+            var GOOGLECHARTS_ACTIVE=false;
+            // Load the Visualization API and the piechart package.
+            google.load('visualization', '1.0', {packages:["gauge"]});
+
+            // Set a callback to run when the Google Visualization API is loaded.
+            google.setOnLoadCallback(activateCharts);
+            function activateCharts() {
+                GOOGLECHARTS_ACTIVE=true;
+            }
+        </script>            
         <script type="text/javascript" src="lib/libscct/libscct.js"></script>        
         <script type="text/javascript" src="js/functions.js"></script> 
         <script type="text/javascript" src="js/signals.js"></script> 
         <script type="text/javascript" src="js/app.js"></script> 
+        <!--Load the GOOGLE AJAX API-->
         <script type="text/javascript">            
             //Oggetto Logger
             function Logger(msg,obj){
@@ -100,11 +87,6 @@
             //On document load load the canvas..
             $(document).ready(function(){
                 
-                Highcharts.setOptions({
-                    global: {
-                        useUTC: false
-                    }
-                });
                 
                 //ask for connection
                 var scctChannel = new SCCTChannel();
@@ -284,203 +266,153 @@
         </header>
         <div class="container-fluid">
             <div class="row-fluid">
-                <div class="hero-unit span12">
-                    <div class="row-fluid">
-                        <div class="span8">
-                            <h2 id="system_name"></h2>
-                            <p id="system_description"></p>
+                <div class="span3">
+                    <div class="left-sidebar">
+                        <div class="span12 well">
+                            <h2>Event Logger</h2>
+                            <h4>This is the IoT event logger.</h4>
+                            <div id="iot-logger"></div>
+                        </div>
+                    </div>
+                    <div class="left-sidebar">
+                        <div class="span12 well">   
+                            <p><img id="pulse" src="/app/img/red-light.png"></p>
+                            <p>Prodotti disponibili: <span id="system_availableProductTypes">0</span></p>
+                            <p>Velocità massima motore: <span id="system_maxMotorSpeed">0</span> RPM</p>
+                            <div id="system_hw"></div>
+                            <hr>
+                            <p>
+                                <a id="startStream" class="btn btn-primary">Start Stream</a>
+                                <a id="stopStream" class="btn btn-warning">Stop Stream</a>
+                            </p>
+                            <p id="system_conn_parameters"></p>
+                        </div>                        
+                    </div><!--/.well -->
+                    <div class="left-sidebar">
+                        <div class="span12 well">  
+                            <h2><a title="Click to toggle controls" href="#">Controls</a></h2>
+                            <div id="iot-controls">
+                                <div class="well">
+                                    <button id="iot-controls-2-5-enable" class="btn btn-info" data-toggle="button">Activate motor</button>
+                                    <button id="iot-controls-2-5-disable" class="btn btn-warning" data-toggle="button" style="display:none;">Deactivate motor</button>
+                                </div>
+                                <div class="well">
+                                    <button id="iot-controls-2-3-enable" class="btn btn-info" data-toggle="button">Enable cooling system</button>
+                                    <button id="iot-controls-2-3-disable" class="btn btn-warning" data-toggle="button"  style="display:none;">Disable cooling system</button>
+                                </div>
+                                <div class="well">
+                                    <button id="iot-controls-2-2-enable" class="btn btn-info" data-toggle="button">Arm cutter</button>
+                                    <button id="iot-controls-2-2-disable" class="btn btn-warning" data-toggle="button" style="display:none;">Disarm cutter</button>
+                                </div>
+                                <div class="well">
+                                    <button id="iot-controls-2-4-enable" class="btn btn-info" data-toggle="button">Open injection circuit</button>
+                                    <button id="iot-controls-2-4-disable" class="btn btn-warning" data-toggle="button" style="display:none;">Close injection circuit</button>
+                                </div>
+                            </div>
+                        </div>                        
+                    </div><!--/.well -->
+                    <div class="left-sidebar">
+                        <div class="span12 well">  
+                            <h2><a title="Click to toggle controls" href="#">Motor speed</a></h2>
+                            <div id="100_0"></div>
+                             <div id="100_0_ch"></div>
+                            <div id="100_1"></div>
+                             <div id="100_1_ch"></div>
+                        </div>                        
+                    </div><!--/.well -->                    
 
-                        </div>
-                        <div class="span4">
-                            <img id="pulse" src="/app/img/red-light.png">                            
-                            <div class="btn-group">
-                                <button id="startStream" class="btn btn-primary">Start Stream</button>
-                                <button id="stopStream" class="btn btn-warning">Stop Stream</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="tabbable tabs-left"> <!-- Only required for left/right tabs -->
-                <ul class="nav nav-tabs">
-                    <li><a href="#tab-alarms" data-toggle="tab">System Alarms</a></li>
-                    <li><a href="#tab-pressures" data-toggle="tab">Blades Pressures</a></li>
-                    <li><a href="#tab-slow" data-toggle="tab">Slow signals</a></li>
-                    <li><a href="#tab-products" data-toggle="tab">Products</a></li>
-                    <li><a href="#tab-Hw" data-toggle="tab">Hardware</a></li>
-                    <li><a href="#tab-raw" data-toggle="tab">Raw data</a></li>
-                </ul>
-                <div class="tab-content">
-                    <div class="tab-pane active" id="tab-alarms">
-                        <h3>System alarms</h3>
-                        <ul>                           
-                            <li>
-                                <div id="1_0"></div>                                
-                            </li>
-                            <li>
-                                <div id="1_1"></div>                                
-                            </li>
-                            <li>
-                                <div id="1_2"></div>                                
-                            </li>
-                            <li>
-                                <div id="1_3"></div>                                
-                            </li>
-                            <li>
-                                <div id="1_4"></div>                                
-                            </li>
-                            <li>
-                                <div id="1_5"></div>                                
-                            </li>
-                            <li>
-                                <div id="1_6"></div>                                
-                            </li>
-                            <li>
-                                <div id="1_7"></div>                                
-                            </li>
-                        </ul>                      
-                    </div>
-                    <div class="tab-pane " id="tab-products">
-                        <h3>Products</h3>
-                        <ul>
-                            <li>                                
-                                <div id="201_0_ch" class="iot3dchart"></div>
-                                <div id="201_0"></div>
-                            </li>
-                            <li>
-                                <div id="201_1_ch" class="iot3dchart"></div>
-                                <div id="201_1"></div>
-                            </li>
-                            <li>
-                                <div id="201_2_ch" class="iot3dchart"></div>
-                                <div id="201_2"></div>
-                            </li>
-                            <li>
-                                <div id="201_3_ch" class="iot3dchart"></div>
-                                <div id="201_3"></div>
-                            </li>
-                            <li>
-                                <div id="201_4_ch" class="iot3dchart"></div>
-                                <div id="201_4"></div>
-                            </li>
-                            <li>
-                                <div id="201_5_ch" class="iot3dchart"></div>
-                                <div id="201_5"></div>
-                            </li>
-                            <li>
-                                <div id="201_6_ch" class="iot3dchart"></div>
-                                <div id="201_6"></div>
-                            </li>
-                            <li>
-                                <div id="201_7_ch" class="iot3dchart"></div>
-                                <div id="201_7"></div>
-                            </li>
-                        </ul>   
-                    </div>
-                    <div class="tab-pane " id="tab-pressures">
-                        <h3>Blades pressures</h3>
-                        <ul>
-                            <li>                                
-                                <div id="101_0_ch" class="iot3dchart"></div>
-                                <div id="101_0"></div>
-                            </li>
-                            <li>
-                                <div id="101_1_ch" class="iot3dchart"></div>
-                                <div id="101_1"></div>
-                            </li>
-                            <li>
-                                <div id="101_2_ch" class="iot3dchart"></div>
-                                <div id="101_2"></div>
-                            </li>
-                            <li>
-                                <div id="101_3_ch" class="iot3dchart"></div>
-                                <div id="101_3"></div>
-                            </li>
-                            <li>
-                                <div id="101_4_ch" class="iot3dchart"></div>
-                                <div id="101_4"></div>
-                            </li>
-                            <li>
-                                <div id="101_5_ch" class="iot3dchart"></div>
-                                <div id="101_5"></div>
-                            </li>
-                            <li>
-                                <div id="101_6_ch" class="iot3dchart"></div>
-                                <div id="101_6"></div>
-                            </li>
-                            <li>
-                                <div id="101_7_ch" class="iot3dchart"></div>
-                                <div id="101_7"></div>
-                            </li>
-                        </ul>                       
-                    </div>
-                    <div class="tab-pane " id="tab-slow">
-                        <h3>Slow signals</h3>
-                        <ul>                            
-                            <li>
-                                <div id="200_0_ch" class="iot3dchart"></div>                                
-                                <div id="200_0"></div>                                
-                            </li>
-                            <li>
-                                <div id="200_1_ch" class="iot3dchart"></div>                                
-                                <div id="200_1"></div>                                
-                            </li>
-                            <li>
-                                <div id="200_2_ch" class="iot3dchart"></div>                                
-                                <div id="200_2"></div>                                
-                            </li>
-                            <li>
-                                <div id="200_2_ch" class="iot3dchart"></div>                                
-                                <div id="200_2"></div>                                
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="tab-pane " id="tab-Hw">
-                        <h3>System modules</h3>
-                        <ul>
-                            <li>
-                                <div id="system_hw"></div>                                
-                            </li>
-                            <li>
-                                <div id="1_0"></div>                                
-                            </li>
-                            <li>
-                                <div id="1_1"></div>                                
-                            </li>
-                            <li>
-                                <div id="1_2"></div>                                
-                            </li>
-                            <li>
-                                <div id="1_3"></div>                                
-                            </li>
-                        </ul>
-                        <h3>System speed</h3>
-                        <ul>                           
-                            <li>
-                                <div id="100_0_ch"></div>                                
-                                <div id="100_0"></div>
-                            </li>
-                            <li>
-                                <div id="100_1_ch"></div>                                
-                                <div id="100_1"></div>                          
-                            </li>
-                        </ul>
-                        <h3>Connection parameters</h3>
-                        <div id="system_conn_parameters"></div>
-                    </div>
-                    <div class="tab-pane" id="tab-raw">
-                        <div id="rowdata" class="row-fluid channel">
-                            <div class="span12 well">
-                                <h3>Row Data</h3>
-                                <h4>This is the row data passed from the SCS system.</h4>
-                                <p>Number of total products: <span id="system_availableProductTypes">0</span></p>
-                                <p>Max motor speed: <span id="system_maxMotorSpeed">0</span> RPM</p>
-                                <div id="iot-rowdata"></div>
-                            </div>
+                </div><!--/span-->
+                <div class="span9">
+                    <div class="hero-unit">
+                        <h2 id="system_name"></h2>
+                        <p id="system_description">Descrizione sistema</p>                        
+                    </div>                                       
+                    <div id="alarms" class="row-fluid channel">
+                        <div class="span12 well">
+                            <h2><a href="#" title="Click to toggle data.">Alarms</a></h2>                           
+                            <div id="1_0"></div>
+                            <div id="1_1"></div>
+                            <div id="1_2"></div>
+                            <div id="1_3"></div>
+                            <div id="1_4"></div>
+                            <div id="1_5"></div>
+                            <div id="1_6"></div>
+                            <div id="1_7"></div>                            
                         </div>
                     </div>
-                </div>
-            </div>
+                    <div id="events" class="row-fluid channel">
+                        <div class="span12 well">
+                            <h2><a href="#" title="Click to toggle data.">Events</a></h2>
+                            <h4></h4>
+                            <table class="table thumbnails">
+                                <tr>
+                                    <td><div id="2_0"></div></td>
+                                    <td><div id="2_1"></div></td>
+                                    <td><div id="2_2"></div></td>
+                                    <td><div id="2_3"></div></td>
+                                </tr>
+                                <tr>
+                                    <td><div id="2_4"></div></td>
+                                    <td><div id="2_5"></div></td>
+                                    <td><div id="2_6"></div></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="span3 well">
+                           <div id="3_0"></div>
+                           <div id="101_0"></div>
+                           <div id="201_0"></div>                               
+                        </div>
+                        <div class="span3 well">
+                           <div id="3_1"></div>
+                           <div id="101_1"></div>
+                           <div id="201_1"></div>                               
+                        </div>
+                       <div class="span3 well">
+                           <div id="3_2"></div>
+                           <div id="101_2"></div>
+                           <div id="201_2"></div>                               
+                        </div>
+                        <div class="span3 well">
+                           <div id="3_3"></div>
+                           <div id="101_3"></div>
+                           <div id="201_3"></div>                               
+                        </div>
+                    </div>
+                    <div class="row-fluid">
+                         <div class="span3 well">
+                           <div id="3_4"></div>
+                           <div id="101_4"></div>
+                           <div id="201_4"></div>                               
+                        </div>
+                        <div class="span3 well">
+                           <div id="3_5"></div>
+                           <div id="101_5"></div>
+                           <div id="201_5"></div>                               
+                        </div>
+                       <div class="span3 well">
+                           <div id="3_6"></div>
+                           <div id="101_6"></div>
+                           <div id="201_6"></div>                               
+                        </div>
+                        <div class="span3 well">
+                           <div id="3_7"></div>
+                           <div id="101_7"></div>
+                           <div id="201_7"></div>                               
+                        </div>
+                    </div>
+                    <div id="rowdata" class="row-fluid channel">
+                        <div class="span12 well">
+                            <h2><a href="#" title="Click to toggle data.">Row Data</a></h2>
+                            <h4>This is the row data passed from the SCS system.</h4>
+                            <div id="iot-rowdata"></div>
+                        </div>
+                    </div>
+                </div><!--/span-->
+            </div><!--/row-->
+            <hr>
             <footer class="footer">
                 <p class="muted credit">Powered by GDG Brescia & T4SM</p>
                 <p class="muted credit">Code licensed under the
@@ -490,5 +422,6 @@
                 </p>
             </footer>
         </div>
+
     </body>
 </html>

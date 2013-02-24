@@ -17,7 +17,8 @@ function Signal(sid,lineid,type,name,description,conf){
     this.tplUrl="";
     this.node;
         
-    this.options;    
+    this.options;
+    this.currentValue=0;
 }
 
 /**
@@ -60,11 +61,11 @@ Signal.prototype.afterRender=function(){}
 Signal.prototype.beforeRedraw=function(){}
 Signal.prototype.afterRedraw=function(){}
 
-Signal.prototype.render=function(to){
+Signal.prototype.render=function(){
     this.beforeRender();
-    //console.log("Render: "+this.sourceId+"_"+this.lineId);    
+    console.log("Render: "+this.sourceId+"_"+this.lineId);    
     var placeholder= $("#"+this.sourceId+"_"+this.lineId);   
-    var html=this.parseTemplate(this.tplUrl,this,true);
+    var html=this.parseTemplate(this.tplUrl,this,true);    
     if(placeholder){
         this.node=placeholder;
         this.node.replaceWith($(html));
@@ -87,8 +88,7 @@ Signal.prototype.redraw=function(){
 
 
 /* DIGITAL SIGNAL */
-function DSignal(sid,lineid,name,description,conf){    
-    this.currentValue=false;
+function DSignal(sid,lineid,name,description,conf){   
     //code for command management
     this.buttons=[];
     Signal.call(this, sid,lineid,SignalTypes.DIGITAL,name, description,conf);
@@ -169,12 +169,17 @@ function ASignal(sid,lineid,name,description,conf){
     this.tplUrl="/app/views/analogic-signal.html";    
     //console.log(conf);
     if(conf!=null){
-        //this.data= FixedQueue( conf.samplingRate/10 , [] );
         this.data= FixedQueue( conf.samplingRate/10 , [] );
     }else{
         this.data= FixedQueue( 1, [] );
     }
-    
+    this.units=function(){
+        if(conf!=null){
+            return conf.units;
+        }else{
+            return "";
+        }
+    }
     this.chartData=[];
     this.chartOptions=[];
 }
@@ -186,12 +191,27 @@ ASignal.prototype.addValue=function(value){
     this.data.push(value);
 }
 ASignal.prototype.createChart=function(){
-    //overloaded...
-    };
+    var sig=$("#"+this.sourceId+"_"+this.lineId+"_ch")[0];
+    if(sig!=null){
+        this.chart = new Istogram3DBar(sig);
+    }
+};
 ASignal.prototype.updateChart=function(){
-    //overloaded...
-    };
-
+    if(this.chart!=null){
+        var maxChHeight=100, maxHeight=this.conf.maxValue,chValue, dValue=this.data[i],
+        srate=this.conf.samplingRate/10;
+        for (var i = 0; i < srate; i++) {
+            this.currentValue=this.data[i].toFixed(3); //format number...
+            this.chart.setHeight(maxChHeight * this.data[i].toFixed(3) / maxHeight);
+        }
+    }
+};
+ASignal.prototype.afterRender=function(){
+    this.createChart();
+}
+ASignal.prototype.afterRedraw=function(){
+    this.updateChart();
+}
 
 function SpeedASignal(sid,lineid,name,description,conf){
     
@@ -202,7 +222,107 @@ function SpeedASignal(sid,lineid,name,description,conf){
     this.tplUrl="/app/views/speed-signal.html";    
 }
 SpeedASignal.inherits(ASignal);
-
+    
+SpeedASignal.prototype.createChart=function(){
+    var sig=$("#"+this.sourceId+"_"+this.lineId+"_ch")[0],
+    self=this;
+    console.log(sig);
+    if(sig!=null){
+        self.chart = new Highcharts.Chart({
+            chart: {
+                renderTo: self.sourceId+"_"+self.lineId+"_ch",
+                type: 'spline',
+                marginRight: 10,
+                events: {
+                    load: function() {
+                        // set up the updating of the chart each second
+                        var series = this.series[0];
+                        setInterval(function() {
+                            console.log(self.data[0]);
+                            if(self.data[0]!=null){
+                                var srate=self.conf.samplingRate/10;
+                                for (var i = 0; i < srate; i++) {
+                                    var x = (new Date()).getTime(), // current time
+                                    y = self.data[i].toFixed(3);            
+                                    series.addPoint([x, y], true, true);
+                                }
+                            }
+                        }, 1000);
+                      
+                    }
+                }
+            },
+            title: {
+                text: 'Live random data'
+            },
+            xAxis: {
+                type: 'datetime',
+                tickPixelInterval: 150
+            },
+            yAxis: {
+                title: {
+                    text: 'Value'
+                },
+                plotLines: [{
+                    value: 0,
+                    width: 1,
+                    color: '#808080'
+                }]
+            },
+            tooltip: {
+                formatter: function() {
+                    return '<b>'+ self.conf.name +'</b><br/>'+
+                    Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.x) +'<br/>'+
+                    Highcharts.numberFormat(this.y, 2);
+                }
+            },
+            legend: {
+                enabled: false
+            },
+            exporting: {
+                enabled: false
+            },
+            series: [{
+                name: self.conf.name,
+                data: (function() {
+                    // generate an array of random data
+                    var data = [],
+                    time = (new Date()).getTime();    
+                    if(self.data[0]!=null){
+                        var srate=self.conf.samplingRate/10;
+                        for (var i = 0; i < srate; i++) {
+                            data.push({
+                                x: time + i * 1000,
+                                y: self.data[i].toFixed(3)
+                            });                                
+                        }
+                    }                       
+                    return data;
+                })()
+            }]
+        });
+    }
+};
+SpeedASignal.prototype.updateChart=function(){
+    if(this.chart!=null){
+    /*
+        var maxChHeight=100, maxHeight=this.conf.maxValue,chValue, dValue=this.data[i],
+        srate=this.conf.samplingRate/10;
+        for (var i = 0; i < srate; i++) {
+            this.currentValue=this.data[i].toFixed(3); //format number...
+            this.chart.setHeight(maxChHeight * this.data[i].toFixed(3) / maxHeight);
+        }
+       
+       var srate=this.conf.samplingRate/10;
+       for (var i = 0; i < srate; i++) {
+            var x = (new Date()).getTime(), // current time
+            y = this.data[i].toFixed(3);            
+            this.chart.series[0].addPoint([x, y], true, true);
+       }
+       */
+    }
+};
+    
 
 function PressureASignal(sid,lineid,name,description,conf){
     //call the parent constructor
@@ -214,61 +334,6 @@ function PressureASignal(sid,lineid,name,description,conf){
 }
 
 PressureASignal.inherits(ASignal);
-
-PressureASignal.prototype.createChart=function(){
-    var signal=this;
-    var dataArray = [
-        [signal.conf.name, signal.conf.units]
-    ];
-    dataArray.push([signal.conf.name,0]);
-    this.chartData = google.visualization.arrayToDataTable(dataArray);     
-    this.chartOptions = {
-        title: signal.conf.name,
-        width:200,
-        height:300,
-        legend: 'none',
-        /*
-        animation:{
-            duration: 10,
-            easing: 'linear'
-        },*/
-        vAxis: {
-            minValue:signal.conf.minValue, 
-            maxValue:signal.conf.maxValue
-            }
-    };
-    this.chart = new google.visualization.ColumnChart($("#"+signal.sourceId+"_"+signal.lineId+"_ch")[0]);
-    this.chart.draw(this.chartData, this.chartOptions);
-}
-PressureASignal.prototype.updateChart=function(){
-    this.chartData.setValue(0, 1, this.data[this.data.length-1]);
-    this.chart.draw(this.chartData, this.chartOptions);
-}
-
-
-PressureASignal.prototype.render=function(){
-    //console.log("Render: "+this.sourceId+"_"+this.lineId);
-    //get node...
-    if(GOOGLECHARTS_ACTIVE){
-        this.createChart();
-    }
-    this.tpl=this.parseTemplate(this.tplUrl,this,true);
-    $("#"+this.sourceId+"_"+this.lineId).replaceWith($(this.tpl));
-}
-
-PressureASignal.prototype.redraw=function(){
-    //console.log("Redraw: "+this.sourceId+"_"+this.lineId);
-    //get node...
-    var html=this.parseTemplate(this.tplUrl,this,false);
-    if(GOOGLECHARTS_ACTIVE){
-        this.updateChart();
-    }    
-    $("#"+this.sourceId+"_"+this.lineId).replaceWith($(html));
-}
-
-
-
-
 
 function SlowRateASignal(sid,lineid,name,description,conf){
     //call the parent constructor
@@ -282,7 +347,6 @@ SlowRateASignal.inherits(ASignal);
 
 function ProductCountASignal(sid,lineid,name,description,conf){
     //call the parent constructor
-    this.currentCount=0;
     ASignal.call(this, sid,lineid,name, description,conf);
     this.containerEl=$("<div/>",{
         'class':'asignal-pcount span3'
