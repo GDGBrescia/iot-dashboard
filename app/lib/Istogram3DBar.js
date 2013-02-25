@@ -15,11 +15,13 @@ function Istogram3DBar (wrapperElement) {
 	
 	this._leftFace=document.createElement('div');
 	this._leftFace.className='leftFace';
-	this._leftFace.innerHTML='<h2 class="rotate-clockwise">Left</h2><p>&nbsp;</p>';
+	//this._leftFace.innerHTML='<h2 class="rotate-clockwise">Left</h2><p>&nbsp;</p>';
+        this._leftFace.innerHTML='<p>&nbsp;</p>';
 	
 	this._rightFace=document.createElement('div');
 	this._rightFace.className='rightFace';
-	this._rightFace.innerHTML='<h2 class="rotate-counterclockwise">Right</h2><p>&nbsp;</p>';
+	//this._rightFace.innerHTML='<h2 class="rotate-counterclockwise">Right</h2><p>&nbsp;</p>';
+        this._rightFace.innerHTML='<p>&nbsp;</p>';
 	
 	this._container.appendChild(this._topFace);
 	this._container.appendChild(this._leftFace);

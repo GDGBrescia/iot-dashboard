@@ -16,7 +16,7 @@ function Signal(sid,lineid,type,name,description,conf){
     this.tpl="";
     this.tplUrl="";
     this.node;
-        
+    
     this.options;
     this.currentValue=0;
 }
@@ -63,7 +63,7 @@ Signal.prototype.afterRedraw=function(){}
 
 Signal.prototype.render=function(){
     this.beforeRender();
-    console.log("Render: "+this.sourceId+"_"+this.lineId);    
+    //console.log("Render: "+this.sourceId+"_"+this.lineId);    
     var placeholder= $("#"+this.sourceId+"_"+this.lineId);   
     var html=this.parseTemplate(this.tplUrl,this,true);    
     if(placeholder){
@@ -214,7 +214,8 @@ ASignal.prototype.afterRedraw=function(){
 }
 
 function SpeedASignal(sid,lineid,name,description,conf){
-    
+    this.currentValuePerc=0;
+    this.currentMaxPerc=100;
     ASignal.call(this, sid,lineid,name, description,conf);
     this.containerEl=$("<div/>",{
         'class':'asignal-speed'
@@ -222,107 +223,22 @@ function SpeedASignal(sid,lineid,name,description,conf){
     this.tplUrl="/app/views/speed-signal.html";    
 }
 SpeedASignal.inherits(ASignal);
-    
-SpeedASignal.prototype.createChart=function(){
-    var sig=$("#"+this.sourceId+"_"+this.lineId+"_ch")[0],
-    self=this;
-    console.log(sig);
-    if(sig!=null){
-        self.chart = new Highcharts.Chart({
-            chart: {
-                renderTo: self.sourceId+"_"+self.lineId+"_ch",
-                type: 'spline',
-                marginRight: 10,
-                events: {
-                    load: function() {
-                        // set up the updating of the chart each second
-                        var series = this.series[0];
-                        setInterval(function() {
-                            console.log(self.data[0]);
-                            if(self.data[0]!=null){
-                                var srate=self.conf.samplingRate/10;
-                                for (var i = 0; i < srate; i++) {
-                                    var x = (new Date()).getTime(), // current time
-                                    y = self.data[i].toFixed(3);            
-                                    series.addPoint([x, y], true, true);
-                                }
-                            }
-                        }, 1000);
-                      
-                    }
-                }
-            },
-            title: {
-                text: 'Live random data'
-            },
-            xAxis: {
-                type: 'datetime',
-                tickPixelInterval: 150
-            },
-            yAxis: {
-                title: {
-                    text: 'Value'
-                },
-                plotLines: [{
-                    value: 0,
-                    width: 1,
-                    color: '#808080'
-                }]
-            },
-            tooltip: {
-                formatter: function() {
-                    return '<b>'+ self.conf.name +'</b><br/>'+
-                    Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.x) +'<br/>'+
-                    Highcharts.numberFormat(this.y, 2);
-                }
-            },
-            legend: {
-                enabled: false
-            },
-            exporting: {
-                enabled: false
-            },
-            series: [{
-                name: self.conf.name,
-                data: (function() {
-                    // generate an array of random data
-                    var data = [],
-                    time = (new Date()).getTime();    
-                    if(self.data[0]!=null){
-                        var srate=self.conf.samplingRate/10;
-                        for (var i = 0; i < srate; i++) {
-                            data.push({
-                                x: time + i * 1000,
-                                y: self.data[i].toFixed(3)
-                            });                                
-                        }
-                    }                       
-                    return data;
-                })()
-            }]
-        });
-    }
-};
+
+
+SpeedASignal.prototype.createChart=function(){   
+        this.currentValue=0; //format number...
+        this.currentValuePerc=0;
+    };
 SpeedASignal.prototype.updateChart=function(){
-    if(this.chart!=null){
-    /*
-        var maxChHeight=100, maxHeight=this.conf.maxValue,chValue, dValue=this.data[i],
-        srate=this.conf.samplingRate/10;
-        for (var i = 0; i < srate; i++) {
-            this.currentValue=this.data[i].toFixed(3); //format number...
-            this.chart.setHeight(maxChHeight * this.data[i].toFixed(3) / maxHeight);
-        }
-       
-       var srate=this.conf.samplingRate/10;
-       for (var i = 0; i < srate; i++) {
-            var x = (new Date()).getTime(), // current time
-            y = this.data[i].toFixed(3);            
-            this.chart.series[0].addPoint([x, y], true, true);
-       }
-       */
+    var srate=this.conf.samplingRate/10,
+        ratio=100/this.conf.maxValue;    
+    for (var i = 0; i < srate; i++) {        
+        this.currentValue=this.data[i].toFixed(3); //format number...
+        this.currentValuePerc=this.data[i]*ratio;
+        this.currentMaxPerc=100-this.currentValuePerc;        
     }
 };
-    
+
 
 function PressureASignal(sid,lineid,name,description,conf){
     //call the parent constructor
@@ -354,3 +270,11 @@ function ProductCountASignal(sid,lineid,name,description,conf){
     this.tplUrl="/app/views/count-signal.html";
 }
 ProductCountASignal.inherits(ASignal);
+
+ProductCountASignal.prototype.createChart=function(){   
+        this.currentValue=0; //format number...
+    };
+ProductCountASignal.prototype.updateChart=function(){
+    //console.log(this.data);
+    this.currentValue=this.data[0]; //format number...
+};

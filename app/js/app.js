@@ -84,29 +84,33 @@ function IotDashboard(channel){ //},driver){
                 if(_channel.getAvailableAnalogDataCount() > 0){
                     var analogData = _channel.getAnalogData();
                     if (analogData!=null) {
-                        if(analogData.commonData.source_id==200){                        
-                            console.log(analogData);
-                        }
-                        if(analogData.num_channels>1){                           
+                        if(analogData.num_channels>1){
                             for (var i = 0, len = analogData.channels.length; i < len; i++) {
                                 //console.log(analogData.channels[i]);
-                                $("#sid"+analogData.commonData.source_id+"cid"+i).text(analogData.channels[i].toString());
+                                $("#sid"+analogData.commonData.source_id+"cid"+i).text(analogData.channels[i].toString());                                
                                 var anLine=self.getSignal(analogData.commonData.source_id, i);
                                 if(anLine!= null){
                                     for (var ii = 0, len2 = analogData.channels[i].length; ii < len2; ii++) {
                                         anLine.addValue(analogData.channels[i][ii]);
                                     }
-                                    anLine.redraw();       
+                                    anLine.redraw();
                                 }
                             };
                         }else{
+                            console.log(analogData);
                             for (var i = 0, len = analogData.channels[0].length; i < len; i++) {
                                 $("#sid"+analogData.commonData.source_id+"cid"+i).text(analogData.channels[0][i]);
+                                var anLine=self.getSignal(analogData.commonData.source_id, i);
+                                if(anLine!= null){
+                                    anLine.addValue(analogData.channels[0][i]);
+                                    anLine.redraw();
+                                }
                             }
                         }
                     }
 
-                }    
+                }
+                self.redrawCommon();
             }            
             
             _channel.digitalDataArrivedHandler = function(){
@@ -133,6 +137,7 @@ function IotDashboard(channel){ //},driver){
                         }
                     }
                 }
+                self.redrawCommon();
             }
             
             //HANDLER OF THE SYSTEM CONFIGURATION
@@ -223,9 +228,16 @@ function IotDashboard(channel){ //},driver){
                                 adata.push(tadata);
                                 //DIGITAL SIGNALS IDENTIFICATION - refer to SCS specs document
                                 sourceid=parseInt(sourceid);
+                                var s;
                                 switch(sourceid){
                                     case 100 :    //MOTOR SPEED
-                                        self.addSignal(sourceid,i,new SpeedASignal(sourceid,i, name, desc,tadata));
+                                        s=new SpeedASignal(sourceid,i, name, desc,tadata);
+                                        if(i==0){
+                                            s.bartype="danger";
+                                        }else{
+                                            s.bartype="success";
+                                        }
+                                        self.addSignal(sourceid,i,s);
                                         break;
                                     case 101 :    //PRESSURE SOURCE
                                         self.addSignal(sourceid,i,new PressureASignal(sourceid,i, name, desc,tadata));
@@ -234,7 +246,8 @@ function IotDashboard(channel){ //},driver){
                                         self.addSignal(sourceid,i,new SlowRateASignal(sourceid,i, name, desc,tadata));
                                         break;
                                     case 201 :    //PRODUCT COUNT SOURCE
-                                        self.addSignal(sourceid,i,new ProductCountASignal(sourceid,i, name, desc,tadata));
+                                        s=new ProductCountASignal(sourceid,i, name, desc,tadata);
+                                        self.addSignal(sourceid,i,s);
                                         break;
                                 }
                                 i++;
@@ -395,40 +408,6 @@ function IotDashboard(channel){ //},driver){
         $.each(this.signals,function(){
             this.render();
         });
-    /*
-        for (var i = 0, len = this.signals.length; i < len; i++) {
-            var s = this.signals[i];
-            s.render();
-            
-        };
-        */
-    /*
-        $.each(this.signals,function(){
-            //this.render();
-            if(this instanceof AlarmDSignal){                
-                this.render();
-            }
-            if(this instanceof EventDSignal){
-                this.render();
-            }
-            if(this instanceof ProductCountASignal){
-                this.render();
-            }
-            if(this instanceof SpeedASignal){
-                this.render();
-            }
-            if(this instanceof PressureASignal){
-                //this.createChart=pressureChart(this);
-                this.render();
-            }
-            if(this instanceof SlowRateASignal){
-                this.render();
-            }
-            if(this instanceof ProductCountASignal){
-                this.render();
-            }
-        });
-        */
     }
    
    
@@ -506,4 +485,28 @@ function IotDashboard(channel){ //},driver){
             _channel.stop();
         }        
     }    
+    
+    this.redrawCommon=function(){        
+        //common speed graph.... 
+        var maxSpeed=this.getSignal(100, 0);
+        var currSpeed=this.getSignal(100, 1);        
+        //update the common speed chart...                
+        $("#speedChart").find(".mratio").replaceWith("<p class='mratio'><b>Motor ratio:</b><br>"+currSpeed.currentValue+"/"+maxSpeed.currentValue+" "+maxSpeed.conf.units+"</p>");
+        //WARNING SPEED!
+        if(currSpeed.currentValue-maxSpeed.currentValue>0){
+            $("#"+currSpeed.sourceId+"_"+currSpeed.lineId+"_ch").css('width','100%');
+            $("#"+maxSpeed.sourceId+"_"+maxSpeed.lineId+"_ch").css('width','0%');
+            $("#"+currSpeed.sourceId+"_"+currSpeed.lineId+"_ch").removeClass('bar-success').addClass('bar-warning');
+            $("#speedChart .alert").replaceWith($('<div class="alert alert-error">'
+                +'<strong>Warning!</strong><br>Actual speed greater than target one!'
+                +'</div>'));
+        }else{
+            $("#"+currSpeed.sourceId+"_"+currSpeed.lineId+"_ch").css('width',currSpeed.currentValue/maxSpeed.currentValue*100+'%');
+            $("#"+maxSpeed.sourceId+"_"+maxSpeed.lineId+"_ch").css('width',(1-currSpeed.currentValue/maxSpeed.currentValue)*100+'%');
+            $("#"+currSpeed.sourceId+"_"+currSpeed.lineId+"_ch").addClass('bar-success').removeClass('bar-warning');
+            $("#speedChart .alert").replaceWith($('<div class="alert" />'));
+        }   
+        
+        
+    }
 }

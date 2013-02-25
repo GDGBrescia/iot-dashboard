@@ -1,4 +1,7 @@
-<div id="{sourceId}_{lineId}" class="speed-signal">
-    <p>{currentValue} {units}</p>
-    <p>{sourceId}.{lineId} - {name}</p>    
+<div id="{sourceId}_{lineId}">
+    <p><b>{sourceId}.{lineId} - {name}:</b></p>
+    <div class="speed-signal progress progress-striped">         
+        <div class="bar bar-{bartype}" style="width: {currentValuePerc}%;"></div>
+        <div class="bar" style="width: {currentMaxPerc}%;">{currentValue} {units}</div>
+    </div>
 </div>
