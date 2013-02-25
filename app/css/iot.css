@@ -107,3 +107,135 @@ img.feature-logo{
     background-repeat: repeat-y;
     background-position: center center;
 }
+#console{
+    z-index: 1;
+    text-align: center;
+    padding: 10px;
+    background-image: url('/app/img/alpha200.png');
+    background-repeat: repeat;
+    border: 1px solid #ccc;                
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+    -moz-box-shadow: 2px 2px 5px #666666;
+    -webkit-box-shadow: 2px 2px 5px #666666;
+    box-shadow: 2px 2px 5px #666666;
+}
+#console p{
+    margin:0px auto;
+    font-weight: 10px;
+    line-height: 14px;
+}
+
+#pulse {
+    width: 64px;
+}
+#tab-slow ul,#tab-products ul,
+#tab-pressures ul{
+    list-style-type: none;                
+}
+#tab-slow li,#tab-products li,
+#tab-pressures li{
+    position: relative;
+    display: inline-block;
+    border: 1px solid #CCC;
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+    -moz-box-shadow: 2px 2px 5px #666666;
+    -webkit-box-shadow: 2px 2px 5px #666;
+    box-shadow: 2px 2px 5px #666;
+    padding: 5px;
+    font-size: 10px;
+    width: 142px;
+    margin: 5px;
+}
+#tab-slow .iot3dchart,
+#tab-products .iot3dchart,
+#tab-pressures .iot3dchart{
+    width: auto;
+    position: relative;
+    left: 50px;
+    height: 200px;               
+}
+#tab-slow li > div,
+#tab-products li > div,
+#tab-pressures li > div{
+    position: relative;
+    height: 100%;
+}  
+.slow-signal{
+    line-height: 10px;
+    margin: 16px 0px 0px 0px;
+}
+
+#iot-alarms ul,
+#iot-status ul{
+    list-style-type: none;
+    margin: 0px auto;
+}
+#iot-alarms li,
+#iot-status li{
+    display: inline-block;
+    font-size: 12px;
+    line-height: 15px;
+    vertical-align: top;
+    padding: 4px;
+}
+#iot-alarms img,
+#iot-status img{
+    width: 32px;
+    height: 32px;
+    position: absolute;
+    bottom: 5px;
+    left: 40px;
+}
+
+#iot-alarms .alarm-signal{
+    position: relative;
+    text-align: center;
+    padding: 2px 5px;
+    width: 100px;
+    height: 90px;
+    border: 1px solid #ccc;                
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+    -moz-box-shadow: 2px 2px 5px #666666;
+    -webkit-box-shadow: 2px 2px 5px #666666;
+    box-shadow: 2px 2px 5px #666666;
+}
+#iot-status .event-signal{
+    position: relative;
+    text-align: center;
+    padding: 2px 5px;
+    width: 100px;
+    height: 70px;
+    border: 1px solid #ccc;                
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+    -moz-box-shadow: 2px 2px 5px #666666;
+    -webkit-box-shadow: 2px 2px 5px #666666;
+    box-shadow: 2px 2px 5px #666666;
+}
+
+#tab-products li{
+    margin: 5px;
+}
+
+#tab-products .count-signal{
+    position: relative;
+    text-align: center;
+    height: 140px;
+}
+#tab-products .count-signal > h2{
+    font-size: 18px;
+    font-style: italic;
+    color: #666;
+}
+#tab-products .count-signal > p{
+    position: absolute;
+    display: block;
+    width: 100%;
+}

@@ -1,90 +1,90 @@
 .istogram-container {
-	position: relative;
-	height: 100%;
+    position: relative;
+    height: 100%;
 }
 .istogram-container p {
-	font-size: 12px;
+    font-size: 12px;
 }
 
 .istogram-container h2 {
-	font-weight: bold;
+    font-weight: bold;
 }
 .istogram-container .rotate-clockwise {
-	-webkit-transform: rotate(90deg) translate(-100%,0);
-	-moz-transform: rotate(90deg) translate(-100%,0);
-	-o-transform: rotate(90deg) translate(-100%,0);
-	-ms-transform: rotate(90deg) translate(-100%,0);
-	transform: rotate(90deg) translate(-100%,0);
+    -webkit-transform: rotate(90deg) translate(-100%,0);
+    -moz-transform: rotate(90deg) translate(-100%,0);
+    -o-transform: rotate(90deg) translate(-100%,0);
+    -ms-transform: rotate(90deg) translate(-100%,0);
+    transform: rotate(90deg) translate(-100%,0);
 }
 .istogram-container .rotate-counterclockwise {
-	-webkit-transform: rotate(-90deg) translate(-100%,0);
-	-moz-transform: rotate(-90deg) translate(-100%,0);
-	-o-transform: rotate(-90deg) translate(-100%,0);
-	-ms-transform: rotate(-90deg) translate(-100%,0);
-	transform: rotate(-90deg) translate(-100%,0);
+    -webkit-transform: rotate(-90deg) translate(-100%,0);
+    -moz-transform: rotate(-90deg) translate(-100%,0);
+    -o-transform: rotate(-90deg) translate(-100%,0);
+    -ms-transform: rotate(-90deg) translate(-100%,0);
+    transform: rotate(-90deg) translate(-100%,0);
 }
 .rightFace,
 .leftFace,
 .topFace div {
-	padding: 5px;
-	width: 20px;
-	overflow: hidden;
+    padding: 5px;
+    width: 20px;
+    overflow: hidden;
 }
 
 .rightFace,
 .leftFace {
-	bottom: 0;
-	height: 5%;
-	background-image: linear-gradient(bottom, rgb(0,0,255) 0%, rgb(255,0,0) 100%);
-	background-image: -o-linear-gradient(bottom, rgb(0,0,255) 0%, rgb(255,0,0) 100%);
-	background-image: -moz-linear-gradient(bottom, rgb(0,0,255) 0%, rgb(255,0,0) 100%);
-	background-image: -webkit-linear-gradient(bottom, rgb(0,0,255) 0%, rgb(255,0,0) 100%);
-	background-image: -ms-linear-gradient(bottom, rgb(0,0,255) 0%, rgb(255,0,0) 100%);
+    bottom: 0;
+    height: 5%;
+    background-image: linear-gradient(bottom, rgb(0,0,255) 0%, rgb(255,0,0) 100%);
+    background-image: -o-linear-gradient(bottom, rgb(0,0,255) 0%, rgb(255,0,0) 100%);
+    background-image: -moz-linear-gradient(bottom, rgb(0,0,255) 0%, rgb(255,0,0) 100%);
+    background-image: -webkit-linear-gradient(bottom, rgb(0,0,255) 0%, rgb(255,0,0) 100%);
+    background-image: -ms-linear-gradient(bottom, rgb(0,0,255) 0%, rgb(255,0,0) 100%);
 }
 
 .rightFace,
 .leftFace,
 .topFace {
-	position: absolute;
-	transition: all 50ms;
-	-moz-transition: all 50ms;
-	-webkit-transition: all 50ms;
-	-o-transition: all 50ms;
+    position: absolute;
+    transition: all 50ms;
+    -moz-transition: all 50ms;
+    -webkit-transition: all 50ms;
+    -o-transition: all 50ms;
 }
 
 .leftFace {
-	-webkit-transform: skew(0deg, 30deg);
-	-moz-transform: skew(0deg, 30deg);
-	-o-transform: skew(0deg, 30deg);
-	-ms-transform: skew(0deg, 30deg);
-	transform: skew(0deg, 30deg);
-	background-color: #ccc;
+    -webkit-transform: skew(0deg, 30deg);
+    -moz-transform: skew(0deg, 30deg);
+    -o-transform: skew(0deg, 30deg);
+    -ms-transform: skew(0deg, 30deg);
+    transform: skew(0deg, 30deg);
+    background-color: #ccc;
 }
 .rightFace {
-	-webkit-transform: skew(0deg, -30deg);
-	-moz-transform: skew(0deg, -30deg);
-	-o-transform: skew(0deg, -30deg);
-	-ms-transform: skew(0deg, -30deg);
-	transform: skew(0deg, -30deg);
-	left: 30px;
-	background-color: #ddd;
+    -webkit-transform: skew(0deg, -30deg);
+    -moz-transform: skew(0deg, -30deg);
+    -o-transform: skew(0deg, -30deg);
+    -ms-transform: skew(0deg, -30deg);
+    transform: skew(0deg, -30deg);
+    left: 30px;
+    background-color: #ddd;
 }
 .topFace {
-	-webkit-transform: rotate(60deg);
-	-moz-transform: rotate(60deg);
-	-o-transform: rotate(60deg);
-	-ms-transform: rotate(60deg);
-	transform: rotate(60deg);
-	left: 15px;
-	bottom: 6.5%;
+    -webkit-transform: rotate(60deg);
+    -moz-transform: rotate(60deg);
+    -o-transform: rotate(60deg);
+    -ms-transform: rotate(60deg);
+    transform: rotate(60deg);
+    left: 15px;
+    bottom: 6.5%;
 }
 .topFace div {
-	-webkit-transform: skew(0deg, -30deg) scale(1, 1.16);
-	-moz-transform: skew(0deg, -30deg) scale(1, 1.16);
-	-o-transform: skew(0deg, -30deg) scale(1, 1.16);
-	-ms-transform: skew(0deg, -30deg) scale(1, 1.16);
-	transform: skew(0deg, -30deg) scale(1, 1.16);
-	background-color: red;
-	height: 20px;
-	font-size: 0.862em;
+    -webkit-transform: skew(0deg, -30deg) scale(1, 1.16);
+    -moz-transform: skew(0deg, -30deg) scale(1, 1.16);
+    -o-transform: skew(0deg, -30deg) scale(1, 1.16);
+    -ms-transform: skew(0deg, -30deg) scale(1, 1.16);
+    transform: skew(0deg, -30deg) scale(1, 1.16);
+    background-color: red;
+    height: 20px;
+    font-size: 0.862em;
 }

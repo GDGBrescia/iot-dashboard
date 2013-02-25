@@ -158,7 +158,29 @@ function ProductTypeDSignal(sid,lineid,name,description,conf){
     this.tplUrl="/app/views/ptype-signal.html";
 }
 ProductTypeDSignal.inherits(DSignal);
-
+ProductTypeDSignal.prototype.setButtons=function(enableButton,disableButton){
+    this.enableButton=enableButton;
+    this.disableButton=disableButton;
+}
+ProductTypeDSignal.prototype.checkButtons=function(){
+    if (!this.getValue()){
+        if(this.enableButton) {
+            this.enableButton.show();
+        }
+        if(this.disableButton){
+            this.disableButton.hide();
+        }
+    } else {
+        if(this.enableButton) {
+            this.enableButton.hide();
+        }
+        if(this.disableButton){
+            this.disableButton.show();
+        }
+    }
+}
+ProductTypeDSignal.prototype.beforeRedraw=ProductTypeDSignal.prototype.checkButtons;
+ProductTypeDSignal.prototype.beforeRender=ProductTypeDSignal.prototype.checkButtons;
 
 /* ANALOGIC SIGNAL */
 function ASignal(sid,lineid,name,description,conf){
@@ -250,6 +272,15 @@ function PressureASignal(sid,lineid,name,description,conf){
 }
 
 PressureASignal.inherits(ASignal);
+PressureASignal.prototype.createChart=function(){
+    var sig=$("#"+this.sourceId+"_"+this.lineId+"_ch")[0];
+    if(sig!=null){
+        this.chart = new Istogram3DBar(sig);
+        this.chart.setTopColor(0,102,153);
+        this.chart.setBottomColor(102,255,255);
+    }
+}
+
 
 function SlowRateASignal(sid,lineid,name,description,conf){
     //call the parent constructor
@@ -260,6 +291,21 @@ function SlowRateASignal(sid,lineid,name,description,conf){
     this.tplUrl="/app/views/slow-signal.html";
 }
 SlowRateASignal.inherits(ASignal);
+SlowRateASignal.prototype.createChart=function(){
+    var sig=$("#"+this.sourceId+"_"+this.lineId+"_ch")[0];
+    if(sig!=null){
+        this.chart = new Istogram3DBar(sig);
+        if(this.conf.units=="C"){
+            //temperature
+            this.chart.setTopColor(51,0,0);
+            this.chart.setBottomColor(255,102,102);
+        }else{
+            //pressure
+            this.chart.setTopColor(0,102,153);
+            this.chart.setBottomColor(102,255,255);   
+        }        
+    }
+}
 
 function ProductCountASignal(sid,lineid,name,description,conf){
     //call the parent constructor

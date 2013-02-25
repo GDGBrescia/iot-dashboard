@@ -87,7 +87,7 @@ function IotDashboard(channel){ //},driver){
                         if(analogData.num_channels>1){
                             for (var i = 0, len = analogData.channels.length; i < len; i++) {
                                 //console.log(analogData.channels[i]);
-                                $("#sid"+analogData.commonData.source_id+"cid"+i).text(analogData.channels[i].toString());                                
+                                $("#sid"+analogData.commonData.source_id+"cid"+i).html("<div>"+analogData.channels[i].toString().replace(/,/g, '<br>')+"</div>");
                                 var anLine=self.getSignal(analogData.commonData.source_id, i);
                                 if(anLine!= null){
                                     for (var ii = 0, len2 = analogData.channels[i].length; ii < len2; ii++) {
@@ -97,7 +97,6 @@ function IotDashboard(channel){ //},driver){
                                 }
                             };
                         }else{
-                            console.log(analogData);
                             for (var i = 0, len = analogData.channels[0].length; i < len; i++) {
                                 $("#sid"+analogData.commonData.source_id+"cid"+i).text(analogData.channels[0][i]);
                                 var anLine=self.getSignal(analogData.commonData.source_id, i);
@@ -204,7 +203,11 @@ function IotDashboard(channel){ //},driver){
                                         self.addSignal(sourceid,i,eventSignal);
                                         break;
                                     case 3 :    //PRODUCT TYPES ENABLE SOURCE
-                                        self.addSignal(sourceid,i,new ProductTypeDSignal(sourceid,i, name, desc,tddata));
+                                        var ptypeSignal = new ProductTypeDSignal(sourceid,i, name, desc,tddata);
+                                        if($('#iot-controls-'+sourceid+'-'+i+'-enable') && $('#iot-controls-'+sourceid+'-'+i+'-disable')){
+                                            ptypeSignal.setButtons($('#iot-controls-'+sourceid+'-'+i+'-enable'),$('#iot-controls-'+sourceid+'-'+i+'-disable'));
+                                        }
+                                        self.addSignal(sourceid,i,ptypeSignal);
                                         break;
                                 }
                                 i++;
@@ -368,7 +371,7 @@ function IotDashboard(channel){ //},driver){
                     +"# digital channels: "+source.digitalDataCount+"<br>"
                     +"# analogic channels: "+source.analogDataCount+"</li>");
                 if(source.digitalDataCount>0){
-                    var tableTpl="<table><tr><th>Name</th><th>Description</th><th>Valore</th></tr>";
+                    var tableTpl="<table class='table table-striped table-bordered'><thead><tr><th>Name</th><th>Description</th><th>Valore</th></tr></thead><tbody>";
                     var i=0;
                     $.each(source.digitalData,function(){                               
                         tableTpl=tableTpl+"<tr><td>"+this.name
@@ -376,7 +379,7 @@ function IotDashboard(channel){ //},driver){
                         +this.description+"</td><td><span id='sid"+source.id+"cid"+i+"'>n.d.</span></td></tr>";
                         i++;
                     });
-                    tableTpl=tableTpl+"</table>";
+                    tableTpl=tableTpl+"</tbody></table>";
                     $(sourceTpl).append(tableTpl);
                 }
                 if(source.analogDataCount>0){
