@@ -134,7 +134,7 @@ img.feature-logo{
 #tab-pressures ul{
     list-style-type: none;                
 }
-#tab-slow li,#tab-products li,
+#tab-slow li,
 #tab-pressures li{
     position: relative;
     display: inline-block;
@@ -149,7 +149,26 @@ img.feature-logo{
     font-size: 10px;
     width: 142px;
     margin: 5px;
+    background-image: url('/app/img/chart_bkg.jpg');
+    background-repeat: no-repeat;
+    background-position-x: 10px;    
 }
+#tab-products li{
+    position: relative;
+    display: inline-block;
+    border: 1px solid #CCC;
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+    -moz-box-shadow: 2px 2px 5px #666666;
+    -webkit-box-shadow: 2px 2px 5px #666;
+    box-shadow: 2px 2px 5px #666;
+    padding: 5px;
+    font-size: 10px;
+    width: 142px;
+    margin: 5px;
+}
+
 #tab-slow .iot3dchart,
 #tab-products .iot3dchart,
 #tab-pressures .iot3dchart{
@@ -160,10 +179,16 @@ img.feature-logo{
 }
 #tab-slow li > div,
 #tab-products li > div,
-#tab-pressures li > div{
+#tab-pressures li > div{    
     position: relative;
     height: 100%;
+    line-height: 12px;
 }  
+#tab-slow .slow-signal,
+#tab-pressures .pressure-signal{   
+    margin-top: 16px;
+}
+
 .slow-signal{
     line-height: 10px;
     margin: 16px 0px 0px 0px;
@@ -239,3 +264,4 @@ img.feature-logo{
     display: block;
     width: 100%;
 }
+
