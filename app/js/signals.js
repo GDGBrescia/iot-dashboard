@@ -131,6 +131,7 @@ EventDSignal.prototype.setButtons=function(enableButton,disableButton){
 EventDSignal.prototype.checkButtons=function(){
     if (!this.getValue()){
         if(this.enableButton) {
+			this.enableButton.button('reset');
             this.enableButton.show();
         }
         if(this.disableButton){
@@ -141,6 +142,7 @@ EventDSignal.prototype.checkButtons=function(){
             this.enableButton.hide();
         }
         if(this.disableButton){
+			this.disableButton.button('reset');
             this.disableButton.show();
         }
     }
@@ -156,6 +158,8 @@ function ProductTypeDSignal(sid,lineid,name,description,conf){
         'class':'dsignal-ptype'
     });
     this.tplUrl="/app/views/ptype-signal.html";
+	this.enableButton={};
+    this.disableButton={};
 }
 ProductTypeDSignal.inherits(DSignal);
 ProductTypeDSignal.prototype.setButtons=function(enableButton,disableButton){
@@ -163,8 +167,18 @@ ProductTypeDSignal.prototype.setButtons=function(enableButton,disableButton){
     this.disableButton=disableButton;
 }
 ProductTypeDSignal.prototype.checkButtons=function(){
+	console.log('product value: '+this.getValue());
+	console.log('  enable button: ');
+	console.log(this.enableButton);
+	console.log('  disable button: ');
+	console.log(this.disableButton);
+	
+	this.enableButton.text(this.getValue());
+	this.disableButton.text(this.getValue());
+	
     if (!this.getValue()){
         if(this.enableButton) {
+			this.enableButton.button('reset');
             this.enableButton.show();
         }
         if(this.disableButton){
@@ -175,6 +189,7 @@ ProductTypeDSignal.prototype.checkButtons=function(){
             this.enableButton.hide();
         }
         if(this.disableButton){
+			this.disableButton.button('reset');
             this.disableButton.show();
         }
     }

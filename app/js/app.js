@@ -500,9 +500,6 @@ function IotDashboard(channel){ //},driver){
             $("#"+currSpeed.sourceId+"_"+currSpeed.lineId+"_ch").css('width','100%');
             $("#"+maxSpeed.sourceId+"_"+maxSpeed.lineId+"_ch").css('width','0%');
             $("#"+currSpeed.sourceId+"_"+currSpeed.lineId+"_ch").removeClass('bar-success').addClass('bar-warning');
-            $("#speedChart .alert").replaceWith($('<div class="alert alert-error">'
-                +'<strong>Warning!</strong><br>Actual speed greater than target one!'
-                +'</div>'));
         }else{
             $("#"+currSpeed.sourceId+"_"+currSpeed.lineId+"_ch").css('width',currSpeed.currentValue/maxSpeed.currentValue*100+'%');
             $("#"+maxSpeed.sourceId+"_"+maxSpeed.lineId+"_ch").css('width',(1-currSpeed.currentValue/maxSpeed.currentValue)*100+'%');

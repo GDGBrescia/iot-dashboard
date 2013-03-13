@@ -133,12 +133,16 @@
                 });
 				
                 // controls -----
-                $('#iot-controls-2-5-enable').click(function(e){
+				
+				//note that the disable/enable button for the motors are flipped
+				//because the signal is "motor is off". when you try to disable the
+				//"motor off signal" you are actually turning it on.
+                $('#iot-controls-2-5-disable').click(function(e){
                     e.preventDefault();
                     console.log("Turn motor on");
                     iotDash.sendMessageData('switchMotorOn',100);
                 });
-                $('#iot-controls-2-5-disable').click(function(e){
+                $('#iot-controls-2-5-enable').click(function(e){
                     e.preventDefault();
                     console.log("Turn motor off");
                     iotDash.sendMessageData('switchMotorOff',0);
@@ -208,7 +212,7 @@
                         <div class="control-group">
                             <label class="control-label">Server port:</label>
                             <div class="controls">
-                                <input id="server-port" type="text" placeholder="3000">
+                                <input id="server-port" type="text" placeholder="8089">
                             </div>
                         </div>
                         <div class="control-group">
@@ -220,7 +224,7 @@
                         <div class="control-group">
                             <label class="control-label">Timeout:</label>
                             <div class="controls">
-                                <input id="server-tout" type="text" placeholder="20.00">
+                                <input id="server-tout" type="text" placeholder="30">
                             </div>
                         </div>
                     </fieldset>
@@ -331,20 +335,20 @@
                             <div id="100_1_ch" class="bar bar-success"></div>
                             <div id="100_0_ch" class="bar bar-danger"></div>
                         </div>
-                        <div class="alert"></div>
                     </div>
                     <hr>
                     <div id="iot-controls">                                
                         <h3>Control panel</h3>
                         <div class="btn-group btn-group-vertical">
-                            <button id="iot-controls-2-5-enable" class="btn  btn-block btn-info" data-toggle="button">Activate motor</button>
-                            <button id="iot-controls-2-5-disable" class="btn  btn-block btn-warning" data-toggle="button" style="display:none;">Deactivate motor</button>
-                            <button id="iot-controls-2-3-enable" class="btn  btn-block btn-info" data-toggle="button">Enable cooling system</button>
-                            <button id="iot-controls-2-3-disable" class="btn  btn-block btn-warning" data-toggle="button"  style="display:none;">Disable cooling system</button>
-                            <button id="iot-controls-2-2-enable" class="btn  btn-block btn-info" data-toggle="button">Arm cutter</button>
-                            <button id="iot-controls-2-2-disable" class="btn  btn-block btn-warning" data-toggle="button" style="display:none;">Disarm cutter</button>
-                            <button id="iot-controls-2-4-enable" class="btn  btn-block btn-info" data-toggle="button">Open injection circuit</button>
-                            <button id="iot-controls-2-4-disable" class="btn  btn-block btn-warning" data-toggle="button" style="display:none;">Close injection circuit</button>
+							<!-- note that the activate/deactivate motors are actually flipped, as above. -->
+                            <button id="iot-controls-2-5-enable" class="btn  btn-block btn-warning" style="display:none;">Deactivate motor</button>
+                            <button id="iot-controls-2-5-disable" class="btn  btn-block btn-info">Activate motor</button>
+                            <button id="iot-controls-2-3-enable" class="btn  btn-block btn-info">Enable cooling system</button>
+                            <button id="iot-controls-2-3-disable" class="btn  btn-block btn-warning" style="display:none;">Disable cooling system</button>
+                            <button id="iot-controls-2-2-enable" class="btn  btn-block btn-info">Arm cutter</button>
+                            <button id="iot-controls-2-2-disable" class="btn  btn-block btn-warning" style="display:none;">Disarm cutter</button>
+                            <button id="iot-controls-2-4-enable" class="btn  btn-block btn-info">Open injection circuit</button>
+                            <button id="iot-controls-2-4-disable" class="btn  btn-block btn-warning" style="display:none;">Close injection circuit</button>
                         </div>
                     </div>
                 </div>

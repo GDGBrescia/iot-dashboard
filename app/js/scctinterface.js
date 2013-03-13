@@ -12,12 +12,14 @@ var scctChannel = new SCCTChannel();
  * Connection parameters needed
  **/
 function init(){
+/*  //default parameters: 
     scctChannel.connectToPublisher(
         't4sm.blogdns.com', //IP ADDRESS
         '8089', //PORT
         'SCS', //API KEY
         3600 //TIMEOUT
     );
+*/
 }
 
 /* 
