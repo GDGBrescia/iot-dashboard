@@ -166,36 +166,30 @@ ProductTypeDSignal.prototype.setButtons=function(enableButton,disableButton){
     this.enableButton=enableButton;
     this.disableButton=disableButton;
 }
-ProductTypeDSignal.prototype.checkButtons=function(){
-	console.log('product value: '+this.getValue());
-	console.log('  enable button: ');
-	console.log(this.enableButton);
-	console.log('  disable button: ');
-	console.log(this.disableButton);
-	
+ProductTypeDSignal.prototype.checkButtons=function(){	
 	this.enableButton.text(this.getValue());
 	this.disableButton.text(this.getValue());
 	
     if (!this.getValue()){
         if(this.enableButton) {
 			this.enableButton.button('reset');
-            this.enableButton.show();
+            $(this.enableButton.selector).show()
         }
         if(this.disableButton){
-            this.disableButton.hide();
+            $(this.disableButton.selector).hide()
         }
     } else {
         if(this.enableButton) {
-            this.enableButton.hide();
+            $(this.enableButton.selector).hide()
         }
         if(this.disableButton){
 			this.disableButton.button('reset');
-            this.disableButton.show();
+            $(this.disableButton.selector).show()
         }
     }
 }
-ProductTypeDSignal.prototype.beforeRedraw=ProductTypeDSignal.prototype.checkButtons;
-ProductTypeDSignal.prototype.beforeRender=ProductTypeDSignal.prototype.checkButtons;
+ProductTypeDSignal.prototype.afterRedraw=ProductTypeDSignal.prototype.checkButtons;
+ProductTypeDSignal.prototype.afterRender=ProductTypeDSignal.prototype.checkButtons;
 
 /* ANALOGIC SIGNAL */
 function ASignal(sid,lineid,name,description,conf){

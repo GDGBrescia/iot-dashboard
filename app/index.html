@@ -70,6 +70,9 @@
                 }
             }
 
+			//made the dashboard a global variable...
+			var iotDash = {};
+
 			
             //On document load load the canvas..
             $(document).ready(function(){
@@ -83,7 +86,7 @@
                 
                 //ask for connection
                 var scctChannel = new SCCTChannel();
-                var iotDash=new IotDashboard(scctChannel);   //create the dashboard with the SCCTChannel
+                iotDash=new IotDashboard(scctChannel);   //create the dashboard with the SCCTChannel
                 
                 // try to retrive connections parameters from cookies
                 if (getCookie('host')){$("#server-host").val(getCookie('host'));}
@@ -115,14 +118,19 @@
                     }
                      */	
                     var connected=iotDash.connect(host,port,apikey,tout);
+					$('#connectionModal').modal('hide');
+					
+					/* //this condition was useless, check contidions inside IotDashboard.connect(...)
                     if(connected==true){
                         $('#connectionModal').modal('hide');                        
                         //iotDash.refreshGui();   //called too early....                        
                     }else{
                         alert('Impossibile connettersi');
                     }
+					*/
                 });                
                 
+				/* buttons removed. 
                 $('#startStream').click(function(e){
                     e.preventDefault();                    
                     iotDash.startStream();
@@ -131,6 +139,7 @@
                     e.preventDefault();                    
                     iotDash.stopStream();
                 });
+				*/
 				
                 // controls -----
 				
@@ -206,25 +215,25 @@
                         <div class="control-group">
                             <label class="control-label">Server IP:</label>
                             <div class="controls">
-                                <input id="server-host" type="text" placeholder="localhost">
+                                <input id="server-host" type="text" placeholder="localhost" required>
                             </div>
                         </div>
                         <div class="control-group">
                             <label class="control-label">Server port:</label>
                             <div class="controls">
-                                <input id="server-port" type="text" placeholder="8089">
+                                <input id="server-port" type="text" placeholder="8089" required>
                             </div>
                         </div>
                         <div class="control-group">
                             <label class="control-label">API key:</label>
                             <div class="controls">
-                                <input id="server-apikey" type="text" placeholder="scs">
+                                <input id="server-apikey" type="text" placeholder="scs" required>
                             </div>
                         </div>
                         <div class="control-group">
                             <label class="control-label">Timeout:</label>
                             <div class="controls">
-                                <input id="server-tout" type="text" placeholder="30">
+                                <input id="server-tout" type="text" placeholder="30" required>
                             </div>
                         </div>
                     </fieldset>
@@ -321,11 +330,12 @@
                     </div>
                 </div>
                 <div id="console" data-spy="affix" data-offset-top="40" class="span3 pull-right" style="right:16px">
-                    <img id="pulse" src="/app/img/red-light.png">                            
-                    <div class="btn-group">
-                        <button id="startStream" class="btn btn-primary">Start Stream</button>
-                        <button id="stopStream" class="btn btn-warning">Stop Stream</button>
-                    </div>
+					<div>
+						<img id="pulse" src="/app/img/red-light.png">
+						<span id="connectionlog"> </span>
+						<br/>
+						<span id="streamlog"> </span>
+					</div>
                     <hr>
                     <div id="speedChart">
                         <div id="100_1"></div>

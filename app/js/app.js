@@ -72,13 +72,14 @@ function IotDashboard(channel){ //},driver){
                 tout //3600 //TIMEOUT
                 );
             _connectionJsonString="{'host':"+host+",'port':"+port+",'apikey':"+apikey+",'tout ':"+tout+"}";
+			$("#connectionlog").text('Connecting to host: '+host+':'+port);
             //add the event handlers of the channel (this part is now static...            
-            _channel.connectionOpenedHandler= onConnectionOpened();
-            _channel.connectionRefusedHandler =onConnectionRefused();
-            _channel.connectionClosedHandler = onConnectionClosed();
+            _channel.connectionOpenedHandler= onConnectionOpened;
+            _channel.connectionRefusedHandler =onConnectionRefused;
+            _channel.connectionClosedHandler = onConnectionClosed;
             
-            _channel.streamStartedHandler = onStreamStarted();
-            _channel.streamStoppedHandler = onStreamClosed();                       
+            _channel.streamStartedHandler = onStreamStarted;
+            _channel.streamStoppedHandler = onStreamClosed;                       
             
             _channel.analogDataArrivedHandler = function(){
                 if(_channel.getAvailableAnalogDataCount() > 0){
@@ -270,8 +271,10 @@ function IotDashboard(channel){ //},driver){
             
             console.log(self);
             
+			/*
             _ready=true;
             _connected=true;
+			*/
             return true;
         }else{
             _ready=false;
@@ -285,7 +288,9 @@ function IotDashboard(channel){ //},driver){
             //start data stream
             _ready=true;
             _connected=true;
-            console.log("Channel is ready: "+_ready);
+            console.log('Connection is opened.');
+			$("#connectionlog").text('Connection now open!');
+			self.startStream();
         //To stop data stream, call:
         //scctChannel.stop();
         }
@@ -294,17 +299,20 @@ function IotDashboard(channel){ //},driver){
         * Connection refused message
         */
         function onConnectionRefused(){
-            console.log('Connection is refused');
+            console.log('Connection is refused, because:');
             console.log(_channel.reasonOfConnectionFailure);
+			$("#connectionlog").text('Connection refused!');
             _ready=false;
             _connected=false;
+			alert('Unable to connect, connection refused!');
+			$('#connectionModal').modal({keyboard: false,backdrop:"static"});
         }
 
         /*
         * Connection closed message
         */
         function onConnectionClosed(){
-            console.log('Connection is closed');
+            console.log('Connection is closed.');
             _connected=false;
         }
 
@@ -312,7 +320,8 @@ function IotDashboard(channel){ //},driver){
         * Stream started message
         */
         function onStreamStarted(){
-            console.log('The connection is started');
+            console.log('The stream is started');
+			$("#streamlog").text('Stream started!');
             _connected=true;
         }
 
@@ -320,8 +329,8 @@ function IotDashboard(channel){ //},driver){
         * Stream stopped message
         */
         function onStreamClosed(){
-            console.log('The connection is stopped');
-
+            console.log('The stream is stopped');
+			$("#streamlog").text('Stream closed!');
         }       
     }
     
@@ -452,6 +461,7 @@ function IotDashboard(channel){ //},driver){
         allPressureChart.draw(data, options);
         */
     }
+	
     /*
      * Function to send commands from the client to the server.
      */
@@ -461,8 +471,8 @@ function IotDashboard(channel){ //},driver){
     }
     
     this.disconnect=function(){
-    
-        console.log("Disconnect from server...");
+        console.log("Disconnecting from server...");
+		stopStream();
         if(_connected){
             _channel.close();
             _connected=false;
@@ -474,7 +484,7 @@ function IotDashboard(channel){ //},driver){
         if(_ready && _connected){
             var _pulseImg=$("#pulse");
             $(_pulseImg).attr('src','/app/img/green-light.png').fadeIn('fast');            
-            console.log("Stream started...");
+            console.log("Starting stream...");
             _channel.start();
         }
 
@@ -484,7 +494,7 @@ function IotDashboard(channel){ //},driver){
         if(_ready && _connected){
             var _pulseImg=$("#pulse");
             $(_pulseImg).attr('src','/app/img/red-light.png').fadeIn('fast');            
-            console.log("Stream stopped...");
+            console.log("Stopping stream...");
             _channel.stop();
         }        
     }    

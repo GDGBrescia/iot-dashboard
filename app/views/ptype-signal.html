@@ -1,5 +1,5 @@
 <div id="{sourceId}_{lineId}" class="ptype-signal">
-    <img src='/app/img/light-{currentValue}.png'>
-    <button id="iot-controls-{sourceId}-{lineId}-enable" class="btn btn-small btn-info">Activate</button>
-    <button id="iot-controls-{sourceId}-{lineId}-disable" class="btn btn-small btn-warning" style="display:none;">Deactivate</button>
+    <img src='/app/img/light-{currentValue}.png' style="height:26px; margin:10px;">
+    <button id="iot-controls-{sourceId}-{lineId}-enable" class="btn btn-small btn-info" onclick="iotDash.sendMessageData('enableType',{lineId}+1);">Activate</button>
+    <button id="iot-controls-{sourceId}-{lineId}-disable" class="btn btn-small btn-warning" onclick="iotDash.sendMessageData('disableType',{lineId}+1);" style="display:none;">Deactivate</button>
 </div>
