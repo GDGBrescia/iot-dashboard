@@ -102,6 +102,11 @@
                     var apikey=$("#server-apikey").val();
                     var tout=$("#server-tout").val();
 					
+					if (host === '') host = 'localhost';
+					if (port === '') port = '8089';
+					if (apikey === '') apikey = 'SCS';
+					if (tout === '') tout = '30';
+					
                     //set connection parameters in cookies
                     setCookie('host',host,7);
                     setCookie('port',port,7);
@@ -260,44 +265,255 @@
                         <a class="btn btn-primary pull-right" href="https://github.com/GDGBrescia/iot-dashboard" target="_blank">
                             <i class="icon-github"></i>
                             Fork on GitHub</a>
-
+                                
                     </div>
                 </div>
             </div>
         </header>
         <div class="container-fluid">
             <div class="row-fluid">
-                <div class="hero-unit span9">
-                    <h2 id="system_name"></h2>
-                    <p id="system_description"></p>
-                    <div id="iot-status">
-                        <h3>System status</h3>
-                        <ul>                           
-                            <li>
-                                <div id="2_0"></div>                                
-                            </li>
-                            <li>
-                                <div id="2_1"></div>                                
-                            </li>
-                            <li>
-                                <div id="2_2"></div>                                
-                            </li>
-                            <li>
-                                <div id="2_3"></div>                                
-                            </li>
-                            <li>
-                                <div id="2_4"></div>                                
-                            </li>
-                            <li>
-                                <div id="2_5"></div>                                
-                            </li>
-                            <li>
-                                <div id="2_6"></div>                                
-                            </li>
-                            <li>
-                                <div id="2_7"></div>                                
-                            </li>
-                        </ul> 
+                <div class="span9">
+                    <div class="row-fluid">
+                        <div class="hero-unit span12">
+                            <h2 id="system_name"></h2>
+                            <p id="system_description"></p>
+                            <div id="iot-status">
+                                <h3>System status</h3>
+                                <ul>                           
+                                    <li>
+                                        <div id="2_0"></div>                                
+                                    </li>
+                                    <li>
+                                        <div id="2_1"></div>                                
+                                    </li>
+                                    <li>
+                                        <div id="2_2"></div>                                
+                                    </li>
+                                    <li>
+                                        <div id="2_3"></div>                                
+                                    </li>
+                                    <li>
+                                        <div id="2_4"></div>                                
+                                    </li>
+                                    <li>
+                                        <div id="2_5"></div>                                
+                                    </li>
+                                    <li>
+                                        <div id="2_6"></div>                                
+                                    </li>
+                                    <li>
+                                        <div id="2_7"></div>                                
+                                    </li>
+                                </ul> 
+                            </div>
+                            <!--
+                            <div id="iot-alarms">
+                                    <h3>System alarms</h3>
+                                    <ul>                           
+                                            <li>
+                                                    <div id="1_0"></div>                                
+                                            </li>
+                                            <li>
+                                                    <div id="1_1"></div>                                
+                                            </li>
+                                            <li>
+                                                    <div id="1_2"></div>                                
+                                            </li>
+                                            <li>
+                                                    <div id="1_3"></div>                                
+                                            </li>
+                                            <li>
+                                                    <div id="1_4"></div>                                
+                                            </li>
+                                            <li>
+                                                    <div id="1_5"></div>                                
+                                            </li>
+                                            <li>
+                                                    <div id="1_6"></div>                                
+                                            </li>
+                                            <li>
+                                                    <div id="1_7"></div>                                
+                                            </li>
+                                    </ul>     
+                            </div>
+                            -->
+                        </div>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="span12">
+                            <ul class="nav nav-tabs">
+                                <li class="active"><a href="#tab-pressures" data-toggle="tab">Blades Pressures</a></li>
+                                <li><a href="#tab-slow" data-toggle="tab">Slow signals</a></li>
+                                <li><a href="#tab-products" data-toggle="tab">Producted Products</a></li>
+                                <li><a href="#tab-Hw" data-toggle="tab">Hardware</a></li>
+                                <li><a href="#tab-raw" data-toggle="tab">Raw data</a></li>
+                            </ul>
+                            <div class="tab-content">                    
+                                <div class="tab-pane " id="tab-products">
+                                    <h3>Producted Products</h3>
+                                    <h4>Displays number of producted products.</h4>
+                                    <ul>
+                                        <li>                                
+                                            <div id="201_0"></div>
+                                            <div id="3_0"></div>
+                                        </li>
+                                        <li>
+                                            <div id="201_1"></div>
+                                            <div id="3_1"></div>
+                                        </li>
+                                        <li>
+                                            <div id="201_2"></div>
+                                            <div id="3_2"></div>
+                                        </li>
+                                        <li>
+                                            <div id="201_3"></div>
+                                            <div id="3_3"></div>
+                                        </li>
+                                        <li>
+                                            <div id="201_4"></div>
+                                            <div id="3_4"></div>
+                                        </li>
+                                        <li>
+                                            <div id="201_5"></div>
+                                            <div id="3_5"></div>
+                                        </li>
+                                        <li>
+                                            <div id="201_6"></div>
+                                            <div id="3_6"></div>
+                                        </li>
+                                        <li>
+                                            <div id="201_7"></div>
+                                            <div id="3_7"></div>
+                                        </li>
+                                    </ul>   
+                                </div>
+                                <div class="tab-pane active" id="tab-pressures">
+                                    <h3>Blades pressures</h3>
+                                    <ul>
+                                        <li>                                
+                                            <div id="101_0_ch" class="iot3dchart"></div>
+                                            <div id="101_0"></div>
+                                        </li>
+                                        <li>
+                                            <div id="101_1_ch" class="iot3dchart"></div>
+                                            <div id="101_1"></div>
+                                        </li>
+                                        <li>
+                                            <div id="101_2_ch" class="iot3dchart"></div>
+                                            <div id="101_2"></div>
+                                        </li>
+                                        <li>
+                                            <div id="101_3_ch" class="iot3dchart"></div>
+                                            <div id="101_3"></div>
+                                        </li>
+                                        <li>
+                                            <div id="101_4_ch" class="iot3dchart"></div>
+                                            <div id="101_4"></div>
+                                        </li>
+                                        <li>
+                                            <div id="101_5_ch" class="iot3dchart"></div>
+                                            <div id="101_5"></div>
+                                        </li>
+                                        <li>
+                                            <div id="101_6_ch" class="iot3dchart"></div>
+                                            <div id="101_6"></div>
+                                        </li>
+                                        <li>
+                                            <div id="101_7_ch" class="iot3dchart"></div>
+                                            <div id="101_7"></div>
+                                        </li>
+                                    </ul>                       
+                                </div>
+                                <div class="tab-pane " id="tab-slow">
+                                    <h3>Slow signals</h3>
+                                    <ul>                            
+                                        <li>
+                                            <div id="200_0_ch" class="iot3dchart"></div>                                
+                                            <div id="200_0"></div>                                
+                                        </li>
+                                        <li>
+                                            <div id="200_1_ch" class="iot3dchart"></div>                                
+                                            <div id="200_1"></div>                                
+                                        </li>
+                                        <li>
+                                            <div id="200_2_ch" class="iot3dchart"></div>                                
+                                            <div id="200_2"></div>                                
+                                        </li>
+                                        <li>
+                                            <div id="200_3_ch" class="iot3dchart"></div>                                
+                                            <div id="200_3"></div>                                
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="tab-pane " id="tab-Hw">
+                                    <h3>System modules</h3>
+                                    <ul>
+                                        <li>
+                                            <div id="system_hw"></div>                                
+                                        </li>
+                                        <li>
+                                            <div id="module-1_0"></div>                                
+                                        </li>
+                                        <li>
+                                            <div id="module-1_1"></div>                                
+                                        </li>
+                                        <li>
+                                            <div id="module-1_2"></div>                                
+                                        </li>
+                                        <li>
+                                            <div id="module-1_3"></div>                                
+                                        </li>
+                                    </ul>
+                                    <h3>Connection parameters</h3>
+                                    <div id="system_conn_parameters"></div>
+                                </div>
+                                <div class="tab-pane" id="tab-raw">
+                                    <div id="rowdata" class="row-fluid channel">
+                                        <div class="span12 well">
+                                            <h3>Row Data</h3>
+                                            <h4>This is the row data passed from the SCS system.</h4>
+                                            <p>Number of total products: <span id="system_availableProductTypes">0</span></p>
+                                            <p>Max motor speed: <span id="system_maxMotorSpeed">0</span> RPM</p>
+                                            <div id="iot-rowdata"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                                    
+                <div id="console" data-spy="affix" data-offset-top="40" class="span3 pull-right" style="right:16px">
+                    <div>
+                        <img id="pulse" src="/app/img/red-light.png">
+                        <span id="connectionlog"> </span>
+                        <br/>
+                        <span id="streamlog"> </span>
+                    </div>
+                    <hr>
+                    <div id="speedChart">
+                        <div id="100_1"></div>
+                        <div id="100_0"></div>
+                        <p class="mratio"><b>Motor ratio:</b></p>
+                        <div class="speed-signal progress progress-striped">
+                            <div id="100_1_ch" class="bar bar-success"></div>
+                            <div id="100_0_ch" class="bar bar-danger"></div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div id="iot-controls">                                
+                        <h3>Control panel</h3>
+                        <div class="btn-group btn-group-vertical">
+                            <!-- note that the activate/deactivate motors are actually flipped, as above. -->
+                            <button id="iot-controls-2-5-enable" class="btn  btn-block btn-warning" style="display:none;">Deactivate motor</button>
+                            <button id="iot-controls-2-5-disable" class="btn  btn-block btn-info">Activate motor</button>
+                            <button id="iot-controls-2-3-enable" class="btn  btn-block btn-info">Enable cooling system</button>
+                            <button id="iot-controls-2-3-disable" class="btn  btn-block btn-warning" style="display:none;">Disable cooling system</button>
+                            <button id="iot-controls-2-2-enable" class="btn  btn-block btn-info">Arm cutter</button>
+                            <button id="iot-controls-2-2-disable" class="btn  btn-block btn-warning" style="display:none;">Disarm cutter</button>
+                            <button id="iot-controls-2-4-enable" class="btn  btn-block btn-info">Open injection circuit</button>
+                            <button id="iot-controls-2-4-disable" class="btn  btn-block btn-warning" style="display:none;">Close injection circuit</button>
+                        </div>
                     </div>
                     <div id="iot-alarms">
                         <h3>System alarms</h3>
@@ -329,182 +545,8 @@
                         </ul>     
                     </div>
                 </div>
-                <div id="console" data-spy="affix" data-offset-top="40" class="span3 pull-right" style="right:16px">
-					<div>
-						<img id="pulse" src="/app/img/red-light.png">
-						<span id="connectionlog"> </span>
-						<br/>
-						<span id="streamlog"> </span>
-					</div>
-                    <hr>
-                    <div id="speedChart">
-                        <div id="100_1"></div>
-                        <div id="100_0"></div>
-                        <p class="mratio"><b>Motor ratio:</b></p>
-                        <div class="speed-signal progress progress-striped">
-                            <div id="100_1_ch" class="bar bar-success"></div>
-                            <div id="100_0_ch" class="bar bar-danger"></div>
-                        </div>
-                    </div>
-                    <hr>
-                    <div id="iot-controls">                                
-                        <h3>Control panel</h3>
-                        <div class="btn-group btn-group-vertical">
-							<!-- note that the activate/deactivate motors are actually flipped, as above. -->
-                            <button id="iot-controls-2-5-enable" class="btn  btn-block btn-warning" style="display:none;">Deactivate motor</button>
-                            <button id="iot-controls-2-5-disable" class="btn  btn-block btn-info">Activate motor</button>
-                            <button id="iot-controls-2-3-enable" class="btn  btn-block btn-info">Enable cooling system</button>
-                            <button id="iot-controls-2-3-disable" class="btn  btn-block btn-warning" style="display:none;">Disable cooling system</button>
-                            <button id="iot-controls-2-2-enable" class="btn  btn-block btn-info">Arm cutter</button>
-                            <button id="iot-controls-2-2-disable" class="btn  btn-block btn-warning" style="display:none;">Disarm cutter</button>
-                            <button id="iot-controls-2-4-enable" class="btn  btn-block btn-info">Open injection circuit</button>
-                            <button id="iot-controls-2-4-disable" class="btn  btn-block btn-warning" style="display:none;">Close injection circuit</button>
-                        </div>
-                    </div>
-                </div>
             </div>
-            <div class="row-fluid">
-                <div class="span9">
-                    <ul class="nav nav-tabs">
-                        <li class="active"><a href="#tab-pressures" data-toggle="tab">Blades Pressures</a></li>
-                        <li><a href="#tab-slow" data-toggle="tab">Slow signals</a></li>
-                        <li><a href="#tab-products" data-toggle="tab">Producted Products</a></li>
-                        <li><a href="#tab-Hw" data-toggle="tab">Hardware</a></li>
-                        <li><a href="#tab-raw" data-toggle="tab">Raw data</a></li>
-                    </ul>
-                    <div class="tab-content">                    
-                        <div class="tab-pane " id="tab-products">
-                            <h3>Producted Products</h3>
-                            <h4>Displays number of producted products.</h4>
-                            <ul>
-                                <li>                                
-                                    <div id="201_0"></div>
-                                    <div id="3_0"></div
-                                </li>
-                                <li>
-                                    <div id="201_1"></div>
-                                    <div id="3_1"></div
-                                </li>
-                                <li>
-                                    <div id="201_2"></div>
-                                    <div id="3_2"></div
-                                </li>
-                                <li>
-                                    <div id="201_3"></div>
-                                    <div id="3_3"></div
-                                </li>
-                                <li>
-                                    <div id="201_4"></div>
-                                    <div id="3_4"></div
-                                </li>
-                                <li>
-                                    <div id="201_5"></div>
-                                    <div id="3_5"></div
-                                </li>
-                                <li>
-                                    <div id="201_6"></div>
-                                    <div id="3_6"></div
-                                </li>
-                                <li>
-                                    <div id="201_7"></div>
-                                    <div id="3_7"></div
-                                </li>
-                            </ul>   
-                        </div>
-                        <div class="tab-pane active" id="tab-pressures">
-                            <h3>Blades pressures</h3>
-                            <ul>
-                                <li>                                
-                                    <div id="101_0_ch" class="iot3dchart"></div>
-                                    <div id="101_0"></div>
-                                </li>
-                                <li>
-                                    <div id="101_1_ch" class="iot3dchart"></div>
-                                    <div id="101_1"></div>
-                                </li>
-                                <li>
-                                    <div id="101_2_ch" class="iot3dchart"></div>
-                                    <div id="101_2"></div>
-                                </li>
-                                <li>
-                                    <div id="101_3_ch" class="iot3dchart"></div>
-                                    <div id="101_3"></div>
-                                </li>
-                                <li>
-                                    <div id="101_4_ch" class="iot3dchart"></div>
-                                    <div id="101_4"></div>
-                                </li>
-                                <li>
-                                    <div id="101_5_ch" class="iot3dchart"></div>
-                                    <div id="101_5"></div>
-                                </li>
-                                <li>
-                                    <div id="101_6_ch" class="iot3dchart"></div>
-                                    <div id="101_6"></div>
-                                </li>
-                                <li>
-                                    <div id="101_7_ch" class="iot3dchart"></div>
-                                    <div id="101_7"></div>
-                                </li>
-                            </ul>                       
-                        </div>
-                        <div class="tab-pane " id="tab-slow">
-                            <h3>Slow signals</h3>
-                            <ul>                            
-                                <li>
-                                    <div id="200_0_ch" class="iot3dchart"></div>                                
-                                    <div id="200_0"></div>                                
-                                </li>
-                                <li>
-                                    <div id="200_1_ch" class="iot3dchart"></div>                                
-                                    <div id="200_1"></div>                                
-                                </li>
-                                <li>
-                                    <div id="200_2_ch" class="iot3dchart"></div>                                
-                                    <div id="200_2"></div>                                
-                                </li>
-                                <li>
-                                    <div id="200_3_ch" class="iot3dchart"></div>                                
-                                    <div id="200_3"></div>                                
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="tab-pane " id="tab-Hw">
-                            <h3>System modules</h3>
-                            <ul>
-                                <li>
-                                    <div id="system_hw"></div>                                
-                                </li>
-                                <li>
-                                    <div id="1_0"></div>                                
-                                </li>
-                                <li>
-                                    <div id="1_1"></div>                                
-                                </li>
-                                <li>
-                                    <div id="1_2"></div>                                
-                                </li>
-                                <li>
-                                    <div id="1_3"></div>                                
-                                </li>
-                            </ul>
-                            <h3>Connection parameters</h3>
-                            <div id="system_conn_parameters"></div>
-                        </div>
-                        <div class="tab-pane" id="tab-raw">
-                            <div id="rowdata" class="row-fluid channel">
-                                <div class="span12 well">
-                                    <h3>Row Data</h3>
-                                    <h4>This is the row data passed from the SCS system.</h4>
-                                    <p>Number of total products: <span id="system_availableProductTypes">0</span></p>
-                                    <p>Max motor speed: <span id="system_maxMotorSpeed">0</span> RPM</p>
-                                    <div id="iot-rowdata"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            
             <footer class="footer">
                 <p class="muted credit">Powered by GDG Brescia & T4SM</p>
                 <p class="muted credit">Code licensed under the
