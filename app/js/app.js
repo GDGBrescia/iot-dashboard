@@ -195,6 +195,7 @@ function IotDashboard(channel){ //},driver){
                                 switch(sourceid){
                                     case 1 :    //ALARMS SOURCE
                                         self.addSignal(sourceid,i,new AlarmDSignal(sourceid,i, name, desc,tddata));
+										console.log('adding allarms: '+sourceid+' - '+i);
                                         break;
                                     case 2 :    //EVENTS SOURCE
                                         var eventSignal = new EventDSignal(sourceid,i, name, desc,tddata);

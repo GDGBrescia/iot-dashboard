@@ -199,7 +199,7 @@ img.feature-logo{
     list-style-type: none;
     margin: 0px auto;
 }
-#iot-alarms li,
+
 #iot-status li{
     display: inline-block;
     font-size: 12px;
@@ -207,13 +207,20 @@ img.feature-logo{
     vertical-align: top;
     padding: 4px;
 }
-#iot-alarms img,
+
 #iot-status img{
     width: 32px;
     height: 32px;
     position: absolute;
     bottom: 5px;
     left: 40px;
+}
+#iot-alarms li p {
+	margin:5px;
+	text-align:left;
+}
+#iot-alarms li p img {
+	width: 20px;
 }
 
 #iot-alarms .alarm-signal{

@@ -152,14 +152,19 @@
 				//because the signal is "motor is off". when you try to disable the
 				//"motor off signal" you are actually turning it on.
                 $('#iot-controls-2-5-disable').click(function(e){
+					$('#iot-controls-2-5-enable').attr('disabled','0');
                     e.preventDefault();
-                    console.log("Turn motor on");
-                    iotDash.sendMessageData('switchMotorOn',100);
+					console.log("Turn motor on");
+					iotDash.sendMessageData('switchMotorOn',100);
                 });
                 $('#iot-controls-2-5-enable').click(function(e){
                     e.preventDefault();
-                    console.log("Turn motor off");
-                    iotDash.sendMessageData('switchMotorOff',0);
+					var yes=confirm("You really want to turn off motors?");
+					if (yes) {
+						$('#iot-controls-2-5-enable').attr('disabled','1');
+						console.log("Turn motor off");
+						iotDash.sendMessageData('switchMotorOff',0);
+					}
                 });
 				
                 $('#iot-controls-2-3-enable').click(function(e){
@@ -232,7 +237,7 @@
                         <div class="control-group">
                             <label class="control-label">API key:</label>
                             <div class="controls">
-                                <input id="server-apikey" type="text" placeholder="scs" required>
+                                <input id="server-apikey" type="text" placeholder="SCS" required>
                             </div>
                         </div>
                         <div class="control-group">
@@ -306,37 +311,6 @@
                                     </li>
                                 </ul> 
                             </div>
-                            <!--
-                            <div id="iot-alarms">
-                                    <h3>System alarms</h3>
-                                    <ul>                           
-                                            <li>
-                                                    <div id="1_0"></div>                                
-                                            </li>
-                                            <li>
-                                                    <div id="1_1"></div>                                
-                                            </li>
-                                            <li>
-                                                    <div id="1_2"></div>                                
-                                            </li>
-                                            <li>
-                                                    <div id="1_3"></div>                                
-                                            </li>
-                                            <li>
-                                                    <div id="1_4"></div>                                
-                                            </li>
-                                            <li>
-                                                    <div id="1_5"></div>                                
-                                            </li>
-                                            <li>
-                                                    <div id="1_6"></div>                                
-                                            </li>
-                                            <li>
-                                                    <div id="1_7"></div>                                
-                                            </li>
-                                    </ul>     
-                            </div>
-                            -->
                         </div>
                     </div>
                     <div class="row-fluid">
@@ -505,8 +479,8 @@
                         <h3>Control panel</h3>
                         <div class="btn-group btn-group-vertical">
                             <!-- note that the activate/deactivate motors are actually flipped, as above. -->
-                            <button id="iot-controls-2-5-enable" class="btn  btn-block btn-warning" style="display:none;">Deactivate motor</button>
-                            <button id="iot-controls-2-5-disable" class="btn  btn-block btn-info">Activate motor</button>
+                            <button id="iot-controls-2-5-enable" class="btn  btn-block btn-danger" style="display:none;">Deactivate motor</button>
+                            <button id="iot-controls-2-5-disable" class="btn  btn-block btn-success">Activate motor</button>
                             <button id="iot-controls-2-3-enable" class="btn  btn-block btn-info">Enable cooling system</button>
                             <button id="iot-controls-2-3-disable" class="btn  btn-block btn-warning" style="display:none;">Disable cooling system</button>
                             <button id="iot-controls-2-2-enable" class="btn  btn-block btn-info">Arm cutter</button>
@@ -515,6 +489,7 @@
                             <button id="iot-controls-2-4-disable" class="btn  btn-block btn-warning" style="display:none;">Close injection circuit</button>
                         </div>
                     </div>
+					<hr>
                     <div id="iot-alarms">
                         <h3>System alarms</h3>
                         <ul>                           

@@ -112,6 +112,14 @@ function AlarmDSignal(sid,lineid,name,description,conf){
 }
 AlarmDSignal.inherits(DSignal);
 
+AlarmDSignal.prototype.checkAlarm=function(){
+	if(this.getValue()) {
+		$("#"+this.sourceId+"_"+this.lineId).show();
+	}
+}
+AlarmDSignal.prototype.afterRedraw=AlarmDSignal.prototype.checkAlarm;
+AlarmDSignal.prototype.afterRender=AlarmDSignal.prototype.checkAlarm;
+
 /* EVENT SIGNAL */
 function EventDSignal(sid,lineid,name,description,conf){
     //call the parent constructor
