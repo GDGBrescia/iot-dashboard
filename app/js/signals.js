@@ -297,11 +297,6 @@ PressureASignal.prototype.createChart=function(){
         this.chart.setBottomColor(102,255,255);
     }
 }
-//PressureASignal don't need to be rendered again.
-PressureASignal.prototype.render=function(){
-    this.beforeRender();
-    this.afterRender();
-}
 
 
 function SlowRateASignal(sid,lineid,name,description,conf){
@@ -327,11 +322,6 @@ SlowRateASignal.prototype.createChart=function(){
             this.chart.setBottomColor(102,255,255);   
         }        
     }
-}
-//SlowRateASignal don't need to be rendered again.
-SlowRateASignal.prototype.render=function(){
-    this.beforeRender();
-    this.afterRender();
 }
 
 function ProductCountASignal(sid,lineid,name,description,conf){
