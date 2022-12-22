@@ -10,7 +10,7 @@ function ClockCtrl($scope, time) {
 
 function ServerCtrl($scope) {
     $scope.serverDefaults={
-        'host' : 't4sm.blogdns.com',
+        'host' : '127.0.0.1',
         'port' : 8089,
         'apikey' : 'SCS',
         'tout': 10  
